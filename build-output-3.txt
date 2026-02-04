@@ -1,0 +1,24 @@
+
+> recruitflow@0.1.0 build
+> next build
+
+▲ Next.js 16.1.5 (Turbopack)
+- Environments: .env
+
+⚠ The "middleware" file convention is deprecated. Please use "proxy" instead. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+  Creating an optimized production build ...
+✓ Compiled successfully in 83s
+  Running TypeScript ...
+Failed to compile.
+
+./app/actions/auth.ts:10:10
+Type error: Module '"@/lib/rate-limit"' has no exported member 'checkRateLimit'.
+
+[0m [90m  8 |[39m
+ [90m  9 |[39m [36mimport[39m { logger[33m,[39m analytics } [36mfrom[39m [32m"@/lib/monitoring"[39m
+[31m[1m>[22m[39m[90m 10 |[39m [36mimport[39m { checkRateLimit } [36mfrom[39m [32m"@/lib/rate-limit"[39m
+ [90m    |[39m          [31m[1m^[22m[39m
+ [90m 11 |[39m
+ [90m 12 |[39m [36mexport[39m [36masync[39m [36mfunction[39m signUpAction(data[33m:[39m [33mSignUpInput[39m) {
+ [90m 13 |[39m   [36mtry[39m {[0m
+Next.js build worker exited with code: 1 and signal: null

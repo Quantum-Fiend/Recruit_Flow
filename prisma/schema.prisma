@@ -1,0 +1,169 @@
+// RecruitFlow ATS - Production Database Schema (Hardened)
+// Prisma schema for PostgreSQL with focus on Data Integrity and Auditability
+
+generator client {
+  provider = "prisma-client-js"
+  engineType = "library"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+
+}
+
+// User model - Supports Applicants, Recruiters, and Admins
+model User {
+  id        String   @id @default(cuid())
+  name      String
+  email     String   @unique
+  password  String   // Hashed with bcrypt
+  role      UserRole @default(APPLICANT)
+  
+  // Soft delete flag
+  deletedAt DateTime?
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  jobsPosted      Job[]           @relation("RecruiterJobs")
+  applications    Application[]   @relation("ApplicantApplications")
+  applicationNotes ApplicationNote[]
+  statusHistory   ApplicationHistory[] @relation("RecruiterHistory")
+
+  @@index([email])
+  @@index([role])
+  @@index([deletedAt])
+}
+
+enum UserRole {
+  APPLICANT
+  RECRUITER
+  ADMIN
+}
+
+// Job model - Job postings created by recruiters
+model Job {
+  id              String         @id @default(cuid())
+  title           String
+  description     String         @db.Text
+  location        String
+  type            JobType        @default(FULL_TIME)
+  employmentType  EmploymentType @default(OFFICE)
+  experienceLevel String         // e.g., "Entry Level", "Mid Level", "Senior"
+  skills          String[]       // Array of required skills
+  status          JobStatus      @default(OPEN)
+  recruiterId     String
+  
+  // Soft delete flag
+  deletedAt       DateTime?
+  
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+
+  // Relations
+  recruiter    User          @relation("RecruiterJobs", fields: [recruiterId], references: [id], onDelete: Cascade)
+  applications Application[]
+
+  @@index([recruiterId])
+  @@index([status])
+  @@index([createdAt])
+  @@index([deletedAt])
+}
+
+enum JobType {
+  FULL_TIME
+  PART_TIME
+  CONTRACT
+  INTERNSHIP
+}
+
+enum EmploymentType {
+  OFFICE
+  REMOTE
+  HYBRID
+}
+
+enum JobStatus {
+  OPEN
+  CLOSED
+}
+
+// Application model - Tracks job applications
+model Application {
+  id          String            @id @default(cuid())
+  jobId       String
+  applicantId String
+  resumeUrl   String            // URL to uploaded resume
+  resumeName  String            // Original filename
+  status      ApplicationStatus @default(APPLIED)
+  
+  // Soft delete flag
+  deletedAt   DateTime?
+  
+  appliedAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+
+  // Relations
+  job          Job                  @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  applicant    User                 @relation("ApplicantApplications", fields: [applicantId], references: [id], onDelete: Cascade)
+  notes        ApplicationNote[]
+  history      ApplicationHistory[]
+
+  // Prevent duplicate applications (Production Requirement)
+  @@unique([jobId, applicantId])
+  @@index([jobId])
+  @@index([applicantId])
+  @@index([status])
+  @@index([appliedAt])
+  @@index([deletedAt])
+}
+
+enum ApplicationStatus {
+  APPLIED
+  SHORTLISTED
+  INTERVIEW
+  OFFER
+  HIRED
+  REJECTED
+  WITHDRAWN
+  OFFER_DECLINED
+}
+
+// Audit Trail - Track every status change for compliance and transparency
+model ApplicationHistory {
+  id            String            @id @default(cuid())
+  applicationId String
+  oldStatus     ApplicationStatus?
+  newStatus     ApplicationStatus
+  changedById   String            // Who made the change (Recruiter ID)
+  createdAt     DateTime          @default(now())
+
+  // Relations
+  application Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  changedBy   User        @relation("RecruiterHistory", fields: [changedById], references: [id])
+
+  @@index([applicationId])
+  @@index([changedById])
+  @@index([oldStatus])
+  @@index([newStatus])
+  @@index([createdAt])
+}
+
+// ApplicationNote model - Internal notes by recruiters
+model ApplicationNote {
+  id            String   @id @default(cuid())
+  applicationId String
+  recruiterId   String
+  note          String   @db.Text
+  createdAt     DateTime @default(now())
+
+  // Relations
+  application Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  recruiter   User        @relation(fields: [recruiterId], references: [id], onDelete: Cascade)
+
+  @@index([applicationId])
+  @@index([recruiterId])
+  @@index([createdAt])
+}

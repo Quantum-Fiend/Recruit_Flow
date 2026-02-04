@@ -1,0 +1,103 @@
+
+> recruitflow@0.1.0 lint
+> eslint
+
+
+C:\Users\tusha\OneDrive\Desktop\Recruit_Flow\recruitflow\app\actions\jobs.ts
+  100:40  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  104:36  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\tusha\OneDrive\Desktop\Recruit_Flow\recruitflow\app\api\uploadthing\core.ts
+  8:31  warning  '_' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\tusha\OneDrive\Desktop\Recruit_Flow\recruitflow\app\jobs\[id]\page.tsx
+  48:5  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+C:\Users\tusha\OneDrive\Desktop\Recruit_Flow\recruitflow\app\jobs\[id]\page.tsx:48:5
+  46 |
+  47 |   useEffect(() => {
+> 48 |     loadJob().catch(console.error);
+     |     ^^^^^^^ Avoid calling setState() directly within an effect
+  49 |   }, [loadJob])
+  50 |
+  51 |   const handleApply = async () => {  react-hooks/set-state-in-effect
+
+C:\Users\tusha\OneDrive\Desktop\Recruit_Flow\recruitflow\app\jobs\page.tsx
+  41:5  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+C:\Users\tusha\OneDrive\Desktop\Recruit_Flow\recruitflow\app\jobs\page.tsx:41:5
+  39 |
+  40 |   useEffect(() => {
+> 41 |     loadJobs()
+     |     ^^^^^^^^ Avoid calling setState() directly within an effect
+  42 |   }, [loadJobs])
+  43 |
+  44 |   const filteredJobs = jobs.filter(job =>  react-hooks/set-state-in-effect
+
+C:\Users\tusha\OneDrive\Desktop\Recruit_Flow\recruitflow\app\recruiter\dashboard\page.tsx
+  47:5  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+C:\Users\tusha\OneDrive\Desktop\Recruit_Flow\recruitflow\app\recruiter\dashboard\page.tsx:47:5
+  45 |
+  46 |   useEffect(() => {
+> 47 |     loadDashboardData()
+     |     ^^^^^^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  48 |   }, [loadDashboardData])
+  49 |
+  50 |   return (  react-hooks/set-state-in-effect
+
+C:\Users\tusha\OneDrive\Desktop\Recruit_Flow\recruitflow\app\recruiter\jobs\[id]\applicants\page.tsx
+  249:49  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\tusha\OneDrive\Desktop\Recruit_Flow\recruitflow\app\recruiter\jobs\page.tsx
+  38:5  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+C:\Users\tusha\OneDrive\Desktop\Recruit_Flow\recruitflow\app\recruiter\jobs\page.tsx:38:5
+  36 |
+  37 |   useEffect(() => {
+> 38 |     loadJobs()
+     |     ^^^^^^^^ Avoid calling setState() directly within an effect
+  39 |   }, [loadJobs])
+  40 |
+  41 |   const handleCloseJob = async (jobId: string) => {  react-hooks/set-state-in-effect
+
+C:\Users\tusha\OneDrive\Desktop\Recruit_Flow\recruitflow\lib\prisma.ts
+  12:69   error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  12:88   error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  12:104  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  19:70   error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  19:89   error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  19:105  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  26:65   error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  26:84   error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  26:100  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  29:66   error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  29:85   error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  29:101  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+✖ 20 problems (19 errors, 1 warning)
+

@@ -1,0 +1,44 @@
+
+> recruitflow@0.1.0 build
+> next build
+
+▲ Next.js 16.1.5 (Turbopack)
+- Environments: .env
+
+⚠ The "middleware" file convention is deprecated. Please use "proxy" instead. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+  Creating an optimized production build ...
+✓ Compiled successfully in 12.4s
+  Running TypeScript ...
+  Collecting page data using 7 workers ...
+  Generating static pages using 7 workers (0/14) ...
+  Generating static pages using 7 workers (3/14) 
+  Generating static pages using 7 workers (6/14) 
+  Generating static pages using 7 workers (10/14) 
+✓ Generating static pages using 7 workers (14/14) in 784.5ms
+  Finalizing page optimization ...
+
+Route (app)
+┌ ƒ /
+├ ○ /_not-found
+├ ƒ /api/applications/[applicationId]
+├ ƒ /api/applications/[applicationId]/status
+├ ƒ /api/auth/[...nextauth]
+├ ƒ /api/health
+├ ƒ /api/jobs
+├ ƒ /api/uploadthing
+├ ○ /dashboard
+├ ○ /jobs
+├ ƒ /jobs/[id]
+├ ○ /login
+├ ○ /recruiter/dashboard
+├ ○ /recruiter/jobs
+├ ƒ /recruiter/jobs/[id]/applicants
+├ ○ /recruiter/jobs/new
+└ ○ /signup
+
+
+ƒ Proxy (Middleware)
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+

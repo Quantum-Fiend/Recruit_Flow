@@ -1,0 +1,30 @@
+
+> recruitflow@0.1.0 build
+> next build
+
+▲ Next.js 16.1.5 (Turbopack)
+- Environments: .env
+
+⚠ The "middleware" file convention is deprecated. Please use "proxy" instead. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+  Creating an optimized production build ...
+✓ Compiled successfully in 17.0s
+  Running TypeScript ...
+Failed to compile.
+
+./lib/auth.ts:23:3
+Type error: Type 'import("C:/Users/tusha/OneDrive/Desktop/Recruit_Flow/recruitflow/node_modules/@auth/prisma-adapter/node_modules/@auth/core/adapters").Adapter' is not assignable to type 'import("C:/Users/tusha/OneDrive/Desktop/Recruit_Flow/recruitflow/node_modules/@auth/core/adapters").Adapter'.
+  Types of property 'createUser' are incompatible.
+    Type '((user: import("C:/Users/tusha/OneDrive/Desktop/Recruit_Flow/recruitflow/node_modules/@auth/prisma-adapter/node_modules/@auth/core/adapters").AdapterUser) => import("C:/Users/tusha/OneDrive/Desktop/Recruit_Flow/recruitflow/node_modules/@auth/prisma-adapter/node_modules/@auth/core/types").Awaitable<import("C:/Users/t...' is not assignable to type '((user: import("C:/Users/tusha/OneDrive/Desktop/Recruit_Flow/recruitflow/node_modules/@auth/core/adapters").AdapterUser) => import("C:/Users/tusha/OneDrive/Desktop/Recruit_Flow/recruitflow/node_modules/@auth/core/types").Awaitable<import("C:/Users/tusha/OneDrive/Desktop/Recruit_Flow/recruitflow/node_modules/@auth/co...'.
+      Type '(user: import("C:/Users/tusha/OneDrive/Desktop/Recruit_Flow/recruitflow/node_modules/@auth/prisma-adapter/node_modules/@auth/core/adapters").AdapterUser) => import("C:/Users/tusha/OneDrive/Desktop/Recruit_Flow/recruitflow/node_modules/@auth/prisma-adapter/node_modules/@auth/core/types").Awaitable<import("C:/Users/tu...' is not assignable to type '(user: import("C:/Users/tusha/OneDrive/Desktop/Recruit_Flow/recruitflow/node_modules/@auth/core/adapters").AdapterUser) => import("C:/Users/tusha/OneDrive/Desktop/Recruit_Flow/recruitflow/node_modules/@auth/core/types").Awaitable<import("C:/Users/tusha/OneDrive/Desktop/Recruit_Flow/recruitflow/node_modules/@auth/cor...'.
+        Type 'import("C:/Users/tusha/OneDrive/Desktop/Recruit_Flow/recruitflow/node_modules/@auth/prisma-adapter/node_modules/@auth/core/types").Awaitable<import("C:/Users/tusha/OneDrive/Desktop/Recruit_Flow/recruitflow/node_modules/@auth/prisma-adapter/node_modules/@auth/core/adapters").AdapterUser>' is not assignable to type 'import("C:/Users/tusha/OneDrive/Desktop/Recruit_Flow/recruitflow/node_modules/@auth/core/types").Awaitable<import("C:/Users/tusha/OneDrive/Desktop/Recruit_Flow/recruitflow/node_modules/@auth/core/adapters").AdapterUser>'.
+          Type 'AdapterUser' is not assignable to type 'Awaitable<AdapterUser>'.
+            Property 'role' is missing in type 'import("C:/Users/tusha/OneDrive/Desktop/Recruit_Flow/recruitflow/node_modules/@auth/prisma-adapter/node_modules/@auth/core/adapters").AdapterUser' but required in type 'import("C:/Users/tusha/OneDrive/Desktop/Recruit_Flow/recruitflow/node_modules/@auth/core/adapters").AdapterUser'.
+
+[0m [90m 21 |[39m
+ [90m 22 |[39m [36mexport[39m [36mconst[39m { handlers[33m,[39m signIn[33m,[39m signOut[33m,[39m auth } [33m=[39m [33mNextAuth[39m({
+[31m[1m>[22m[39m[90m 23 |[39m   adapter[33m:[39m [33mPrismaAdapter[39m(prisma [36mas[39m unknown [36mas[39m [33mPrismaClient[39m)[33m,[39m
+ [90m    |[39m   [31m[1m^[22m[39m
+ [90m 24 |[39m   session[33m:[39m {
+ [90m 25 |[39m     strategy[33m:[39m [32m"jwt"[39m[33m,[39m
+ [90m 26 |[39m   }[33m,[39m[0m
+Next.js build worker exited with code: 1 and signal: null

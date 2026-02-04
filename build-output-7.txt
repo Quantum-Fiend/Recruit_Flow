@@ -1,0 +1,27 @@
+
+> recruitflow@0.1.0 build
+> next build
+
+▲ Next.js 16.1.5 (Turbopack)
+- Environments: .env
+
+⚠ The "middleware" file convention is deprecated. Please use "proxy" instead. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+  Creating an optimized production build ...
+✓ Compiled successfully in 14.5s
+  Running TypeScript ...
+  Collecting page data using 7 workers ...
+Error [PrismaClientConstructorValidationError]: Using engine type "client" requires either "adapter" or "accelerateUrl" to be provided to PrismaClient constructor.
+Read more at https://pris.ly/d/client-constructor
+    at module evaluation (C:\Users\tusha\OneDrive\Desktop\Recruit_Flow\recruitflow\.next\server\chunks\[root-of-the-server]__f333f432._.js:1:1168)
+    at instantiateModule (C:\Users\tusha\OneDrive\Desktop\Recruit_Flow\recruitflow\.next\server\chunks\[turbopack]_runtime.js:740:9)
+    at getOrInstantiateModuleFromParent (C:\Users\tusha\OneDrive\Desktop\Recruit_Flow\recruitflow\.next\server\chunks\[turbopack]_runtime.js:763:12)
+    at Context.esmImport [as i] (C:\Users\tusha\OneDrive\Desktop\Recruit_Flow\recruitflow\.next\server\chunks\[turbopack]_runtime.js:228:20)
+    at module evaluation (C:\Users\tusha\OneDrive\Desktop\Recruit_Flow\recruitflow\.next\server\chunks\[root-of-the-server]__f333f432._.js:1:2052)
+    at instantiateModule (C:\Users\tusha\OneDrive\Desktop\Recruit_Flow\recruitflow\.next\server\chunks\[turbopack]_runtime.js:740:9)
+    at instantiateRuntimeModule (C:\Users\tusha\OneDrive\Desktop\Recruit_Flow\recruitflow\.next\server\chunks\[turbopack]_runtime.js:768:12)
+
+> Build error occurred
+Error: Failed to collect page data for /api/health
+    at ignore-listed frames {
+  type: 'Error'
+}

@@ -1,0 +1,29 @@
+
+> recruitflow@0.1.0 build
+> next build
+
+▲ Next.js 16.1.5 (Turbopack)
+- Environments: .env
+
+⚠ The "middleware" file convention is deprecated. Please use "proxy" instead. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+  Creating an optimized production build ...
+
+> Build error occurred
+Error: Turbopack build failed with 1 errors:
+./app/dashboard/page.tsx:142:25
+Parsing ecmascript source code failed
+[0m [90m 140 |[39m                       )}
+ [90m 141 |[39m                     [33m<[39m[33m/[39m[33mdiv[39m[33m>[39m
+[31m[1m>[22m[39m[90m 142 |[39m                   [33m<[39m[33m/[39m[33mdiv[39m[33m>[39m
+ [90m     |[39m                         [31m[1m^[22m[39m
+[31m[1m>[22m[39m[90m 143 |[39m                 [33m<[39m[33m/[39m[33mCardContent[39m[33m>[39m
+ [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 144 |[39m               [33m<[39m[33m/[39m[33mCard[39m[33m>[39m
+ [90m 145 |[39m             ))}
+ [90m 146 |[39m           [33m<[39m[33m/[39m[33mdiv[39m[33m>[39m[0m
+
+Expected '</', got 'jsx text (
+                )'
+
+
+    at <unknown> (./app/dashboard/page.tsx:142:25)

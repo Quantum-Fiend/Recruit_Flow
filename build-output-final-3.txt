@@ -1,0 +1,28 @@
+
+> recruitflow@0.1.0 build
+> next build
+
+▲ Next.js 16.1.5 (Turbopack)
+- Environments: .env
+
+⚠ The "middleware" file convention is deprecated. Please use "proxy" instead. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+  Creating an optimized production build ...
+✓ Compiled successfully in 13.5s
+  Running TypeScript ...
+Failed to compile.
+
+./lib/prisma.ts:29:13
+Type error: Type '<A extends DynamicQueryExtensionCbArgs<TypeMap<InternalArgs & DefaultArgs, {}>, "model", "User" | "Job" | "Application" | "ApplicationNote" | "ApplicationHistory", "findUnique">>({ args, query }: { ...; }) => Promise<...>' is not assignable to type 'DynamicQueryExtensionCb<TypeMap<InternalArgs & DefaultArgs, {}>, "model", "User" | "Job" | "Application" | "ApplicationNote" | "ApplicationHistory", "findUnique">'.
+  Types of parameters '__0' and 'args' are incompatible.
+    Type 'A' is not assignable to type '{ _model: string; args: any; query: (args: any) => Promise<any>; }'.
+      Type 'DynamicQueryExtensionCbArgs<TypeMap<InternalArgs & DefaultArgs, {}>, "model", "User" | "Job" | "Application" | "ApplicationNote" | "ApplicationHistory", "findUnique">' is not assignable to type '{ _model: string; args: any; query: (args: any) => Promise<any>; }'.
+        Property '_model' is missing in type '{ args: UserFindUniqueArgs<InternalArgs & DefaultArgs>; model: "User"; operation: "findUnique"; query: <A extends UserFindUniqueArgs<InternalArgs & DefaultArgs>>(args: A) => PrismaPromise<...>; } & { ...; }' but required in type '{ _model: string; args: any; query: (args: any) => Promise<any>; }'.
+
+[0m [90m 27 |[39m       }[33m,[39m
+ [90m 28 |[39m       [90m// eslint-disable-next-line @typescript-eslint/no-explicit-any[39m
+[31m[1m>[22m[39m[90m 29 |[39m       [36masync[39m findUnique({ args[33m,[39m query }[33m:[39m { _model[33m:[39m string[33m,[39m args[33m:[39m any[33m,[39m query[33m:[39m (args[33m:[39m any) [33m=>[39m [33mPromise[39m[33m<[39m[33many[39m[33m>[39m }) {
+ [90m    |[39m             [31m[1m^[22m[39m
+ [90m 30 |[39m         [36mreturn[39m query(args)
+ [90m 31 |[39m       }[33m,[39m
+ [90m 32 |[39m       [90m// eslint-disable-next-line @typescript-eslint/no-explicit-any[39m[0m
+Next.js build worker exited with code: 1 and signal: null

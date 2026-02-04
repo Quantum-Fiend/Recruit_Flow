@@ -1,0 +1,231 @@
+
+> recruitflow@0.1.0 lint
+> eslint
+
+
+C:\Users\tusha\OneDrive\Desktop\Recruit_Flow\recruitflow\app\(auth)\login\page.tsx
+  89:20  error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+
+C:\Users\tusha\OneDrive\Desktop\Recruit_Flow\recruitflow\app\actions\applications.ts
+    4:41  warning  'getCurrentUser' is defined but never used  @typescript-eslint/no-unused-vars
+  119:42  error    Unexpected any. Specify a different type    @typescript-eslint/no-explicit-any
+
+C:\Users\tusha\OneDrive\Desktop\Recruit_Flow\recruitflow\app\actions\jobs.ts
+  96:18  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\tusha\OneDrive\Desktop\Recruit_Flow\recruitflow\app\api\health\route.ts
+  6:17  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\tusha\OneDrive\Desktop\Recruit_Flow\recruitflow\app\api\jobs\route.ts
+  43:18  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\tusha\OneDrive\Desktop\Recruit_Flow\recruitflow\app\api\uploadthing\core.ts
+  3:10  warning  'validateFile' is defined but never used  @typescript-eslint/no-unused-vars
+  9:26  warning  'req' is defined but never used           @typescript-eslint/no-unused-vars
+
+C:\Users\tusha\OneDrive\Desktop\Recruit_Flow\recruitflow\app\dashboard\page.tsx
+  10:39  warning  'ArrowLeft' is defined but never used     @typescript-eslint/no-unused-vars
+  13:52  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\tusha\OneDrive\Desktop\Recruit_Flow\recruitflow\app\jobs\[id]\page.tsx
+  10:10  warning  'createApplicationAction' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               @typescript-eslint/no-unused-vars
+  18:34  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          @typescript-eslint/no-explicit-any
+  20:10  warning  'applying' is assigned a value but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     @typescript-eslint/no-unused-vars
+  20:20  warning  'setApplying' is assigned a value but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  @typescript-eslint/no-unused-vars
+  23:5   error    Error: Cannot access variable before it is declared
+
+`loadJob` is accessed before it is declared, which prevents the earlier access from updating when this value changes over time.
+
+C:\Users\tusha\OneDrive\Desktop\Recruit_Flow\recruitflow\app\jobs\[id]\page.tsx:23:5
+  21 |
+  22 |   useEffect(() => {
+> 23 |     loadJob()
+     |     ^^^^^^^ `loadJob` accessed before it is declared
+  24 |   }, [])
+  25 |
+  26 |   const loadJob = async () => {
+
+C:\Users\tusha\OneDrive\Desktop\Recruit_Flow\recruitflow\app\jobs\[id]\page.tsx:26:3
+  24 |   }, [])
+  25 |
+> 26 |   const loadJob = async () => {
+     |   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 27 |     const result = await getJobByIdAction(params.id as string)
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 28 |     if (result.success && result.job) {
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 29 |       setJob(result.job)
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 30 |     }
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 31 |     setLoading(false)
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 32 |   }
+     | ^^^^ `loadJob` is declared here
+  33 |
+  34 |   const handleApply = async () => {
+  35 |     // In a real app, this would open a dialog with resume upload  react-hooks/immutability
+  24:6   warning  React Hook useEffect has a missing dependency: 'loadJob'. Either include it or remove the dependency array                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        react-hooks/exhaustive-deps
+
+C:\Users\tusha\OneDrive\Desktop\Recruit_Flow\recruitflow\app\jobs\page.tsx
+  14:36  error  Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     @typescript-eslint/no-explicit-any
+  19:5   error  Error: Cannot access variable before it is declared
+
+`loadJobs` is accessed before it is declared, which prevents the earlier access from updating when this value changes over time.
+
+C:\Users\tusha\OneDrive\Desktop\Recruit_Flow\recruitflow\app\jobs\page.tsx:19:5
+  17 |
+  18 |   useEffect(() => {
+> 19 |     loadJobs()
+     |     ^^^^^^^^ `loadJobs` accessed before it is declared
+  20 |   }, [])
+  21 |
+  22 |   const loadJobs = async () => {
+
+C:\Users\tusha\OneDrive\Desktop\Recruit_Flow\recruitflow\app\jobs\page.tsx:22:3
+  20 |   }, [])
+  21 |
+> 22 |   const loadJobs = async () => {
+     |   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 23 |     const result = await getJobsAction({ status: "OPEN" })
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 24 |     if (result.success && result.jobs) {
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 25 |       setJobs(result.jobs)
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 26 |     }
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 27 |     setLoading(false)
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 28 |   }
+     | ^^^^ `loadJobs` is declared here
+  29 |
+  30 |   const filteredJobs = jobs.filter(job =>
+  31 |     job.title.toLowerCase().includes(search.toLowerCase()) ||  react-hooks/immutability
+  98:34  error  Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     @typescript-eslint/no-explicit-any
+
+C:\Users\tusha\OneDrive\Desktop\Recruit_Flow\recruitflow\app\recruiter\dashboard\page.tsx
+   5:29  warning  'CardDescription' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              @typescript-eslint/no-unused-vars
+  16:48  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 @typescript-eslint/no-explicit-any
+  20:5   error    Error: Cannot access variable before it is declared
+
+`loadDashboardData` is accessed before it is declared, which prevents the earlier access from updating when this value changes over time.
+
+C:\Users\tusha\OneDrive\Desktop\Recruit_Flow\recruitflow\app\recruiter\dashboard\page.tsx:20:5
+  18 |
+  19 |   useEffect(() => {
+> 20 |     loadDashboardData()
+     |     ^^^^^^^^^^^^^^^^^ `loadDashboardData` accessed before it is declared
+  21 |   }, [])
+  22 |
+  23 |   const loadDashboardData = async () => {
+
+C:\Users\tusha\OneDrive\Desktop\Recruit_Flow\recruitflow\app\recruiter\dashboard\page.tsx:23:3
+  21 |   }, [])
+  22 |
+> 23 |   const loadDashboardData = async () => {
+     |   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 24 |     const result = await getJobsAction({})
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 25 |     if (result.success && result.jobs) {
+     …
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 37 |     setLoading(false)
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 38 |   }
+     | ^^^^ `loadDashboardData` is declared here
+  39 |
+  40 |   return (
+  41 |     <div className="min-h-screen gradient-bg">  react-hooks/immutability
+  27:40  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 @typescript-eslint/no-explicit-any
+  28:62  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 @typescript-eslint/no-explicit-any
+
+C:\Users\tusha\OneDrive\Desktop\Recruit_Flow\recruitflow\app\recruiter\jobs\[id]\applicants\page.tsx
+   21:34  error    Unexpected any. Specify a different type                                                                     @typescript-eslint/no-explicit-any
+   22:52  error    Unexpected any. Specify a different type                                                                     @typescript-eslint/no-explicit-any
+   24:50  error    Unexpected any. Specify a different type                                                                     @typescript-eslint/no-explicit-any
+   30:6   warning  React Hook useEffect has a missing dependency: 'loadData'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+   66:21  error    Unexpected any. Specify a different type                                                                     @typescript-eslint/no-explicit-any
+  221:49  error    Unexpected any. Specify a different type                                                                     @typescript-eslint/no-explicit-any
+
+C:\Users\tusha\OneDrive\Desktop\Recruit_Flow\recruitflow\app\recruiter\jobs\new\page.tsx
+  143:83  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  160:93  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\tusha\OneDrive\Desktop\Recruit_Flow\recruitflow\app\recruiter\jobs\page.tsx
+  14:36  error  Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  @typescript-eslint/no-explicit-any
+  18:5   error  Error: Cannot access variable before it is declared
+
+`loadJobs` is accessed before it is declared, which prevents the earlier access from updating when this value changes over time.
+
+C:\Users\tusha\OneDrive\Desktop\Recruit_Flow\recruitflow\app\recruiter\jobs\page.tsx:18:5
+  16 |
+  17 |   useEffect(() => {
+> 18 |     loadJobs()
+     |     ^^^^^^^^ `loadJobs` accessed before it is declared
+  19 |   }, [])
+  20 |
+  21 |   const loadJobs = async () => {
+
+C:\Users\tusha\OneDrive\Desktop\Recruit_Flow\recruitflow\app\recruiter\jobs\page.tsx:21:3
+  19 |   }, [])
+  20 |
+> 21 |   const loadJobs = async () => {
+     |   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 22 |     const result = await getJobsAction({})
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 23 |     if (result.success && result.jobs) {
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 24 |       setJobs(result.jobs)
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 25 |     }
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 26 |     setLoading(false)
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 27 |   }
+     | ^^^^ `loadJobs` is declared here
+  28 |
+  29 |   const handleCloseJob = async (jobId: string) => {
+  30 |     if (!confirm("Are you sure you want to close this job posting?")) return  react-hooks/immutability
+
+C:\Users\tusha\OneDrive\Desktop\Recruit_Flow\recruitflow\components\ui\input.tsx
+  4:18  error  An interface declaring no members is equivalent to its supertype  @typescript-eslint/no-empty-object-type
+
+C:\Users\tusha\OneDrive\Desktop\Recruit_Flow\recruitflow\components\ui\textarea.tsx
+  4:18  error  An interface declaring no members is equivalent to its supertype  @typescript-eslint/no-empty-object-type
+
+C:\Users\tusha\OneDrive\Desktop\Recruit_Flow\recruitflow\debug_env.js
+  2:1  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+C:\Users\tusha\OneDrive\Desktop\Recruit_Flow\recruitflow\lib\auth.ts
+  22:37  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\tusha\OneDrive\Desktop\Recruit_Flow\recruitflow\lib\file-security.ts
+  28:44  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\tusha\OneDrive\Desktop\Recruit_Flow\recruitflow\lib\monitoring.ts
+   11:29   error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   52:103  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   61:87   error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   70:74   error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   79:98   error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  133:52   error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\tusha\OneDrive\Desktop\Recruit_Flow\recruitflow\lib\prisma.ts
+  12:31   warning  'operation' is defined but never used     @typescript-eslint/no-unused-vars
+  12:99   error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  12:111  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  18:32   warning  'operation' is defined but never used     @typescript-eslint/no-unused-vars
+  18:100  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  18:112  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  24:26   warning  'model' is defined but never used         @typescript-eslint/no-unused-vars
+  24:33   warning  'operation' is defined but never used     @typescript-eslint/no-unused-vars
+  24:101  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  24:113  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  30:28   warning  'operation' is defined but never used     @typescript-eslint/no-unused-vars
+  30:96   error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  30:108  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  40:79   error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+✖ 59 problems (44 errors, 15 warnings)
+
