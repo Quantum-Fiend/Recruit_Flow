@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="public/assets/hero-banner.svg" alt="RecruitFlow Banner" width="100%">
+</p>
+
 # RecruitFlow - Production-Ready Applicant Tracking System
 
 > [!IMPORTANT]
@@ -6,22 +10,37 @@
 
 A modern, full-stack Applicant Tracking System (ATS) built with Next.js 14+, featuring role-based access control, workflow automation, and comprehensive audit trails.
 
+---
+
 ## ✨ Features
 
-### For Applicants
-- 🔍 **Job Discovery** - Browse and search open positions with advanced filtering
-- 📄 **Resume Upload** - Secure file upload with validation and virus scanning
-- 📊 **Application Tracking** - Real-time status updates and email notifications
-- 🔔 **Email Notifications** - Automated updates on application status changes
+<table border="0">
+  <tr>
+    <td width="50%" valign="top">
+      <img src="public/assets/feature-applicant.svg" align="left" width="60" style="margin-right: 15px;">
+      <h3>For Applicants</h3>
+      <ul>
+        <li>🔍 <b>Job Discovery</b> - Browse and search positions with advanced filtering</li>
+        <li>📄 <b>Resume Upload</b> - Secure file upload with validation</li>
+        <li>📊 <b>Application Tracking</b> - Real-time status updates</li>
+        <li>🔔 <b>Email Notifications</b> - Automated status change updates</li>
+      </ul>
+    </td>
+    <td width="50%" valign="top">
+      <img src="public/assets/feature-recruiter.svg" align="left" width="60" style="margin-right: 15px;">
+      <h3>For Recruiters</h3>
+      <ul>
+        <li>📝 <b>Job Posting</b> - Manage listings with rich details</li>
+        <li>👥 <b>Candidate Review</b> - Comprehensive profiles and history</li>
+        <li>🔄 <b>Workflow Engine</b> - Enforced status transition rules</li>
+        <li>📋 <b>Internal Notes</b> - Private recruiter-only feedback</li>
+        <li>📈 <b>Audit Trail</b> - Compliance-ready change logging</li>
+      </ul>
+    </td>
+  </tr>
+</table>
 
-### For Recruiters
-- 📝 **Job Posting** - Create and manage job listings with rich details
-- 👥 **Applicant Management** - Review applications with comprehensive candidate profiles
-- 🔄 **Workflow Engine** - Enforce valid status transitions (Applied → Shortlisted → Interview → Offer → Hired)
-- 📋 **Internal Notes** - Add private notes to applications
-- 📈 **Audit Trail** - Complete history of all status changes for compliance
-
-### Production-Ready Features
+### 🛡️ Production Hardening
 - 🔐 **Secure Authentication** - NextAuth.js with bcrypt password hashing
 - 🛡️ **Role-Based Access Control** - Separate dashboards for applicants and recruiters
 - 🗑️ **Soft Deletes** - Data integrity with recoverable deletions
