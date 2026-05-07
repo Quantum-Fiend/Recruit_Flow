@@ -17,6 +17,7 @@ import { toast } from "sonner"
 import { ApplicationStatus } from "@prisma/client"
 import { motion, AnimatePresence } from "framer-motion"
 import { cn } from "@/lib/utils"
+import { Skeleton } from "@/components/ui/skeleton"
 
 interface JobNote {
   id: string

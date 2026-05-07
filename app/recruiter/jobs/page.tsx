@@ -10,6 +10,8 @@ import { getStatusColor, getJobTypeLabel, formatDate } from "@/lib/utils"
 import { Plus, MapPin, Users, Briefcase, ChevronRight, Activity, Zap, Globe, ArrowLeft, Target, Eye, XCircle } from "lucide-react"
 import { toast } from "sonner"
 import { motion, AnimatePresence } from "framer-motion"
+import { cn } from "@/lib/utils"
+import { Skeleton } from "@/components/ui/skeleton"
 
 interface RecruiterJob {
   id: string

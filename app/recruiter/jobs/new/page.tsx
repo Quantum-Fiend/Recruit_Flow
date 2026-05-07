@@ -12,6 +12,7 @@ import { createJobAction } from "@/app/actions/jobs"
 import { ArrowLeft, Plus, Zap, Sparkles, Globe, Target, Shield, ArrowRight, Loader2, Command } from "lucide-react"
 import { toast } from "sonner"
 import { motion } from "framer-motion"
+import { cn } from "@/lib/utils"
 
 export default function NewJobPage() {
   const router = useRouter()
