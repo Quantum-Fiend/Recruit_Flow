@@ -28,8 +28,8 @@ export const updateJobSchema = createJobSchema.partial()
 
 // Application validations
 export const createApplicationSchema = z.object({
-  jobId: z.string().cuid(),
-  resumeUrl: z.string().url('Invalid resume URL'),
+  jobId: z.string().min(1),
+  resumeUrl: z.string().min(1),
   resumeName: z.string().min(1, 'Resume name is required'),
 })
 

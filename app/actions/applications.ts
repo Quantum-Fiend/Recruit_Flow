@@ -70,11 +70,12 @@ export async function createApplicationAction(data: CreateApplicationInput) {
     
     return { success: true, applicationId: application.id }
   } catch (error) {
+    console.error("FULL SUBMIT ERROR:", error)
     logger.error("Create application error", error as Error, {
       action: "createApplicationAction",
       metadata: { jobId: data.jobId }
     })
-    return { error: "Failed to submit application" }
+    return { error: `Failed to submit application: ${(error as Error).message}` }
   }
 }
 
