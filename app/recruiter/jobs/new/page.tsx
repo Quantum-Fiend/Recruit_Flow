@@ -9,8 +9,9 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { createJobAction } from "@/app/actions/jobs"
-import { ArrowLeft } from "lucide-react"
+import { ArrowLeft, Plus, Zap, Sparkles, Globe, Target, Shield, ArrowRight, Loader2, Command } from "lucide-react"
 import { toast } from "sonner"
+import { motion } from "framer-motion"
 
 export default function NewJobPage() {
   const router = useRouter()
@@ -40,162 +41,210 @@ export default function NewJobPage() {
       toast.error(result.error)
       setLoading(false)
     } else {
-      toast.success("Job posted successfully!")
-      router.push("/recruiter/jobs")
+      toast.success("Position Deployed Successfully")
+      router.push("/recruiter/dashboard")
     }
   }
 
   return (
-    <div className="min-h-screen gradient-bg">
-      {/* Navigation */}
-      <nav className="border-b border-white/10 glass sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <Link href="/" className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
-            RecruitFlow
-          </Link>
-          <Link href="/recruiter/jobs">
-            <Button variant="ghost">
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Back to Jobs
+    <motion.div 
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="max-w-[1000px] mx-auto py-12 md:py-20 px-6"
+    >
+      <div className="max-w-3xl mx-auto space-y-12">
+         {/* Navigation */}
+         <Link href="/recruiter/dashboard">
+            <Button variant="ghost" className="rounded-2xl h-12 px-6 group font-bold text-muted-foreground hover:text-foreground">
+               <ArrowLeft className="w-4 h-4 mr-3 transition-transform group-hover:-translate-x-1" />
+               Back to Console
             </Button>
-          </Link>
-        </div>
-      </nav>
+         </Link>
 
-      <div className="container mx-auto px-4 py-12">
-        <div className="max-w-3xl mx-auto">
-          <div className="mb-8 animate-in">
-            <h1 className="text-4xl font-bold mb-2 bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
-              Post a New Job
+         {/* Header Identity */}
+         <header className="space-y-6">
+            <div className="inline-flex items-center gap-3 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-[10px] font-black uppercase tracking-[0.2em]">
+               <Plus className="w-4 h-4" />
+               <span>Mission Deployment</span>
+            </div>
+            <h1 className="h-lg text-sapphire">
+               Deploy New <br /><span className="text-primary">Position.</span>
             </h1>
-            <p className="text-muted-foreground">
-              Fill in the details to create a new job posting
+            <p className="text-xl text-muted-foreground font-medium">
+               Initialize a new talent acquisition sequence within the global engineering pipeline.
             </p>
-          </div>
+         </header>
 
-          <Card className="glass border-white/10">
-            <form onSubmit={handleSubmit}>
-              <CardHeader>
-                <CardTitle>Job Details</CardTitle>
-                <CardDescription>Enter the information for your job posting</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="space-y-2">
-                  <Label htmlFor="title">Job Title *</Label>
-                  <Input
-                    id="title"
-                    placeholder="e.g., Senior Software Engineer"
-                    value={formData.title}
-                    onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                    required
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="description">Job Description *</Label>
-                  <Textarea
-                    id="description"
-                    placeholder="Describe the role, responsibilities, and requirements..."
-                    value={formData.description}
-                    onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                    required
-                    rows={8}
-                    className="resize-none"
-                  />
-                  <p className="text-xs text-muted-foreground">
-                    Minimum 50 characters
-                  </p>
-                </div>
-
-                <div className="grid md:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="location">Location *</Label>
-                    <Input
-                      id="location"
-                      placeholder="e.g., San Francisco, CA"
-                      value={formData.location}
-                      onChange={(e) => setFormData({ ...formData, location: e.target.value })}
-                      required
-                    />
+         {/* Deployment Interface */}
+         <Card className="glass-morphism rounded-[3.5rem] p-4 md:p-14 border-none shadow-2xl relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-80 h-80 bg-primary/5 rounded-full blur-[120px] -z-10" />
+            
+            <form onSubmit={handleSubmit} className="space-y-12">
+               {/* Core Information */}
+               <div className="space-y-8">
+                  <div className="flex items-center gap-5">
+                     <div className="w-16 h-16 sapphire-gradient rounded-2xl flex items-center justify-center text-white shadow-xl shadow-primary/20">
+                        <Target className="w-8 h-8" />
+                     </div>
+                     <div>
+                        <h3 className="text-2xl font-black tracking-tight">Technical Identity</h3>
+                        <p className="text-muted-foreground font-medium">Define the core parameters of the role.</p>
+                     </div>
                   </div>
 
-                  <div className="space-y-2">
-                    <Label htmlFor="experienceLevel">Experience Level *</Label>
-                    <Input
-                      id="experienceLevel"
-                      placeholder="e.g., Mid Level, Senior"
-                      value={formData.experienceLevel}
-                      onChange={(e) => setFormData({ ...formData, experienceLevel: e.target.value })}
-                      required
-                    />
-                  </div>
-                </div>
+                  <div className="grid gap-8">
+                     <div className="space-y-3">
+                        <Label htmlFor="title" className="text-xs font-black uppercase tracking-widest text-muted-foreground ml-1">Position Title</Label>
+                        <Input
+                          id="title"
+                          placeholder="e.g., Senior Infrastructure Engineer"
+                          value={formData.title}
+                          onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                          required
+                          className="h-14 rounded-2xl bg-foreground/5 border-none font-bold text-lg focus-visible:ring-1 focus-visible:ring-primary/30 transition-all"
+                        />
+                     </div>
 
-                <div className="grid md:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label>Job Type *</Label>
-                    <div className="grid grid-cols-2 gap-2">
-                      {["FULL_TIME", "PART_TIME", "CONTRACT", "INTERNSHIP"].map((type) => (
-                        <Button
-                          key={type}
-                          type="button"
-                          variant={formData.type === type ? "default" : "outline"}
-                          onClick={() => setFormData({ ...formData, type: type as "FULL_TIME" | "PART_TIME" | "CONTRACT" | "INTERNSHIP" })}
-                          className="w-full"
-                        >
-                          {type.replace("_", " ")}
-                        </Button>
-                      ))}
-                    </div>
+                     <div className="space-y-3">
+                        <Label htmlFor="description" className="text-xs font-black uppercase tracking-widest text-muted-foreground ml-1">Mission Objective</Label>
+                        <Textarea
+                          id="description"
+                          placeholder="Describe the technical challenges and expected outcomes..."
+                          value={formData.description}
+                          onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                          required
+                          rows={8}
+                          className="rounded-[2rem] bg-foreground/5 border-none font-medium text-lg focus-visible:ring-1 focus-visible:ring-primary/30 transition-all resize-none p-6"
+                        />
+                     </div>
                   </div>
+               </div>
 
-                  <div className="space-y-2">
-                    <Label>Employment Type *</Label>
-                    <div className="grid grid-cols-3 gap-2">
-                      {["OFFICE", "REMOTE", "HYBRID"].map((type) => (
-                        <Button
-                          key={type}
-                          type="button"
-                          variant={formData.employmentType === type ? "default" : "outline"}
-                          onClick={() => setFormData({ ...formData, employmentType: type as "OFFICE" | "REMOTE" | "HYBRID" })}
-                          className="w-full"
-                        >
-                          {type}
-                        </Button>
-                      ))}
-                    </div>
+               {/* Logistics Section */}
+               <div className="grid md:grid-cols-2 gap-8">
+                  <div className="space-y-3">
+                     <Label htmlFor="location" className="text-xs font-black uppercase tracking-widest text-muted-foreground ml-1">Operational Location</Label>
+                     <Input
+                       id="location"
+                       placeholder="e.g., San Francisco / Remote"
+                       value={formData.location}
+                       onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+                       required
+                       className="h-14 rounded-2xl bg-foreground/5 border-none font-bold"
+                     />
                   </div>
-                </div>
+                  <div className="space-y-3">
+                     <Label htmlFor="experienceLevel" className="text-xs font-black uppercase tracking-widest text-muted-foreground ml-1">Experience Tier</Label>
+                     <Input
+                       id="experienceLevel"
+                       placeholder="e.g., L5 / Senior"
+                       value={formData.experienceLevel}
+                       onChange={(e) => setFormData({ ...formData, experienceLevel: e.target.value })}
+                       required
+                       className="h-14 rounded-2xl bg-foreground/5 border-none font-bold"
+                     />
+                  </div>
+               </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="skills">Required Skills *</Label>
+               {/* Configuration Section */}
+               <div className="space-y-8">
+                  <div className="flex items-center gap-4 text-xs font-black uppercase tracking-widest text-muted-foreground">
+                     <Zap className="w-4 h-4 text-primary" />
+                     <span>System Configuration</span>
+                  </div>
+                  <div className="grid md:grid-cols-2 gap-8">
+                     <div className="space-y-4">
+                        <Label className="text-[10px] font-black uppercase tracking-widest opacity-60">Job Type</Label>
+                        <div className="grid grid-cols-2 gap-2">
+                          {["FULL_TIME", "PART_TIME", "CONTRACT", "INTERNSHIP"].map((type) => (
+                            <Button
+                              key={type}
+                              type="button"
+                              variant="ghost"
+                              onClick={() => setFormData({ ...formData, type: type as any })}
+                              className={cn(
+                                "h-11 rounded-xl font-bold text-[10px] uppercase tracking-widest border border-transparent transition-all",
+                                formData.type === type ? "bg-primary/10 text-primary border-primary/20" : "bg-foreground/5 hover:bg-foreground/10"
+                              )}
+                            >
+                              {type.replace("_", " ")}
+                            </Button>
+                          ))}
+                        </div>
+                     </div>
+                     <div className="space-y-4">
+                        <Label className="text-[10px] font-black uppercase tracking-widest opacity-60">Deployment Mode</Label>
+                        <div className="grid grid-cols-3 gap-2">
+                          {["OFFICE", "REMOTE", "HYBRID"].map((type) => (
+                            <Button
+                              key={type}
+                              type="button"
+                              variant="ghost"
+                              onClick={() => setFormData({ ...formData, employmentType: type as any })}
+                              className={cn(
+                                "h-11 rounded-xl font-bold text-[10px] uppercase tracking-widest border border-transparent transition-all",
+                                formData.employmentType === type ? "bg-primary/10 text-primary border-primary/20" : "bg-foreground/5 hover:bg-foreground/10"
+                              )}
+                            >
+                              {type}
+                            </Button>
+                          ))}
+                        </div>
+                     </div>
+                  </div>
+               </div>
+
+               {/* Skills Tagging */}
+               <div className="space-y-3">
+                  <Label htmlFor="skills" className="text-xs font-black uppercase tracking-widest text-muted-foreground ml-1">Required Engineering Stacks</Label>
                   <Input
                     id="skills"
-                    placeholder="e.g., React, TypeScript, Node.js (comma-separated)"
+                    placeholder="React, TypeScript, Node.js, Kubernetes..."
                     value={formData.skills}
                     onChange={(e) => setFormData({ ...formData, skills: e.target.value })}
                     required
+                    className="h-14 rounded-2xl bg-foreground/5 border-none font-bold"
                   />
-                  <p className="text-xs text-muted-foreground">
-                    Separate skills with commas
-                  </p>
-                </div>
+                  <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/40 ml-1">Separate competencies with commas</p>
+               </div>
 
-                <div className="flex gap-4 pt-4">
-                  <Button type="submit" className="flex-1" disabled={loading}>
-                    {loading ? "Posting..." : "Post Job"}
+               {/* Action Footer */}
+               <div className="pt-8 border-t border-foreground/5 flex flex-col sm:flex-row gap-4">
+                  <Button
+                    type="submit"
+                    className="flex-1 h-20 rounded-[2rem] text-2xl font-black sapphire-gradient text-white shadow-2xl shadow-primary/30 group"
+                    disabled={loading}
+                  >
+                    {loading ? (
+                       <span className="flex items-center gap-4">
+                          <Loader2 className="w-8 h-8 animate-spin" />
+                          <span>Deploying...</span>
+                       </span>
+                    ) : (
+                       <span className="flex items-center gap-3">
+                          Deploy Position
+                          <ArrowRight className="w-6 h-6 transition-transform group-hover:translate-x-1" />
+                       </span>
+                    )}
                   </Button>
-                  <Link href="/recruiter/jobs" className="flex-1">
-                    <Button type="button" variant="outline" className="w-full">
+                  <Link href="/recruiter/dashboard" className="sm:w-1/3">
+                    <Button type="button" variant="ghost" className="w-full h-20 rounded-[2rem] font-black text-lg text-muted-foreground hover:bg-foreground/5">
                       Cancel
                     </Button>
                   </Link>
-                </div>
-              </CardContent>
+               </div>
             </form>
-          </Card>
-        </div>
+         </Card>
+
+         {/* System Disclaimer */}
+         <div className="flex flex-col items-center gap-4 text-center opacity-30 px-10">
+            <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest">
+               <Shield className="w-4 h-4" />
+               <span>Enterprise Compliance Verified</span>
+            </div>
+            <p className="text-[10px] font-medium leading-relaxed">By deploying this position, you confirm that all specifications adhere to global employment standards and RecruitFlow's fair recruitment protocol.</p>
+         </div>
       </div>
-    </div>
+    </motion.div>
   )
 }

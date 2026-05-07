@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { getRecruiterDashboardAction } from "@/app/actions/recruiter"
-import { Briefcase, Users, FileText, Plus, ChevronRight, LayoutDashboard, Search, Filter, TrendingUp, UserPlus, Zap, Target } from "lucide-react"
+import { Briefcase, Users, FileText, Plus, ChevronRight, LayoutDashboard, Search, Filter, TrendingUp, UserPlus, Zap, Target, Sparkles, Globe } from "lucide-react"
 import { Skeleton } from "@/components/ui/skeleton"
 import { getJobTypeLabel, formatDate } from "@/lib/utils"
 import { motion, AnimatePresence } from "framer-motion"
@@ -32,26 +32,24 @@ export default function RecruiterDashboard() {
     <motion.div 
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="flex flex-col w-full animate-slide-up"
+      className="flex flex-col w-full animate-slide-up pt-12"
     >
       {/* Dashboard Header */}
-      <header className="w-full mb-16 flex flex-col md:flex-row md:items-end justify-between gap-8">
-        <div className="max-w-2xl">
-           <div className="flex items-center gap-3 mb-6">
-              <div className="w-10 h-10 rounded-xl bg-foreground/5 flex items-center justify-center">
-                 <LayoutDashboard className="w-5 h-5" />
-              </div>
-              <span className="text-xs font-black uppercase tracking-[0.2em] text-muted-foreground">Talent Console</span>
+      <header className="w-full mb-16 flex flex-col md:flex-row md:items-end justify-between gap-10">
+        <div className="max-w-2xl space-y-6">
+           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-[10px] font-black uppercase tracking-widest text-primary">
+              <Zap className="w-3 h-3" />
+              <span>Enterprise Talent Console</span>
            </div>
-           <h1 className="text-6xl md:text-8xl font-black tracking-tighter mb-4">Command <span className="opacity-30">Center</span></h1>
-           <p className="text-xl text-muted-foreground font-medium">Enterprise talent acquisition and pipeline management.</p>
+           <h1 className="h-lg text-sapphire">Command <br /><span className="text-primary">Center.</span></h1>
+           <p className="text-xl text-muted-foreground font-medium">Strategic oversight and pipeline management for the RecruitFlow ecosystem.</p>
         </div>
         
         <div className="flex items-center gap-4">
            <Link href="/recruiter/jobs/new">
-              <Button className="h-16 px-10 rounded-2xl bg-foreground text-background font-black hover:opacity-90 shadow-2xl shadow-foreground/10 flex items-center gap-3">
+              <Button className="btn-sapphire h-16 px-10 shadow-2xl shadow-primary/20 flex items-center gap-4">
                 <Plus className="w-6 h-6" />
-                <span>Deploy New Opening</span>
+                <span>Deploy Position</span>
               </Button>
            </Link>
         </div>
@@ -60,41 +58,41 @@ export default function RecruiterDashboard() {
       {/* Stats Summary Grid */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-16">
         {loading ? (
-          Array(4).fill(0).map((_, i) => <Skeleton key={i} className="h-32 rounded-3xl glass" />)
+          Array(4).fill(0).map((_, i) => <Skeleton key={i} className="h-40 rounded-[2.5rem] glass-morphism" />)
         ) : (
           <>
-            <StatBox label="Active Roles" value={stats.activeJobsCount} icon={<Briefcase />} />
-            <StatBox label="Incoming Flow" value={stats.totalApplicationsCount} icon={<TrendingUp />} />
-            <StatBox label="Awaiting Review" value={stats.pendingApplicationsCount} icon={<UserPlus />} />
-            <StatBox label="Hiring Velocity" value="84%" icon={<Zap />} />
+            <StatBox label="Active Missions" value={stats.activeJobsCount} icon={<Briefcase />} />
+            <StatBox label="Total Profiles" value={stats.totalApplicationsCount} icon={<TrendingUp />} />
+            <StatBox label="Screening Required" value={stats.pendingApplicationsCount} icon={<UserPlus />} />
+            <StatBox label="Hiring Velocity" value="92%" icon={<Zap />} />
           </>
         )}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
         {/* Active Openings Feed */}
-        <div className="lg:col-span-2 space-y-6">
-           <div className="flex items-center justify-between px-4 mb-4">
-              <h2 className="text-2xl font-black tracking-tight">Deployment Pipeline</h2>
-              <Link href="/recruiter/jobs" className="text-[10px] font-black uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors">
-                View All Missions
+        <div className="lg:col-span-2 space-y-10">
+           <div className="flex items-center justify-between px-6 mb-4">
+              <h2 className="text-2xl font-black tracking-tighter uppercase text-muted-foreground/50">Deployment Pipeline</h2>
+              <Link href="/recruiter/jobs" className="text-[10px] font-black uppercase tracking-widest text-primary hover:underline underline-offset-4 transition-all">
+                Access Archives
               </Link>
            </div>
            
            {loading ? (
-             <div className="space-y-4">
-               {[1, 2, 3].map(i => <Skeleton key={i} className="h-44 rounded-3xl glass" />)}
+             <div className="space-y-6">
+               {[1, 2, 3].map(i => <Skeleton key={i} className="h-48 rounded-[2.5rem] glass-morphism" />)}
              </div>
            ) : stats.recentJobs.length === 0 ? (
-             <div className="text-center py-32 glass border-dashed flex flex-col items-center">
-                <Briefcase className="w-16 h-16 mb-6 text-muted-foreground/20" />
-                <h3 className="text-2xl font-black mb-2">No active missions</h3>
+             <div className="text-center py-32 glass-morphism border-dashed rounded-[3rem] flex flex-col items-center">
+                <Briefcase className="w-16 h-16 mb-6 text-muted-foreground/10" />
+                <h3 className="text-3xl font-black mb-4 tracking-tight">No active deployments</h3>
                 <Link href="/recruiter/jobs/new">
-                   <Button variant="outline" className="mt-6 rounded-xl font-black px-8 h-12">Create First Job</Button>
+                   <Button variant="outline" className="mt-8 rounded-xl font-black px-10 h-14 border-border">Initialize First Mission</Button>
                 </Link>
              </div>
            ) : (
-             <div className="space-y-4">
+             <div className="space-y-6">
                {stats.recentJobs.map((job: any, index: number) => (
                  <JobConsoleCard key={job.id} job={job} index={index} />
                ))}
@@ -102,30 +100,34 @@ export default function RecruiterDashboard() {
            )}
         </div>
 
-        {/* Global Pipeline Activity */}
-        <div className="space-y-6">
-           <div className="flex items-center justify-between px-4 mb-4">
-              <h2 className="text-2xl font-black tracking-tight">Recent Activity</h2>
+        {/* Real-time Activity Feed */}
+        <div className="space-y-10">
+           <div className="flex items-center justify-between px-6 mb-4">
+              <h2 className="text-2xl font-black tracking-tighter uppercase text-muted-foreground/50">Telemetry</h2>
            </div>
            
-           <div className="glass p-8 space-y-8">
+           <div className="glass-morphism p-10 space-y-10 rounded-[3rem] relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full blur-3xl -z-10" />
               {loading ? (
-                Array(4).fill(0).map((_, i) => <Skeleton key={i} className="h-12 w-full" />)
+                Array(4).fill(0).map((_, i) => <Skeleton key={i} className="h-16 w-full rounded-2xl" />)
               ) : stats.recentApplications.length === 0 ? (
-                <p className="text-center text-muted-foreground font-medium py-10">Waiting for talent input...</p>
+                <div className="text-center py-10 space-y-4">
+                   <Globe className="w-12 h-12 text-muted-foreground/10 mx-auto" />
+                   <p className="text-sm font-medium text-muted-foreground">Waiting for talent input...</p>
+                </div>
               ) : (
-                <div className="space-y-8 relative">
-                   <div className="absolute left-2.5 top-2 bottom-2 w-px bg-border/50" />
+                <div className="space-y-10 relative">
+                   <div className="absolute left-3 top-2 bottom-2 w-px bg-primary/20" />
                    {stats.recentApplications.map((app: any, index: number) => (
-                     <div key={app.id} className="flex gap-6 relative group">
-                        <div className="w-5 h-5 rounded-full bg-background border-2 border-foreground/20 mt-1 relative z-10 group-hover:border-foreground transition-colors" />
-                        <div className="flex-1 space-y-1">
-                           <p className="text-sm font-bold">
+                     <div key={app.id} className="flex gap-8 relative group">
+                        <div className="w-6 h-6 rounded-full bg-background border-2 border-primary/30 mt-1 relative z-10 group-hover:bg-primary group-hover:border-primary transition-all duration-500 shadow-xl shadow-primary/10" />
+                        <div className="flex-1 space-y-2">
+                           <p className="text-base font-bold leading-tight">
                              <span className="text-foreground">{app.applicant.name}</span>
-                             <span className="text-muted-foreground font-medium"> applied for </span>
-                             <span className="text-foreground">{app.job.title}</span>
+                             <span className="text-muted-foreground font-medium"> engaged </span>
+                             <span className="text-primary">{app.job.title}</span>
                            </p>
-                           <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60">{formatDate(app.appliedAt)}</p>
+                           <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/50">{formatDate(app.appliedAt)}</p>
                         </div>
                      </div>
                    ))}
@@ -133,12 +135,15 @@ export default function RecruiterDashboard() {
               )}
            </div>
            
-           {/* CTA Card */}
-           <div className="glass p-8 bg-foreground/5 flex flex-col gap-6 group overflow-hidden relative">
-              <Sparkles className="w-12 h-12 text-foreground/10 absolute -top-2 -right-2 rotate-12 group-hover:scale-150 transition-transform duration-1000" />
-              <h3 className="text-xl font-black tracking-tight leading-tight">Automate Your <br />Selection Flow</h3>
-              <p className="text-xs font-medium text-muted-foreground leading-relaxed">Leverage RecruitFlow's intelligent filtering to find the perfect candidate 70% faster.</p>
-              <Button className="w-full rounded-xl bg-foreground text-background font-black h-12 text-xs">Unlock Intelligence</Button>
+           {/* Insight Block */}
+           <div className="glass-morphism p-10 sapphire-gradient border-none rounded-[3rem] flex flex-col gap-8 group overflow-hidden relative shadow-2xl shadow-primary/20">
+              <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10" />
+              <Sparkles className="w-16 h-16 text-white/20 absolute -top-4 -right-4 rotate-12 group-hover:scale-150 transition-all duration-1000" />
+              <div className="relative z-10 space-y-4">
+                 <h3 className="text-2xl font-black text-white tracking-tight leading-none">Automate Talent <br />Verification</h3>
+                 <p className="text-sm font-medium text-white/70 leading-relaxed">Activate autonomous screening protocols to identify high-trajectory talent 3x faster.</p>
+              </div>
+              <Button className="w-full rounded-2xl bg-white text-primary font-black h-14 text-sm shadow-2xl relative z-10 hover:bg-zinc-50 transition-all">Unlock Intelligence</Button>
            </div>
         </div>
       </div>
@@ -154,24 +159,26 @@ function JobConsoleCard({ job, index }: { job: any; index: number }) {
       transition={{ duration: 0.5, delay: index * 0.05 }}
     >
       <Link href={`/recruiter/jobs/${job.id}`} className="block group">
-        <Card className="glass glass-hover p-8 border-none flex flex-col md:flex-row md:items-center justify-between gap-8">
-           <div className="flex items-center gap-6 flex-1">
-              <div className="w-16 h-16 rounded-2xl bg-foreground/5 flex items-center justify-center group-hover:bg-foreground group-hover:text-background transition-all duration-700">
-                 <Briefcase className="w-8 h-8" />
+        <Card className="glass-morphism creative-card p-10 border-none flex flex-col md:flex-row md:items-center justify-between gap-10">
+           <div className="flex items-center gap-8 flex-1">
+              <div className="w-20 h-20 rounded-[2rem] bg-primary/5 border border-primary/10 flex items-center justify-center text-primary group-hover:sapphire-gradient group-hover:text-white transition-all duration-700 shadow-xl shadow-primary/5">
+                 <Briefcase className="w-10 h-10" />
               </div>
-              <div className="space-y-2">
-                 <h3 className="text-3xl font-black tracking-tighter">{job.title}</h3>
-                 <div className="flex items-center gap-6 text-[10px] font-black uppercase tracking-widest text-muted-foreground/60">
-                    <span>{job.location}</span>
-                    <span className="w-1 h-1 bg-border rounded-full" />
-                    <span className="flex items-center gap-1.5"><Users className="w-3.5 h-3.5" /> {job._count.applications} Profiles</span>
+              <div className="space-y-3">
+                 <h3 className="text-4xl font-black tracking-tighter group-hover:text-primary transition-colors">{job.title}</h3>
+                 <div className="flex items-center gap-8 text-[10px] font-black uppercase tracking-widest text-muted-foreground/60">
+                    <span className="flex items-center gap-2"><MapPin className="w-4 h-4" /> {job.location}</span>
+                    <span className="w-1.5 h-1.5 bg-primary/30 rounded-full" />
+                    <span className="flex items-center gap-2"><Users className="w-4 h-4" /> {job._count.applications} Profiles Ingested</span>
                  </div>
               </div>
            </div>
            
-           <div className="flex items-center gap-4">
-              <div className="badge-premium">{job.status}</div>
-              <ChevronRight className="w-6 h-6 text-muted-foreground group-hover:translate-x-1 transition-transform" />
+           <div className="flex items-center gap-6">
+              <div className="badge-premium bg-primary/5 text-primary border-primary/10">{job.status}</div>
+              <div className="w-12 h-12 rounded-xl bg-foreground/5 flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-all duration-500">
+                 <ChevronRight className="w-6 h-6" />
+              </div>
            </div>
         </Card>
       </Link>
@@ -181,12 +188,12 @@ function JobConsoleCard({ job, index }: { job: any; index: number }) {
 
 function StatBox({ label, value, icon }: { label: string; value: number | string; icon: React.ReactNode }) {
   return (
-    <Card className="glass glass-hover p-8 text-center border-none flex flex-col items-center group">
-       <div className="w-12 h-12 rounded-2xl bg-foreground/5 flex items-center justify-center text-muted-foreground group-hover:bg-foreground group-hover:text-background transition-all duration-500 mb-6">
+    <Card className="glass-morphism creative-card p-12 text-center border-none flex flex-col items-center group">
+       <div className="w-14 h-14 rounded-2xl bg-primary/5 flex items-center justify-center text-primary group-hover:sapphire-gradient group-hover:text-white transition-all duration-500 mb-8 shadow-xl shadow-primary/5">
           {icon}
        </div>
-       <div className="text-4xl font-black mb-2 tracking-tighter">{value}</div>
-       <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">{label}</p>
+       <div className="text-5xl font-black mb-4 tracking-tighter">{value}</div>
+       <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest opacity-60">{label}</p>
     </Card>
   )
 }

@@ -107,6 +107,7 @@
 .text-sapphire {
   background: linear-gradient(135deg, hsl(var(--foreground)) 30%, hsla(var(--foreground), 0.6) 100%);
   -webkit-background-clip: text;
+  -moz-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
 }

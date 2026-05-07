@@ -12,9 +12,11 @@ import { getJobApplicationsAction, addApplicationNoteAction } from "@/app/action
 import { getJobByIdAction } from "@/app/actions/jobs"
 import { getStatusColor, formatDate } from "@/lib/utils"
 import { getPossibleNextStatuses } from "@/lib/workflow"
-import { ArrowLeft, FileText, MessageSquare } from "lucide-react"
+import { ArrowLeft, FileText, MessageSquare, Target, Users, Zap, Briefcase, ChevronRight, Activity, Globe, LayoutDashboard } from "lucide-react"
 import { toast } from "sonner"
 import { ApplicationStatus } from "@prisma/client"
+import { motion, AnimatePresence } from "framer-motion"
+import { cn } from "@/lib/utils"
 
 interface JobNote {
   id: string
@@ -117,184 +119,187 @@ export default function ApplicantsPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen gradient-bg flex items-center justify-center">
-        <p className="text-muted-foreground">Loading applicants...</p>
+      <div className="max-w-[1200px] mx-auto py-20 px-6 space-y-8">
+         <Skeleton className="h-40 w-full rounded-[3rem] glass-morphism" />
+         <div className="space-y-6">
+            {[1, 2, 3].map(i => <Skeleton key={i} className="h-44 w-full rounded-[2.5rem] glass-morphism" />)}
+         </div>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen gradient-bg">
-      {/* Navigation */}
-      <nav className="border-b border-white/10 glass sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <Link href="/" className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
-            RecruitFlow
-          </Link>
-          <Link href="/recruiter/jobs">
-            <Button variant="ghost">
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Back to Jobs
-            </Button>
-          </Link>
+    <motion.div 
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="max-w-[1300px] mx-auto py-12 md:py-20 px-6 animate-slide-up"
+    >
+      {/* Header Section */}
+      <header className="w-full mb-16 flex flex-col md:flex-row md:items-end justify-between gap-10">
+        <div className="max-w-2xl space-y-6">
+           <Link href="/recruiter/jobs">
+              <Button variant="ghost" className="rounded-2xl h-10 px-4 group font-bold text-muted-foreground hover:text-foreground mb-4">
+                 <ArrowLeft className="w-4 h-4 mr-2 transition-transform group-hover:-translate-x-1" />
+                 Back to Archives
+              </Button>
+           </Link>
+           <h1 className="h-lg text-sapphire">{job?.title} <br /><span className="text-primary text-3xl font-black">Talent Ingestion.</span></h1>
+           <p className="text-xl text-muted-foreground font-medium">Review and manage the active telemetry stream for this position.</p>
         </div>
-      </nav>
-
-      <div className="container mx-auto px-4 py-12">
-        {/* Header */}
-        <div className="mb-8 animate-in">
-          <h1 className="text-4xl font-bold mb-2 bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
-            {job?.title}
-          </h1>
-          <p className="text-muted-foreground">
-            {applications.length} applicants • {job?.location}
-          </p>
+        
+        <div className="flex items-center gap-4">
+           <div className="px-6 py-3 rounded-2xl bg-foreground/5 border border-foreground/10 flex items-center gap-3">
+              <Users className="w-5 h-5 text-primary" />
+              <span className="text-sm font-black">{applications.length} Profiles</span>
+           </div>
         </div>
+      </header>
 
-        {/* Applicants List */}
+      {/* Main Content */}
+      <div className="w-full mb-32 space-y-8">
         {applications.length === 0 ? (
-          <Card className="glass border-white/10 text-center py-12">
-            <CardContent>
-              <FileText className="w-16 h-16 mx-auto mb-4 text-muted-foreground" />
-              <h3 className="text-xl font-semibold mb-2">No Applications Yet</h3>
-              <p className="text-muted-foreground">
-                Applications will appear here once candidates apply
-              </p>
-            </CardContent>
-          </Card>
+          <div className="text-center py-40 glass-morphism w-full border-dashed rounded-[3rem] flex flex-col items-center">
+            <FileText className="w-16 h-16 mb-8 text-muted-foreground/10" />
+            <h3 className="text-3xl font-black mb-4 tracking-tight">No data points received</h3>
+            <p className="text-xl text-muted-foreground max-w-sm font-medium">This deployment has not yet initialized any candidate ingestion sequences.</p>
+          </div>
         ) : (
-          <div className="space-y-4">
-            {applications.map((app) => {
-              const possibleTransitions = getPossibleNextStatuses(app.status as ApplicationStatus)
-              
-              return (
-                <Card key={app.id} className="glass border-white/10">
-                  <CardHeader>
-                    <div className="flex items-start justify-between gap-4">
-                      <div className="flex-1">
-                        <CardTitle className="text-xl mb-2">
-                          {app.applicant.name}
-                        </CardTitle>
-                        <CardDescription>
-                          {app.applicant.email} • Applied {formatDate(app.appliedAt)}
-                        </CardDescription>
-                      </div>
-                      <Badge className={getStatusColor(app.status)}>
-                        {app.status}
-                      </Badge>
-                    </div>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    {/* Resume */}
-                    <div>
-                      <Label className="text-sm text-muted-foreground">Resume</Label>
-                      <div className="flex items-center gap-2 mt-1">
-                        <FileText className="w-4 h-4" />
-                        <a
-                          href={app.resumeUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-primary hover:underline"
-                        >
-                          {app.resumeName}
-                        </a>
-                      </div>
-                    </div>
+          <div className="space-y-6">
+            <AnimatePresence>
+              {applications.map((app, index) => {
+                const possibleTransitions = getPossibleNextStatuses(app.status as ApplicationStatus)
+                const isExpanded = selectedApp?.id === app.id
 
-                    {/* Status Update */}
-                    <div>
-                      <Label className="text-sm text-muted-foreground mb-2 block">
-                        Update Status
-                      </Label>
-                      <div className="flex flex-wrap gap-2">
-                        {/* Current Status (Disabled/Highlighted) */}
-                         <Button
-                            size="sm"
-                            variant="default" // Active look
-                            className="cursor-default opacity-100" // Make it look static but solid
-                          >
-                            {app.status}
-                          </Button>
-
-                        {/* Possible Transitions */}
-                        {possibleTransitions.map((status) => (
-                          <Button
-                            key={status}
-                            size="sm"
-                            variant="outline"
-                            onClick={() => handleStatusUpdate(app.id, status)}
-                          >
-                            Move to {status}
-                          </Button>
-                        ))}
-                        
-                        {possibleTransitions.length === 0 && (
-                           <span className="text-xs text-muted-foreground flex items-center h-9">
-                              {app.status === 'HIRED' ? 'Candidate Hired' : 
-                               app.status === 'WITHDRAWN' ? 'Candidate Withdrawn' : 
-                               app.status === 'OFFER_DECLINED' ? 'Offer Declined' : 
-                               'No actions available'}
-                           </span>
-                        )}
-                      </div>
-                    </div>
-
-                    {/* Notes */}
-                    {app.notes.length > 0 && (
-                      <div>
-                        <Label className="text-sm text-muted-foreground mb-2 block">
-                          Internal Notes
-                        </Label>
-                        <div className="space-y-2">
-                          {app.notes.map((note: JobNote) => (
-                            <div key={note.id} className="p-3 rounded-md bg-muted/50 border border-white/10">
-                              <p className="text-sm">{note.note}</p>
-                              <p className="text-xs text-muted-foreground mt-1">
-                                {note.recruiter.name} • {formatDate(note.createdAt)}
-                              </p>
-                            </div>
-                          ))}
+                return (
+                  <motion.div
+                    key={app.id}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.5, delay: index * 0.05 }}
+                  >
+                    <Card className="glass-morphism creative-card p-2 border-none group">
+                      <CardContent className="p-10 space-y-10">
+                        {/* Identity & Status */}
+                        <div className="flex flex-col md:flex-row md:items-center justify-between gap-10">
+                           <div className="flex items-center gap-8 flex-1">
+                              <div className="w-16 h-16 rounded-[1.5rem] bg-primary/5 border border-primary/10 flex items-center justify-center text-primary group-hover:sapphire-gradient group-hover:text-white transition-all duration-700 shadow-xl shadow-primary/5">
+                                 <Users className="w-8 h-8" />
+                              </div>
+                              <div className="space-y-2">
+                                 <h3 className="text-3xl font-black tracking-tighter group-hover:text-primary transition-colors">{app.applicant.name}</h3>
+                                 <div className="flex items-center gap-6 text-[10px] font-black uppercase tracking-widest text-muted-foreground/60">
+                                    <span>{app.applicant.email}</span>
+                                    <span className="w-1 h-1 bg-border rounded-full" />
+                                    <span>Applied {formatDate(app.appliedAt)}</span>
+                                 </div>
+                              </div>
+                           </div>
+                           <div className={cn("badge-premium px-8 py-3 text-sm", getStatusColor(app.status))}>
+                              {app.status}
+                           </div>
                         </div>
-                      </div>
-                    )}
 
-                    {/* Add Note */}
-                    <div>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => setSelectedApp(selectedApp?.id === app.id ? null : app)}
-                      >
-                        <MessageSquare className="w-4 h-4 mr-2" />
-                        {selectedApp?.id === app.id ? "Cancel" : "Add Note"}
-                      </Button>
+                        {/* Technical Assets & Workflow */}
+                        <div className="grid md:grid-cols-2 gap-10">
+                           <div className="space-y-6">
+                              <div className="flex items-center gap-3 text-[10px] font-black uppercase tracking-widest text-muted-foreground">
+                                 <FileText className="w-4 h-4" />
+                                 <span>Technical Resume</span>
+                              </div>
+                              <a 
+                                 href={app.resumeUrl} 
+                                 target="_blank" 
+                                 rel="noopener noreferrer"
+                                 className="flex items-center justify-between p-6 bg-foreground/5 rounded-2xl border border-foreground/10 hover:border-primary/30 transition-all group/res"
+                              >
+                                 <span className="font-bold text-lg">{app.resumeName}</span>
+                                 <ChevronRight className="w-5 h-5 text-muted-foreground group-hover/res:translate-x-1 transition-all" />
+                              </a>
+                           </div>
 
-                      {selectedApp?.id === app.id && (
-                        <div className="mt-3 space-y-2">
-                          <Textarea
-                            placeholder="Add an internal note about this candidate..."
-                            value={newNote}
-                            onChange={(e) => setNewNote(e.target.value)}
-                            rows={3}
-                          />
-                          <Button
-                            onClick={handleAddNote}
-                            disabled={!newNote.trim() || addingNote}
-                            size="sm"
-                          >
-                            {addingNote ? "Adding..." : "Save Note"}
-                          </Button>
+                           <div className="space-y-6">
+                              <div className="flex items-center gap-3 text-[10px] font-black uppercase tracking-widest text-muted-foreground">
+                                 <Zap className="w-4 h-4" />
+                                 <span>Workflow Optimization</span>
+                              </div>
+                              <div className="flex flex-wrap gap-2">
+                                 {possibleTransitions.map((status) => (
+                                    <Button
+                                       key={status}
+                                       variant="outline"
+                                       className="h-12 px-6 rounded-xl font-black text-xs uppercase tracking-widest border-border hover:bg-primary hover:text-white hover:border-primary transition-all"
+                                       onClick={() => handleStatusUpdate(app.id, status)}
+                                    >
+                                       Move to {status}
+                                    </Button>
+                                 ))}
+                                 {possibleTransitions.length === 0 && (
+                                    <div className="h-12 flex items-center px-6 rounded-xl bg-foreground/5 text-muted-foreground font-black text-[10px] uppercase tracking-widest">
+                                       Sequence Finalized
+                                    </div>
+                                 )}
+                              </div>
+                           </div>
                         </div>
-                      )}
-                    </div>
-                  </CardContent>
-                </Card>
-              )
-            })}
+
+                        {/* Intelligence Notes */}
+                        <div className="space-y-6 pt-6 border-t border-foreground/5">
+                           <div className="flex items-center justify-between">
+                              <div className="flex items-center gap-3 text-[10px] font-black uppercase tracking-widest text-muted-foreground">
+                                 <MessageSquare className="w-4 h-4" />
+                                 <span>Internal Intelligence</span>
+                              </div>
+                              <Button 
+                                 variant="ghost" 
+                                 className="h-8 px-4 rounded-lg font-black text-[10px] uppercase tracking-widest hover:bg-foreground/5"
+                                 onClick={() => setSelectedApp(isExpanded ? null : app)}
+                              >
+                                 {isExpanded ? "Hide Feed" : "Expand Intelligence"}
+                              </Button>
+                           </div>
+
+                           {app.notes.length > 0 && (
+                             <div className="space-y-4">
+                                {app.notes.map((note) => (
+                                   <div key={note.id} className="p-6 bg-foreground/5 rounded-2xl border border-foreground/5 space-y-3">
+                                      <p className="text-base font-medium leading-relaxed">{note.note}</p>
+                                      <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-widest text-muted-foreground/50">
+                                         <span>{note.recruiter.name}</span>
+                                         <span>{formatDate(note.createdAt)}</span>
+                                      </div>
+                                   </div>
+                                ))}
+                             </div>
+                           )}
+
+                           {isExpanded && (
+                             <div className="space-y-4 animate-in slide-in-from-top-2">
+                                <Textarea
+                                   placeholder="Ingest internal note for this profile..."
+                                   value={newNote}
+                                   onChange={(e) => setNewNote(e.target.value)}
+                                   rows={3}
+                                   className="rounded-2xl bg-foreground/5 border-none font-medium text-base focus-visible:ring-1 focus-visible:ring-primary/30"
+                                />
+                                <Button
+                                   onClick={handleAddNote}
+                                   disabled={!newNote.trim() || addingNote}
+                                   className="h-12 px-8 rounded-xl sapphire-gradient text-white font-black text-xs uppercase tracking-widest shadow-xl shadow-primary/20"
+                                >
+                                   {addingNote ? "Ingesting..." : "Deploy Note"}
+                                </Button>
+                             </div>
+                           )}
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </motion.div>
+                )
+              })}
+            </AnimatePresence>
           </div>
         )}
       </div>
-    </div>
+    </motion.div>
   )
 }
-
