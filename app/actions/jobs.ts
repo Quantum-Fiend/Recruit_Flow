@@ -30,7 +30,7 @@ export async function createJobAction(data: CreateJobInput) {
 export async function updateJobAction(jobId: string, data: UpdateJobInput) {
   try {
     const user = await requireRecruiter()
-    
+
     // Verify ownership
     const job = await prisma.job.findUnique({
       where: { id: jobId },
@@ -62,7 +62,7 @@ export async function updateJobAction(jobId: string, data: UpdateJobInput) {
 export async function closeJobAction(jobId: string) {
   try {
     const user = await requireRecruiter()
-    
+
     // Verify ownership
     const job = await prisma.job.findUnique({
       where: { id: jobId },
@@ -149,15 +149,15 @@ export async function getJobsAction(filters?: {
       skills: job.skills.split(',').filter(Boolean),
     }))
 
-    return { 
-      success: true, 
-      jobs: transformedJobs, 
+    return {
+      success: true,
+      jobs: transformedJobs,
       pagination: {
         total,
         pages: Math.ceil(total / limit),
         currentPage: page,
-      }
-    }
+      },
+    };
   } catch (error) {
     console.error("Get jobs error:", error)
     return { error: "Failed to fetch jobs" }
@@ -202,7 +202,7 @@ export async function getJobByIdAction(jobId: string) {
 export async function deleteJobAction(jobId: string) {
   try {
     const user = await requireRecruiter()
-    
+
     // Verify ownership
     const job = await prisma.job.findUnique({
       where: { id: jobId },
