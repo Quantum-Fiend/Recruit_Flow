@@ -6,15 +6,14 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent } from "@/components/ui/card"
 import { toast } from "sonner"
-import { Loader2, ArrowRight, User, Mail, Lock, UserCheck, Briefcase, Command, ShieldCheck } from "lucide-react"
+import { Loader2, ArrowRight, User, Mail, Lock, Briefcase, Command, Sparkles, ShieldCheck } from "lucide-react"
 import { motion } from "framer-motion"
 
 export default function SignupPage() {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
-  const [role, setRole] = useState<"APPLICANT" | "RECRUITER">("APPLICANT")
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -24,145 +23,124 @@ export default function SignupPage() {
     const name = formData.get("name") as string
     const email = formData.get("email") as string
     const password = formData.get("password") as string
+    const role = formData.get("role") as string
 
     try {
-      const response = await fetch("/api/register", {
+      const res = await fetch("/api/auth/signup", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name, email, password, role }),
       })
 
-      if (response.ok) {
-        toast.success("Account initialized successfully.")
+      if (res.ok) {
+        toast.success("Account Created. Initializing ecosystem.")
         router.push("/login")
       } else {
-        const error = await response.text()
-        toast.error(error || "Initialization failed.")
+        const error = await res.text()
+        toast.error(error || "Registration Failed. Identifier already exists.")
       }
     } catch (error) {
-      toast.error("An unexpected error occurred.")
+      toast.error("System Error: Unable to process registration.")
     } finally {
       setLoading(false)
     }
   }
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen py-20 w-full animate-slide-up">
+    <div className="flex flex-col items-center justify-center min-h-[85vh] w-full px-6 py-20">
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
+        initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
-        className="w-full max-w-xl"
+        transition={{ duration: 0.8, ease: [0.23, 1, 0.32, 1] }}
+        className="w-full max-w-[600px]"
       >
-        <Card className="glass p-4 border-none shadow-2xl relative overflow-hidden">
-          <div className="absolute -top-32 -left-32 w-80 h-80 bg-foreground/5 rounded-full blur-[100px] -z-10" />
-          
-          <CardHeader className="p-12 text-center space-y-8">
-            <div className="w-20 h-20 bg-foreground text-background rounded-[2rem] flex items-center justify-center mx-auto shadow-2xl shadow-foreground/10 group">
-              <Command className="w-10 h-10 group-hover:rotate-180 transition-transform duration-700" />
-            </div>
-            <div className="space-y-3">
-              <CardTitle className="text-5xl font-black tracking-tighter">Initialize Account</CardTitle>
-              <CardDescription className="text-muted-foreground font-medium text-xl leading-relaxed">Choose your operational role in the ecosystem.</CardDescription>
-            </div>
+        <div className="text-center mb-12 space-y-4">
+           <motion.div 
+             initial={{ scale: 0.8, opacity: 0 }}
+             animate={{ scale: 1, opacity: 1 }}
+             transition={{ delay: 0.2 }}
+             className="w-20 h-20 bg-primary/10 rounded-[2.5rem] flex items-center justify-center mx-auto mb-8 border border-primary/20 shadow-2xl shadow-primary/10 group"
+           >
+              <User className="w-10 h-10 text-primary group-hover:scale-110 transition-transform duration-500" />
+           </motion.div>
+           <h1 className="h-lg text-sapphire tracking-tighter">Initialize Account.</h1>
+           <p className="text-lg text-muted-foreground font-medium">Create your unique identifier within the RecruitFlow network.</p>
+        </div>
 
-            {/* Premium Role Selector */}
-            <div className="grid grid-cols-2 gap-4">
-              <button
-                type="button"
-                onClick={() => setRole("APPLICANT")}
-                className={`p-6 rounded-2xl border-2 transition-all flex flex-col items-center gap-4 group ${
-                  role === "APPLICANT" 
-                  ? "bg-foreground text-background border-foreground shadow-xl shadow-foreground/10" 
-                  : "bg-foreground/5 border-transparent text-muted-foreground hover:bg-foreground/10"
-                }`}
-              >
-                <div className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all ${
-                  role === "APPLICANT" ? "bg-background text-foreground" : "bg-foreground/10"
-                }`}>
-                  <UserCheck className="w-6 h-6" />
-                </div>
-                <span className="font-black uppercase tracking-widest text-[10px]">Talent</span>
-              </button>
-              
-              <button
-                type="button"
-                onClick={() => setRole("RECRUITER")}
-                className={`p-6 rounded-2xl border-2 transition-all flex flex-col items-center gap-4 group ${
-                  role === "RECRUITER" 
-                  ? "bg-foreground text-background border-foreground shadow-xl shadow-foreground/10" 
-                  : "bg-foreground/5 border-transparent text-muted-foreground hover:bg-foreground/10"
-                }`}
-              >
-                <div className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all ${
-                  role === "RECRUITER" ? "bg-background text-foreground" : "bg-foreground/10"
-                }`}>
-                  <Briefcase className="w-6 h-6" />
-                </div>
-                <span className="font-black uppercase tracking-widest text-[10px]">Recruiter</span>
-              </button>
-            </div>
-          </CardHeader>
+        <Card className="glass-morphism rounded-[3rem] p-2 border-none shadow-2xl shadow-primary/5 group overflow-hidden relative">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-[100px] -z-10" />
           
-          <CardContent className="p-12 pt-0">
+          <CardContent className="p-12 space-y-10">
             <form onSubmit={handleSubmit} className="space-y-8">
-              <div className="grid gap-6">
-                <div className="space-y-3">
-                  <Label htmlFor="name" className="text-xs font-black uppercase tracking-widest text-muted-foreground ml-1">Identity Name</Label>
+              <div className="grid md:grid-cols-2 gap-8">
+                <div className="space-y-4">
+                  <Label htmlFor="name" className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-2">Full Identity</Label>
                   <div className="relative">
-                    <User className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                    <Input id="name" name="name" placeholder="John Doe" required className="h-14 pl-12 rounded-xl bg-foreground/5 border-none font-bold text-lg" />
+                    <User className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground/50" />
+                    <Input id="name" name="name" placeholder="John Doe" required className="h-16 pl-16 rounded-2xl bg-foreground/5 border-none font-bold text-lg" />
                   </div>
                 </div>
-                <div className="space-y-3">
-                  <Label htmlFor="email" className="text-xs font-black uppercase tracking-widest text-muted-foreground ml-1">Communication Channel</Label>
+                <div className="space-y-4">
+                  <Label htmlFor="email" className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-2">Work Email</Label>
                   <div className="relative">
-                    <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                    <Input id="email" name="email" type="email" placeholder="john@example.com" required className="h-14 pl-12 rounded-xl bg-foreground/5 border-none font-bold text-lg" />
-                  </div>
-                </div>
-                <div className="space-y-3">
-                  <Label htmlFor="password" className="text-xs font-black uppercase tracking-widest text-muted-foreground ml-1">Secure Key</Label>
-                  <div className="relative">
-                    <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                    <Input id="password" name="password" type="password" required className="h-14 pl-12 rounded-xl bg-foreground/5 border-none font-bold text-lg" />
+                    <Mail className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground/50" />
+                    <Input id="email" name="email" type="email" placeholder="name@company.com" required className="h-16 pl-16 rounded-2xl bg-foreground/5 border-none font-bold text-lg" />
                   </div>
                 </div>
               </div>
-              
-              <Button 
-                type="submit" 
-                className="w-full h-20 rounded-[2rem] bg-foreground text-background font-black text-2xl shadow-2xl shadow-foreground/10 hover:opacity-90 group transition-all" 
-                disabled={loading}
-              >
-                {loading ? (
-                  <Loader2 className="w-8 h-8 animate-spin" />
-                ) : (
-                  <span className="flex items-center gap-4">
-                    Deploy Profile
-                    <ArrowRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
+
+              <div className="space-y-4">
+                <Label htmlFor="password" className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-2">Master Key</Label>
+                <div className="relative">
+                  <Lock className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground/50" />
+                  <Input id="password" name="password" type="password" required className="h-16 pl-16 rounded-2xl bg-foreground/5 border-none font-bold text-lg" />
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-2">Professional Capacity</Label>
+                <div className="grid grid-cols-2 gap-4">
+                  <label className="relative cursor-pointer group">
+                    <input type="radio" name="role" value="APPLICANT" className="peer sr-only" defaultChecked />
+                    <div className="p-6 rounded-2xl bg-foreground/5 border border-transparent peer-checked:border-primary/50 peer-checked:bg-primary/5 transition-all flex flex-col items-center gap-3">
+                       <User className="w-6 h-6 text-muted-foreground group-hover:text-primary transition-colors" />
+                       <span className="text-sm font-black uppercase tracking-widest">Candidate</span>
+                    </div>
+                  </label>
+                  <label className="relative cursor-pointer group">
+                    <input type="radio" name="role" value="RECRUITER" className="peer sr-only" />
+                    <div className="p-6 rounded-2xl bg-foreground/5 border border-transparent peer-checked:border-primary/50 peer-checked:bg-primary/5 transition-all flex flex-col items-center gap-3">
+                       <Briefcase className="w-6 h-6 text-muted-foreground group-hover:text-primary transition-colors" />
+                       <span className="text-sm font-black uppercase tracking-widest">Recruiter</span>
+                    </div>
+                  </label>
+                </div>
+              </div>
+
+              <Button type="submit" className="w-full h-18 rounded-2xl sapphire-gradient text-white font-black text-xl shadow-2xl shadow-primary/20 hover:opacity-95 group transition-all h-16" disabled={loading}>
+                {loading ? <Loader2 className="w-6 h-6 animate-spin" /> : (
+                  <span className="flex items-center gap-3">
+                    Initialize Deployment
+                    <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                   </span>
                 )}
               </Button>
             </form>
+
+            <div className="pt-8 border-t border-foreground/5 text-center">
+               <p className="text-sm font-medium text-muted-foreground">
+                  Already have an identifier?{" "}
+                  <Link href="/login" className="text-primary font-black hover:underline underline-offset-4 ml-1">
+                    Enter System
+                  </Link>
+               </p>
+            </div>
           </CardContent>
-          
-          <CardFooter className="p-12 border-t border-foreground/5 justify-center bg-foreground/[0.01]">
-            <p className="text-sm font-medium text-muted-foreground">
-              Already integrated?{" "}
-              <Link href="/login" className="text-foreground font-black hover:underline underline-offset-4">
-                Access System
-              </Link>
-            </p>
-          </CardFooter>
         </Card>
 
-        {/* Legal Disclaimer */}
-        <div className="mt-12 flex flex-col items-center gap-4 text-center opacity-30 px-10">
-           <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest">
-              <ShieldCheck className="w-4 h-4" />
-              <span>Identity Protection Active</span>
-           </div>
-           <p className="text-[10px] font-medium leading-relaxed">By initializing an account, you agree to our Enterprise Terms of Service and Global Privacy Protocol.</p>
+        <div className="mt-12 flex items-center justify-center gap-3 text-muted-foreground/40 font-black uppercase tracking-widest text-[10px]">
+           <ShieldCheck className="w-4 h-4" />
+           <span>Secure Ecosystem Protocol Active</span>
         </div>
       </motion.div>
     </div>

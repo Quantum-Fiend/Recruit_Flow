@@ -1,12 +1,15 @@
 import type { Metadata } from "next"
-import { Inter } from "next/font/google"
+import { Plus_Jakarta_Sans } from "next/font/google"
 import "./globals.css"
 import { Toaster } from "sonner"
 import { ThemeProvider } from "@/components/theme-provider"
 import { SessionProvider } from "@/components/session-provider"
 import { Navbar } from "@/components/navbar"
 
-const inter = Inter({ subsets: ["latin"] })
+const jakarta = Plus_Jakarta_Sans({ 
+  subsets: ["latin"],
+  variable: '--font-jakarta',
+})
 
 export const metadata: Metadata = {
   title: "RecruitFlow | The Advanced Hiring Engine",
@@ -20,7 +23,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={inter.className}>
+      <body className={`${jakarta.variable} font-sans`}>
         <SessionProvider>
           <ThemeProvider
             attribute="class"
