@@ -74,8 +74,9 @@
 .text-gradient {
   background: linear-gradient(135deg, #ffffff 0%, #a1a1aa 100%);
   -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  -moz-background-clip: text;
   background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 .heading-xl {
