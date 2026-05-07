@@ -2,7 +2,6 @@ import NextAuth, { DefaultSession } from "next-auth"
 import { PrismaAdapter } from "@auth/prisma-adapter"
 import CredentialsProvider from "next-auth/providers/credentials"
 import { prisma } from "@/lib/prisma"
-import { PrismaClient } from "@prisma/client"
 import bcrypt from "bcryptjs"
 import { signInSchema } from "@/lib/validations"
 
@@ -20,7 +19,8 @@ declare module "next-auth" {
 }
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
-  adapter: PrismaAdapter(prisma as unknown as PrismaClient) as any,
+  // @ts-expect-error - PrismaAdapter type mismatch in NextAuth v5 beta
+  adapter: PrismaAdapter(prisma),
   session: {
     strategy: "jwt",
   },

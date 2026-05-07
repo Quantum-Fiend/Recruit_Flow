@@ -53,11 +53,8 @@ export default function JobDetailsPage() {
     return () => { ignore = true }
   }, [params.id])
 
-  const handleApply = async () => {
-    // In a real app, this would open a dialog with resume upload
-    // For now, we'll simulate it
-    toast.info("Resume upload feature coming soon! For demo, please sign in first.")
-    router.push("/login")
+  const handleApply = () => {
+    router.push(`/jobs/${params.id}/apply`)
   }
 
   if (loading) {

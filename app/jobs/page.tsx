@@ -32,8 +32,9 @@ export default function JobsPage() {
   useEffect(() => {
     let ignore = false;
     
-    async function init() {
-      const result = await getJobsAction()
+    async function loadJobs() {
+      setLoading(true)
+      const result = await getJobsAction({ search })
       if (!ignore) {
         if (result.success && result.jobs) {
           setJobs(result.jobs)
@@ -42,14 +43,17 @@ export default function JobsPage() {
       }
     }
 
-    init()
-    return () => { ignore = true }
-  }, [])
+    const timer = setTimeout(() => {
+      loadJobs()
+    }, 500) // Debounce search
 
-  const filteredJobs = jobs.filter(job =>
-    job.title.toLowerCase().includes(search.toLowerCase()) ||
-    job.location.toLowerCase().includes(search.toLowerCase())
-  )
+    return () => {
+      ignore = true
+      clearTimeout(timer)
+    }
+  }, [search])
+
+  const filteredJobs = jobs // Now handled by server
 
   return (
     <div className="min-h-screen gradient-bg">

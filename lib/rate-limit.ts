@@ -18,7 +18,7 @@ export async function checkRateLimit(key: string, type: 'api' | 'auth' = 'auth')
     await limiter.consume(key)
     return { success: true }
   } catch (rejRes) {
-    const msBeforeNext = (rejRes as any).msBeforeNext || 1000
+    const msBeforeNext = (rejRes as { msBeforeNext?: number })?.msBeforeNext || 1000
     return { 
       success: false, 
       error: `Too many requests. Please try again in ${Math.round(msBeforeNext / 1000)}s.`,

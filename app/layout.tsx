@@ -6,6 +6,7 @@ import { Toaster } from "sonner"
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"),
   title: "RecruitFlow | Modern Applicant Tracking System",
   description: "Streamline your hiring process with RecruitFlow. Manage job postings, track applications, and optimize your recruitment workflow with our production-grade ATS.",
   keywords: ["ATS", "recruitment", "hiring", "job board", "applicant tracking", "hiring software", "recruiter tools"],

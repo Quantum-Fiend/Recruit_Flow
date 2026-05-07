@@ -4,7 +4,7 @@ import { prisma } from "@/lib/prisma"
 import { requireRecruiter } from "@/lib/auth-utils"
 import { createJobSchema, updateJobSchema, type CreateJobInput, type UpdateJobInput } from "@/lib/validations"
 import { revalidatePath } from "next/cache"
-import { Prisma, JobStatus, JobType } from "@prisma/client"
+import type { Prisma, JobStatus, JobType } from "@prisma/client"
 
 export async function createJobAction(data: CreateJobInput) {
   try {
@@ -14,6 +14,7 @@ export async function createJobAction(data: CreateJobInput) {
     const job = await prisma.job.create({
       data: {
         ...validated,
+        skills: validated.skills.join(','),
         recruiterId: user.id,
       },
     })
@@ -43,7 +44,10 @@ export async function updateJobAction(jobId: string, data: UpdateJobInput) {
 
     await prisma.job.update({
       where: { id: jobId },
-      data: validated,
+      data: {
+        ...validated,
+        skills: validated.skills ? validated.skills.join(',') : undefined,
+      },
     })
 
     revalidatePath("/recruiter/jobs")
@@ -105,13 +109,13 @@ export async function getJobsAction(filters?: {
     }
 
     if (filters?.location) {
-      where.location = { contains: filters.location, mode: 'insensitive' }
+      where.location = { contains: filters.location }
     }
 
     if (filters?.search) {
       where.OR = [
-        { title: { contains: filters.search, mode: 'insensitive' } },
-        { description: { contains: filters.search, mode: 'insensitive' } },
+        { title: { contains: filters.search } },
+        { description: { contains: filters.search } },
       ]
     }
 
@@ -140,9 +144,14 @@ export async function getJobsAction(filters?: {
       prisma.job.count({ where }),
     ])
 
+    const transformedJobs = jobs.map((job: any) => ({
+      ...job,
+      skills: job.skills.split(',').filter(Boolean),
+    }))
+
     return { 
       success: true, 
-      jobs, 
+      jobs: transformedJobs, 
       pagination: {
         total,
         pages: Math.ceil(total / limit),
@@ -178,7 +187,12 @@ export async function getJobByIdAction(jobId: string) {
       return { error: "Job not found" }
     }
 
-    return { success: true, job }
+    const transformedJob = {
+      ...job,
+      skills: job.skills.split(',').filter(Boolean),
+    }
+
+    return { success: true, job: transformedJob }
   } catch (error) {
     console.error("Get job error:", error)
     return { error: "Failed to fetch job" }

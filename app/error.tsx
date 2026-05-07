@@ -1,5 +1,6 @@
 'use client'
 
+import Link from 'next/link'
 import { useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { logger } from '@/lib/monitoring'
@@ -23,7 +24,7 @@ export default function Error({
       </div>
       <h1 className="text-3xl font-bold tracking-tight mb-2">Something went wrong</h1>
       <p className="text-muted-foreground mb-8 max-w-md">
-        We've encountered an unexpected error. Our team has been notified and we're working to fix it.
+        We&apos;ve encountered an unexpected error. Our team has been notified and we&apos;re working to fix it.
       </p>
       <div className="flex gap-4">
         <Button onClick={() => reset()} size="lg" className="gap-2">
@@ -31,7 +32,7 @@ export default function Error({
           Try again
         </Button>
         <Button variant="outline" size="lg" asChild>
-          <a href="/">Go to Home</a>
+          <Link href="/">Go to Home</Link>
         </Button>
       </div>
       {process.env.NODE_ENV === 'development' && (

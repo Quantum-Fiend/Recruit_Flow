@@ -7,9 +7,8 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "sqlite"
   url      = env("DATABASE_URL")
-
 }
 
 // User model - Supports Applicants, Recruiters, and Admins
@@ -47,12 +46,12 @@ enum UserRole {
 model Job {
   id              String         @id @default(cuid())
   title           String
-  description     String         @db.Text
+  description     String
   location        String
   type            JobType        @default(FULL_TIME)
   employmentType  EmploymentType @default(OFFICE)
   experienceLevel String         // e.g., "Entry Level", "Mid Level", "Senior"
-  skills          String[]       // Array of required skills
+  skills          String         // Comma-separated list for SQLite compatibility
   status          JobStatus      @default(OPEN)
   recruiterId     String
   
@@ -156,7 +155,7 @@ model ApplicationNote {
   id            String   @id @default(cuid())
   applicationId String
   recruiterId   String
-  note          String   @db.Text
+  note          String
   createdAt     DateTime @default(now())
 
   // Relations

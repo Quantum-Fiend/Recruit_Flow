@@ -34,6 +34,7 @@ export async function POST(req: Request) {
     const job = await prisma.job.create({
       data: {
         ...validatedData,
+        skills: validatedData.skills.join(','),
         recruiterId: session.user.id,
       },
     })
@@ -68,9 +69,9 @@ export async function GET(req: Request) {
 
     if (query) {
        where.OR = [
-        { title: { contains: query, mode: 'insensitive' } },
-        { description: { contains: query, mode: 'insensitive' } },
-        { location: { contains: query, mode: 'insensitive' } },
+        { title: { contains: query } },
+        { description: { contains: query } },
+        { location: { contains: query } },
        ]
     }
 

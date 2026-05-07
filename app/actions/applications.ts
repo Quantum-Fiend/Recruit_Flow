@@ -12,6 +12,8 @@ import {
 } from "@/lib/validations"
 import { revalidatePath } from "next/cache"
 import { sendApplicationReceivedEmail, sendStatusUpdateEmail } from "@/lib/email"
+import { logger, analytics } from "@/lib/monitoring"
+import { isValidTransition } from "@/lib/workflow"
 
 export async function createApplicationAction(data: CreateApplicationInput) {
   try {
@@ -76,8 +78,6 @@ export async function createApplicationAction(data: CreateApplicationInput) {
   }
 }
 
-import { isValidTransition } from "@/lib/workflow"
-import { logger, analytics } from "@/lib/monitoring"
 
 export async function updateApplicationStatusAction(data: UpdateApplicationStatusInput) {
   try {
