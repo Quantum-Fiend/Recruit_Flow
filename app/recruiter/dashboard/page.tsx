@@ -8,6 +8,7 @@ import { getJobsAction } from "@/app/actions/jobs"
 import { Briefcase, Users, TrendingUp, Plus, LayoutDashboard, Sparkles, ChevronRight, ArrowUpRight, Search, Filter } from "lucide-react"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Badge } from "@/components/ui/badge"
+import { cn, formatDate } from "@/lib/utils"
 
 interface RecentJob {
   id: string
@@ -247,5 +248,3 @@ function HealthMetric({ label, value }: { label: string; value: string }) {
   )
 }
 
-import { cn } from "@/lib/utils"
-import { formatDate } from "@/lib/utils"

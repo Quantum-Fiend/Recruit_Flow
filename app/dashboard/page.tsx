@@ -8,7 +8,8 @@ import { Button } from "@/components/ui/button"
 import { getMyApplicationsAction, withdrawApplicationAction, declineOfferAction } from "@/app/actions/applications"
 import { toast } from "sonner"
 import { getStatusColor, formatDate, getJobTypeLabel } from "@/lib/utils"
-import { Briefcase, MapPin, Calendar, FileText, ArrowRight, XCircle, AlertCircle, CheckCircle2 } from "lucide-react"
+import { Briefcase, MapPin, Calendar, FileText, ArrowRight, XCircle, AlertCircle, CheckCircle2, LayoutDashboard, Sparkles } from "lucide-react"
+import { cn } from "@/lib/utils"
 import { Skeleton } from "@/components/ui/skeleton"
 
 interface Application {
@@ -212,4 +213,3 @@ function StatBox({ label, value, icon, color }: { label: string; value: number |
   )
 }
 
-import { LayoutDashboard, Sparkles } from "lucide-react"

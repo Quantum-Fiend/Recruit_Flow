@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button"
 import { getJobByIdAction } from "@/app/actions/jobs"
 import { createApplicationAction } from "@/app/actions/applications"
 import { LocalUpload } from "@/components/local-upload"
-import { ArrowLeft, FileText, CheckCircle2, Sparkles, ShieldCheck, Zap, Briefcase } from "lucide-react"
+import { ArrowLeft, FileText, CheckCircle2, Sparkles, ShieldCheck, Zap, Briefcase, ArrowRight, Loader2 } from "lucide-react"
 import { toast } from "sonner"
 import { Skeleton } from "@/components/ui/skeleton"
 
@@ -224,4 +224,3 @@ function FeatureBox({ icon, label, description }: { icon: React.ReactNode; label
   )
 }
 
-import { Loader2 } from "lucide-react"
