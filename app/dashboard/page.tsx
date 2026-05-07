@@ -5,7 +5,8 @@ import Link from "next/link"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { getMyApplicationsAction } from "@/app/actions/applications"
+import { getMyApplicationsAction, withdrawApplicationAction, declineOfferAction } from "@/app/actions/applications"
+import { toast } from "sonner"
 import { getStatusColor, formatDate, getJobTypeLabel } from "@/lib/utils"
 import { Briefcase, MapPin, Calendar } from "lucide-react"
 
@@ -129,27 +130,45 @@ export default function ApplicantDashboard() {
                       
                       {application.status === 'OFFER' && (
                          <div className="flex gap-2">
-                           {/* Add Accept/Decline logic here later or just Decline for now */}
-                           <form action={async () => {
-                              if(confirm('Are you sure you want to decline this offer?')) {
-                                await import("@/app/actions/applications").then(mod => mod.declineOfferAction(application.id))
-                              }
-                           }}>
-                              <Button variant="destructive" size="sm" type="submit">Decline Offer</Button>
-                           </form>
+                            <Button 
+                              variant="destructive" 
+                              size="sm" 
+                              onClick={async () => {
+                                if(confirm('Are you sure you want to decline this offer?')) {
+                                  const result = await declineOfferAction(application.id)
+                                  if (result.success) {
+                                    toast.success("Offer declined")
+                                    loadApplications()
+                                  } else {
+                                    toast.error(result.error || "Failed to decline offer")
+                                  }
+                                }
+                              }}
+                            >
+                              Decline Offer
+                            </Button>
                          </div>
                       )}
 
                       {['APPLIED', 'SHORTLISTED', 'INTERVIEW'].includes(application.status) && (
-                         <form action={async () => {
+                         <Button 
+                           variant="ghost" 
+                           size="sm" 
+                           className="text-red-400 hover:text-red-300 hover:bg-red-400/10"
+                           onClick={async () => {
                              if(confirm('Are you sure you want to withdraw your application?')) {
-                               await import("@/app/actions/applications").then(mod => mod.withdrawApplicationAction(application.id))
+                               const result = await withdrawApplicationAction(application.id)
+                               if (result.success) {
+                                 toast.success("Application withdrawn")
+                                 loadApplications()
+                               } else {
+                                 toast.error(result.error || "Failed to withdraw application")
+                               }
                              }
-                           }}>
-                           <Button variant="ghost" size="sm" type="submit" className="text-red-400 hover:text-red-300 hover:bg-red-400/10">
-                             Withdraw
-                           </Button>
-                         </form>
+                           }}
+                         >
+                           Withdraw
+                         </Button>
                       )}
                   </div>
                 </CardContent>
