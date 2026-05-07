@@ -2,132 +2,156 @@
 
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { Briefcase, Users, Zap, Shield, Sparkles, ArrowRight, Globe, Star, Command, MousePointer2, Layout } from "lucide-react"
-import { motion, type Variants } from "framer-motion"
+import { Briefcase, Users, Zap, Shield, Sparkles, ArrowRight, Globe, Star, Command, MousePointer2, Layout, Layers, Cpu, Globe2 } from "lucide-react"
+import { motion, useScroll, useTransform } from "framer-motion"
+import { useRef } from "react"
 
 export default function LandingPage() {
-  const containerVariants: Variants = {
+  const containerRef = useRef(null)
+  
+  const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
-      transition: { staggerChildren: 0.1, delayChildren: 0.2 }
+      transition: { staggerChildren: 0.15, delayChildren: 0.3 }
     }
   }
 
-  const itemVariants: Variants = {
-    hidden: { y: 20, opacity: 0 },
-    visible: { y: 0, opacity: 1, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } }
+  const itemVariants = {
+    hidden: { y: 30, opacity: 0 },
+    visible: { y: 0, opacity: 1, transition: { duration: 0.8, ease: [0.23, 1, 0.32, 1] } }
   }
 
   return (
     <motion.div 
+      ref={containerRef}
       initial="hidden"
       animate="visible"
       variants={containerVariants}
       className="flex flex-col items-center w-full"
     >
-      {/* Hero Section - The 'Advanced' Look */}
-      <section className="w-full pt-10 pb-32 flex flex-col items-center text-center">
-        <motion.div variants={itemVariants} className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-foreground/5 border border-foreground/10 text-[10px] font-black uppercase tracking-[0.2em] text-foreground/70 mb-12">
-          <Command className="w-3.5 h-3.5" />
-          <span>System Version 4.0 Stable</span>
+      {/* Hero Section - The Sapphire Tier */}
+      <section className="w-full pt-16 pb-40 flex flex-col items-center text-center relative">
+        <motion.div 
+          variants={itemVariants}
+          className="inline-flex items-center gap-3 px-5 py-2 rounded-2xl bg-primary/10 border border-primary/20 text-xs font-black uppercase tracking-[0.25em] text-primary mb-12 shadow-2xl shadow-primary/5"
+        >
+          <Sparkles className="w-4 h-4" />
+          <span>Next-Gen Talent Acquisition</span>
         </motion.div>
         
-        <motion.h1 variants={itemVariants} className="text-hero text-7xl md:text-9xl mb-12 max-w-5xl">
-          The Talent <br />
-          <span className="opacity-40">Operating</span> System
+        <motion.h1 
+          variants={itemVariants}
+          className="h-xl text-sapphire mb-12 max-w-6xl"
+        >
+          Engineering <br />
+          <span className="opacity-40">Elite</span> Teams.
         </motion.h1>
         
-        <motion.p variants={itemVariants} className="text-xl md:text-2xl text-muted-foreground max-w-3xl font-medium leading-relaxed mb-16 px-4">
-          Experience the most advanced talent engine ever built. Minimalist design. Maximum performance. Built for the speed of tomorrow.
+        <motion.p 
+          variants={itemVariants}
+          className="text-xl md:text-2xl text-muted-foreground max-w-3xl font-medium leading-relaxed mb-20 px-6"
+        >
+          RecruitFlow is the definitive talent infrastructure for world-class engineering teams. 
+          Build your legacy with the most advanced ATS ever conceived.
         </motion.p>
 
         <motion.div variants={itemVariants} className="flex flex-col sm:flex-row items-center gap-6 w-full justify-center px-4">
           <Link href="/signup" className="w-full sm:w-auto">
-            <Button className="btn-advanced h-16 px-12 bg-foreground text-background hover:bg-foreground/90 w-full sm:w-auto text-xl shadow-2xl shadow-foreground/10 group">
-              Start Building Your Team
-              <ArrowRight className="w-5 h-5 ml-2 transition-transform group-hover:translate-x-1" />
+            <Button className="btn-sapphire group min-w-[240px]">
+              Deploy Infrastructure
+              <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
             </Button>
           </Link>
           <Link href="/jobs" className="w-full sm:w-auto">
-            <Button variant="ghost" className="h-16 px-12 rounded-2xl border-border hover:bg-foreground/5 w-full sm:w-auto font-black text-lg">
-              Explore The Pipeline
+            <Button variant="ghost" className="h-14 px-10 rounded-2xl font-black text-lg hover:bg-primary/5 text-foreground/70 hover:text-foreground">
+              Explore Network
             </Button>
           </Link>
         </motion.div>
       </section>
 
-      {/* Advanced Bento Feature Section */}
-      <section className="w-full py-32 border-t border-border">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-6xl mx-auto">
-           {/* Primary Feature */}
-           <motion.div variants={itemVariants} className="md:col-span-2 glass glass-hover p-12 flex flex-col justify-between group min-h-[400px]">
-              <div className="w-16 h-16 rounded-3xl bg-foreground/5 border border-foreground/10 flex items-center justify-center group-hover:bg-foreground group-hover:text-background transition-all duration-700">
-                 <Zap className="w-8 h-8" />
+      {/* Creative Bento Grid - Intelligence Section */}
+      <section className="w-full py-40 border-t border-border/50">
+        <div className="bento-container max-w-7xl mx-auto px-4">
+           {/* Primary Intelligence Block */}
+           <motion.div variants={itemVariants} className="bento-item lg:col-span-8 creative-card glass-morphism min-h-[500px] flex flex-col justify-end group">
+              <div className="absolute top-12 right-12 w-32 h-32 bg-primary/10 rounded-full blur-[60px] group-hover:bg-primary/20 transition-all duration-1000" />
+              <div className="space-y-6">
+                 <div className="w-16 h-16 rounded-3xl sapphire-gradient flex items-center justify-center text-white shadow-2xl shadow-primary/20">
+                    <Cpu className="w-8 h-8" />
+                 </div>
+                 <h2 className="text-5xl font-black tracking-tighter leading-none">AI-Assisted <br />Vector Screening</h2>
+                 <p className="text-lg text-muted-foreground font-medium max-w-md leading-relaxed">Our proprietary algorithms analyze candidate trajectories to predict long-term performance and cultural alignment with 94% accuracy.</p>
+              </div>
+           </motion.div>
+
+           {/* Velocity Block */}
+           <motion.div variants={itemVariants} className="bento-item lg:col-span-4 creative-card glass-morphism flex flex-col justify-between group">
+              <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-all duration-500">
+                 <Zap className="w-6 h-6" />
+              </div>
+              <div className="space-y-4">
+                 <h3 className="text-3xl font-black tracking-tight">Zero-Latency Flow</h3>
+                 <p className="text-muted-foreground font-medium text-sm leading-relaxed">Experience a pipeline that moves as fast as your thoughts. Optimized for extreme recruiting speed.</p>
+              </div>
+           </motion.div>
+
+           {/* Global Scale Block */}
+           <motion.div variants={itemVariants} className="bento-item lg:col-span-4 creative-card glass-morphism flex flex-col gap-8 group">
+              <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
+                 <Globe2 className="w-6 h-6" />
               </div>
               <div>
-                 <h2 className="text-4xl font-black mb-4 tracking-tighter">Hyper-Fast Pipelines</h2>
-                 <p className="text-lg text-muted-foreground font-medium max-w-md">Our proprietary engine processes thousands of applications per second with zero latency. Review candidates as fast as you can think.</p>
+                 <h3 className="text-2xl font-black mb-3">Global Sourcing</h3>
+                 <p className="text-muted-foreground font-medium text-sm leading-relaxed">Connect with talent across 140+ countries with localized compliance and automated screening.</p>
               </div>
            </motion.div>
 
-           {/* Secondary Feature */}
-           <motion.div variants={itemVariants} className="glass glass-hover p-12 flex flex-col gap-8 group">
-              <div className="w-12 h-12 rounded-2xl bg-foreground/5 border border-foreground/10 flex items-center justify-center group-hover:scale-110 transition-transform duration-500">
-                 <Shield className="w-6 h-6" />
+           {/* Security Block */}
+           <motion.div variants={itemVariants} className="bento-item lg:col-span-8 creative-card sapphire-gradient p-12 group overflow-hidden">
+              <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10" />
+              <div className="relative z-10 flex flex-col md:flex-row md:items-end justify-between h-full gap-8">
+                 <div className="max-w-md space-y-6">
+                    <Shield className="w-16 h-16 text-white/40 mb-4" />
+                    <h2 className="text-5xl font-black text-white tracking-tighter leading-none">Hardened <br />Data Integrity</h2>
+                    <p className="text-lg text-white/70 font-medium leading-relaxed">Bank-grade encryption for every application, resume, and interview note. Your talent data is your most valuable asset.</p>
+                 </div>
+                 <Button className="h-16 px-10 rounded-2xl bg-white text-primary font-black hover:bg-zinc-100 shadow-2xl">View Security Audit</Button>
               </div>
-              <div>
-                 <h3 className="text-2xl font-black mb-2 tracking-tight">Core Encryption</h3>
-                 <p className="text-muted-foreground font-medium text-sm leading-relaxed">Enterprise-grade security built into the fundamental architecture of the platform.</p>
-              </div>
-           </motion.div>
-
-           {/* Small Bento Item */}
-           <motion.div variants={itemVariants} className="glass glass-hover p-8 flex items-center gap-6 group">
-              <MousePointer2 className="w-8 h-8 text-foreground/40 group-hover:text-foreground transition-colors" />
-              <span className="font-black uppercase tracking-widest text-[10px]">Precision Selection</span>
-           </motion.div>
-
-           {/* Small Bento Item 2 */}
-           <motion.div variants={itemVariants} className="glass glass-hover p-8 flex items-center gap-6 group">
-              <Layout className="w-8 h-8 text-foreground/40 group-hover:text-foreground transition-colors" />
-              <span className="font-black uppercase tracking-widest text-[10px]">Unified Interface</span>
-           </motion.div>
-
-           {/* Final Bento Item */}
-           <motion.div variants={itemVariants} className="glass glass-hover p-10 flex flex-col justify-center group">
-              <div className="flex gap-1 mb-4">
-                 {[1,2,3].map(i => <Star key={i} className="w-4 h-4 text-foreground/20 fill-foreground/20" />)}
-              </div>
-              <p className="font-bold italic">&ldquo;The UI is simply flawless.&rdquo;</p>
            </motion.div>
         </div>
       </section>
 
-      {/* Visual Break - Interactive Gradient Block */}
-      <section className="w-full py-32 flex flex-col items-center">
-         <motion.div 
-           whileHover={{ scale: 0.98 }}
-           className="w-full max-w-5xl aspect-[21/9] rounded-[3rem] bg-gradient-to-br from-foreground/10 via-foreground/5 to-transparent border border-foreground/5 flex flex-col items-center justify-center p-12 relative overflow-hidden group shadow-2xl"
-         >
-            <div className="absolute top-0 right-0 w-96 h-96 bg-foreground/5 rounded-full blur-[120px] group-hover:bg-foreground/10 transition-colors" />
-            <h2 className="text-5xl md:text-7xl font-black text-center mb-8 leading-tight">Scale Your Vision <br />With Confidence</h2>
-            <div className="flex items-center gap-6">
-               <div className="flex -space-x-4">
-                  {[1,2,3,4].map(i => <div key={i} className="w-12 h-12 rounded-full border-4 border-background bg-foreground/10" />)}
-               </div>
-               <span className="text-sm font-bold text-muted-foreground">+2,400 companies joined this week</span>
+      {/* Social Verification Section */}
+      <section className="w-full py-40 flex flex-col items-center">
+         <div className="max-w-5xl mx-auto px-4 w-full">
+            <motion.div 
+              variants={itemVariants}
+              className="text-center mb-24"
+            >
+               <h2 className="h-lg text-sapphire mb-6">Trusted by the innovators.</h2>
+               <p className="text-xl text-muted-foreground font-medium">Powering talent acquisition for the world's most ambitious companies.</p>
+            </motion.div>
+
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-12 opacity-30 grayscale hover:grayscale-0 transition-all duration-700">
+               <div className="flex items-center justify-center font-black text-3xl tracking-tighter">NEXUS</div>
+               <div className="flex items-center justify-center font-black text-3xl tracking-tighter">ORBIT</div>
+               <div className="flex items-center justify-center font-black text-3xl tracking-tighter">AETHER</div>
+               <div className="flex items-center justify-center font-black text-3xl tracking-tighter">PRISM</div>
             </div>
-         </motion.div>
+         </div>
       </section>
 
-      {/* Closing Section */}
-      <section className="w-full py-40 flex flex-col items-center text-center">
-         <motion.h2 variants={itemVariants} className="text-5xl md:text-8xl font-black mb-12 tracking-tighter">Ready for the <span className="opacity-30">Future?</span></motion.h2>
-         <motion.div variants={itemVariants}>
+      {/* Interactive Closing Section */}
+      <section className="w-full py-60 flex flex-col items-center text-center relative overflow-hidden">
+         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full sapphire-aura opacity-50" />
+         <motion.div variants={itemVariants} className="relative z-10 px-6">
+            <h2 className="h-xl text-sapphire mb-12 tracking-tighter">Build Your <br /><span className="text-primary">Legacy.</span></h2>
             <Link href="/signup">
-               <Button className="btn-advanced h-20 px-20 rounded-[2rem] text-2xl bg-foreground text-background">Initialize Profile</Button>
+               <Button className="btn-sapphire h-20 px-20 rounded-[2rem] text-2xl shadow-2xl">Initialize Deployment</Button>
             </Link>
+            <p className="mt-10 text-muted-foreground font-black uppercase tracking-widest text-xs">Join 500+ Engineering Teams This Month</p>
          </motion.div>
       </section>
     </motion.div>

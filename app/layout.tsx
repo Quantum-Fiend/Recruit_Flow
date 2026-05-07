@@ -28,8 +28,8 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            {/* Advanced Background Layer */}
-            <div className="ambient-glow" />
+            {/* Sapphire Slate Atmosphere */}
+            <div className="sapphire-aura" />
             
             <div className="relative min-h-screen flex flex-col">
               <Navbar />

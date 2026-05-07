@@ -4,7 +4,7 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { ThemeToggle } from "./theme-toggle"
 import { Button } from "./ui/button"
-import { Briefcase, LayoutDashboard, Search, LogOut, User, Menu, X, Command } from "lucide-react"
+import { LayoutDashboard, Search, LogOut, Menu, X, Command, Globe, Briefcase } from "lucide-react"
 import { useState, useEffect } from "react"
 import { cn } from "@/lib/utils"
 import { useSession, signOut } from "next-auth/react"
@@ -18,18 +18,18 @@ export function Navbar() {
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 10)
+      setIsScrolled(window.scrollY > 20)
     }
     window.addEventListener("scroll", handleScroll)
     return () => window.removeEventListener("scroll", handleScroll)
   }, [])
 
   const navLinks = [
-    { name: "Browse Network", href: "/jobs", icon: Search },
+    { name: "Network", href: "/jobs", icon: Globe },
     ...(session?.user?.role === "RECRUITER" 
       ? [{ name: "Talent Console", href: "/recruiter/dashboard", icon: LayoutDashboard }]
       : session?.user 
-        ? [{ name: "Command Center", href: "/dashboard", icon: LayoutDashboard }]
+        ? [{ name: "Dashboard", href: "/dashboard", icon: LayoutDashboard }]
         : []
     ),
   ]
@@ -37,36 +37,36 @@ export function Navbar() {
   return (
     <header 
       className={cn(
-        "sticky top-0 z-50 transition-all duration-500",
+        "fixed top-0 left-0 right-0 z-50 transition-all duration-500",
         isScrolled 
-          ? "bg-background/80 backdrop-blur-xl border-b border-border py-4 shadow-2xl shadow-black/5" 
+          ? "bg-background/80 backdrop-blur-xl border-b border-border py-4 shadow-xl" 
           : "bg-transparent py-8"
       )}
     >
-      <div className="premium-container flex items-center justify-between">
+      <div className="max-w-[1400px] mx-auto px-6 flex items-center justify-between">
         <Link 
           href="/" 
           className="flex items-center gap-3 group transition-all"
         >
-          <div className="w-10 h-10 bg-foreground text-background rounded-xl flex items-center justify-center transition-transform group-hover:rotate-12 group-hover:scale-110 duration-500">
-            <Command className="w-6 h-6" />
+          <div className="w-10 h-10 sapphire-gradient rounded-xl flex items-center justify-center shadow-xl shadow-primary/20 group-hover:rotate-6 transition-transform duration-500">
+            <Command className="w-6 h-6 text-white" />
           </div>
-          <span className="text-2xl font-black tracking-tighter uppercase">
+          <span className="text-2xl font-black tracking-tighter uppercase text-foreground">
             RecruitFlow
           </span>
         </Link>
 
-        {/* Desktop Nav - High End Pill */}
-        <nav className="hidden lg:flex items-center gap-1 glass p-1.5 rounded-2xl">
+        {/* Desktop Nav - Sapphire Pill */}
+        <nav className="hidden lg:flex items-center gap-2 bg-foreground/5 border border-foreground/10 rounded-2xl p-1.5 backdrop-blur-md">
           {navLinks.map((link) => (
             <Link key={link.href} href={link.href}>
               <Button
                 variant="ghost"
                 className={cn(
-                  "gap-2.5 px-6 h-11 rounded-xl transition-all duration-500 font-black text-xs uppercase tracking-widest",
+                  "gap-2.5 px-6 h-10 rounded-xl transition-all duration-400 font-bold text-xs uppercase tracking-widest",
                   pathname === link.href 
-                    ? "bg-foreground text-background hover:bg-foreground hover:text-background shadow-xl shadow-foreground/10" 
-                    : "text-muted-foreground hover:text-foreground hover:bg-foreground/5"
+                    ? "bg-background text-foreground shadow-md" 
+                    : "text-muted-foreground hover:text-foreground"
                 )}
               >
                 <link.icon className="w-4 h-4" />
@@ -79,32 +79,32 @@ export function Navbar() {
         <div className="hidden md:flex items-center gap-4">
           <ThemeToggle />
           
-          <div className="w-px h-8 bg-border/50 mx-2" />
+          <div className="w-px h-6 bg-border mx-2" />
           
           {session ? (
             <div className="flex items-center gap-4">
               <div className="flex flex-col items-end mr-2">
                 <span className="text-sm font-black tracking-tight">{session.user.name}</span>
-                <span className="text-[10px] text-muted-foreground font-black uppercase tracking-widest mt-0.5">
+                <span className="text-[10px] text-muted-foreground font-bold uppercase tracking-[0.2em] mt-0.5">
                   {session.user.role}
                 </span>
               </div>
               <Button 
-                variant="ghost" 
+                variant="outline" 
                 size="icon" 
-                className="w-12 h-12 rounded-2xl bg-foreground/5 border border-foreground/5 hover:bg-foreground/10 group active:scale-95 transition-all"
+                className="w-11 h-11 rounded-xl border-border hover:bg-foreground/5 transition-all group"
                 onClick={() => signOut()}
               >
-                <LogOut className="w-5 h-5 text-muted-foreground group-hover:text-destructive transition-colors" />
+                <LogOut className="w-4 h-4 text-muted-foreground group-hover:text-destructive" />
               </Button>
             </div>
           ) : (
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-3">
               <Link href="/login">
-                <Button variant="ghost" className="rounded-xl px-8 h-12 font-black text-xs uppercase tracking-widest">Sign In</Button>
+                <Button variant="ghost" className="rounded-xl px-6 h-11 font-black text-xs uppercase tracking-widest text-muted-foreground hover:text-foreground">Sign In</Button>
               </Link>
               <Link href="/signup">
-                <Button className="rounded-xl px-8 h-12 bg-foreground text-background font-black text-xs uppercase tracking-widest hover:opacity-90 shadow-2xl shadow-foreground/10 transition-all active:scale-95">
+                <Button className="rounded-xl px-8 h-11 sapphire-gradient text-white font-black text-xs uppercase tracking-widest hover:opacity-90 shadow-xl shadow-primary/20 transition-all active:scale-95">
                   Get Started
                 </Button>
               </Link>
@@ -113,27 +113,27 @@ export function Navbar() {
         </div>
 
         {/* Mobile Menu Toggle */}
-        <div className="flex md:hidden items-center gap-4">
+        <div className="flex md:hidden items-center gap-3">
           <ThemeToggle />
           <Button 
             variant="ghost" 
             size="icon" 
-            className="w-12 h-12 rounded-2xl glass"
+            className="w-11 h-11 rounded-xl bg-foreground/5 border border-foreground/10"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           >
-            {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </Button>
         </div>
       </div>
 
-      {/* Mobile Menu - Premium Full Screen Overlay */}
+      {/* Mobile Menu - Sapphire Overlay */}
       <AnimatePresence>
         {mobileMenuOpen && (
           <motion.div 
-            initial={{ opacity: 0, y: -20 }}
+            initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            className="md:hidden absolute top-full left-0 w-full bg-background/95 backdrop-blur-2xl border-b border-border py-12 px-6 shadow-2xl"
+            exit={{ opacity: 0, y: -10 }}
+            className="md:hidden absolute top-full left-0 w-full bg-background/98 backdrop-blur-2xl border-b border-border py-12 px-6 shadow-2xl"
           >
             <div className="flex flex-col gap-4 max-w-sm mx-auto">
               {navLinks.map((link) => (
@@ -145,8 +145,8 @@ export function Navbar() {
                   <Button
                     variant="ghost"
                     className={cn(
-                      "w-full justify-start gap-5 p-8 rounded-3xl transition-all font-black text-xl tracking-tighter border border-transparent",
-                      pathname === link.href ? "bg-foreground/5 border-border" : "hover:bg-foreground/5"
+                      "w-full justify-start gap-5 p-7 rounded-2xl transition-all font-black text-lg tracking-tighter",
+                      pathname === link.href ? "bg-primary/10 text-primary" : "hover:bg-foreground/5 text-muted-foreground"
                     )}
                   >
                     <link.icon className="w-6 h-6" />
@@ -154,24 +154,24 @@ export function Navbar() {
                   </Button>
                 </Link>
               ))}
-              <div className="h-px bg-border my-4" />
+              <div className="h-px bg-border my-6" />
               {session ? (
                 <Button 
                   variant="ghost" 
-                  className="w-full justify-start gap-5 p-8 rounded-3xl text-destructive hover:bg-destructive/5 font-black text-xl tracking-tighter"
+                  className="w-full justify-start gap-5 p-7 rounded-2xl text-destructive hover:bg-destructive/10 font-black text-lg tracking-tighter"
                   onClick={() => signOut()}
                 >
                   <LogOut className="w-6 h-6" />
-                  Logout Session
+                  Sign Out
                 </Button>
               ) : (
-                <div className="grid gap-4">
-                  <Link href="/login" onClick={() => setMobileMenuOpen(false)}>
-                    <Button variant="outline" className="w-full h-16 rounded-2xl font-black text-lg">Sign In</Button>
-                  </Link>
-                  <Link href="/signup" onClick={() => setMobileMenuOpen(false)}>
-                    <Button className="w-full h-16 rounded-2xl bg-foreground text-background font-black text-lg">Initialize System</Button>
-                  </Link>
+                <div className="grid gap-3">
+                   <Link href="/signup" onClick={() => setMobileMenuOpen(false)}>
+                      <Button className="w-full h-14 rounded-xl sapphire-gradient text-white font-black">Initialize Recruitment</Button>
+                   </Link>
+                   <Link href="/login" onClick={() => setMobileMenuOpen(false)}>
+                      <Button variant="outline" className="w-full h-14 rounded-xl font-black">Sign In</Button>
+                   </Link>
                 </div>
               )}
             </div>
