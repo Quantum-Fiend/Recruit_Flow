@@ -6,10 +6,10 @@ import { ThemeProvider } from "@/components/theme-provider"
 import { SessionProvider } from "@/components/session-provider"
 import { Navbar } from "@/components/navbar"
 
-const jakarta = Plus_Jakarta_Sans({ 
+const jakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
-  variable: '--font-jakarta',
-})
+  variable: "--font-jakarta",
+});
 
 export const metadata: Metadata = {
   title: "RecruitFlow | The Advanced Hiring Engine",
@@ -33,10 +33,10 @@ export default function RootLayout({
           >
             {/* Sapphire Slate Atmosphere */}
             <div className="sapphire-aura" />
-            
+
             <div className="relative min-h-screen flex flex-col">
               <Navbar />
-              
+
               <main className="flex-1 w-full pt-24 md:pt-28 pb-16">
                 {children}
               </main>
@@ -75,7 +75,7 @@ export default function RootLayout({
                  </div>
               </footer>
             </div>
-            
+
             <Toaster position="bottom-right" richColors expand={false} />
           </ThemeProvider>
         </SessionProvider>
