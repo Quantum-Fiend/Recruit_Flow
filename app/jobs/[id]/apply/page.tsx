@@ -152,7 +152,7 @@ export default function ApplyPage() {
                   </div>
 
                   {!resume ? (
-                    <LocalUpload onUploadComplete={(res: any) => setResume(res)} />
+                    <LocalUpload onUploadComplete={(url, name) => setResume({ url, name })} />
                   ) : (
                     <div className="flex items-center justify-between p-8 bg-emerald-500/5 rounded-[2.5rem] border border-emerald-500/10 animate-in fade-in group">
                        <div className="flex items-center gap-6">
