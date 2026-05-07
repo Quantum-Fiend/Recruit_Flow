@@ -8,8 +8,8 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { getJobByIdAction } from "@/app/actions/jobs"
 import { getJobTypeLabel, getEmploymentTypeLabel, formatDate } from "@/lib/utils"
-import { MapPin, Briefcase, Clock, ArrowLeft } from "lucide-react"
-import { toast } from "sonner"
+import { MapPin, Briefcase, Clock, ArrowLeft, Share2, Shield, Globe, Users, ChevronRight, Sparkles } from "lucide-react"
+import { Skeleton } from "@/components/ui/skeleton"
 
 interface JobDetails {
   id: string
@@ -59,115 +59,169 @@ export default function JobDetailsPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen gradient-bg flex items-center justify-center">
-        <p className="text-muted-foreground">Loading job details...</p>
+      <div className="container-wide py-20 space-y-8">
+         <Skeleton className="h-40 w-full rounded-[3rem] glass" />
+         <div className="grid md:grid-cols-3 gap-8">
+            <div className="md:col-span-2 space-y-6">
+               <Skeleton className="h-64 w-full rounded-[2rem] glass" />
+               <Skeleton className="h-40 w-full rounded-[2rem] glass" />
+            </div>
+            <Skeleton className="h-96 w-full rounded-[2rem] glass" />
+         </div>
       </div>
     )
   }
 
   if (!job) {
     return (
-      <div className="min-h-screen gradient-bg flex items-center justify-center">
-        <div className="text-center">
-          <p className="text-muted-foreground mb-4">Job not found</p>
-          <Link href="/jobs">
-            <Button>Back to Jobs</Button>
-          </Link>
-        </div>
+      <div className="container-wide py-32 flex flex-col items-center justify-center text-center">
+         <div className="w-24 h-24 bg-muted rounded-full flex items-center justify-center mb-8">
+            <Briefcase className="w-12 h-12 text-muted-foreground" />
+         </div>
+         <h1 className="text-4xl font-black mb-4">Position Unavailable</h1>
+         <p className="text-lg text-muted-foreground mb-10 max-w-md">The job listing you are looking for has been removed or is no longer active.</p>
+         <Link href="/jobs">
+            <Button size="lg" className="rounded-2xl px-10 h-14">Return to Job Listings</Button>
+         </Link>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen gradient-bg">
-      {/* Navigation */}
-      <nav className="border-b border-white/10 glass sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <Link href="/" className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
-            RecruitFlow
-          </Link>
-          <Link href="/jobs">
-            <Button variant="ghost">
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Back to Jobs
-            </Button>
-          </Link>
+    <div className="flex flex-col min-h-screen">
+      {/* Background Decor */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-4xl h-96 bg-primary/10 rounded-full blur-[120px] -z-10" />
+
+      <div className="container-wide py-12 md:py-20 flex-1">
+        {/* Navigation Breadcrumb */}
+        <div className="mb-12 animate-fade-in">
+           <Link href="/jobs">
+              <Button variant="ghost" className="rounded-xl h-10 px-4 group">
+                 <ArrowLeft className="w-4 h-4 mr-2 transition-transform group-hover:-translate-x-1" />
+                 Back to Search
+              </Button>
+           </Link>
         </div>
-      </nav>
 
-      <div className="container mx-auto px-4 py-12">
-        <div className="max-w-4xl mx-auto">
-          {/* Job Header */}
-          <Card className="glass border-white/10 mb-6 animate-in">
-            <CardHeader>
-              <div className="flex items-start justify-between gap-4 mb-4">
-                <div>
-                  <CardTitle className="text-3xl mb-2">{job.title}</CardTitle>
-                  <CardDescription className="text-base flex items-center gap-2">
-                    <MapPin className="w-4 h-4" />
-                    {job.location}
-                  </CardDescription>
-                </div>
-                <Button size="lg" onClick={handleApply} disabled={job.status !== "OPEN"}>
-                  {job.status === "OPEN" ? "Apply Now" : "Position Closed"}
-                </Button>
-              </div>
+        <div className="grid lg:grid-cols-3 gap-8 items-start">
+           {/* Main Content */}
+           <div className="lg:col-span-2 space-y-8 animate-fade-in [animation-delay:100ms]">
+              {/* Header Card */}
+              <Card className="glass border-white/10 rounded-[2.5rem] p-4 md:p-8 overflow-hidden relative">
+                 <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-[80px] -z-10" />
+                 <CardHeader className="p-0 mb-8">
+                    <div className="flex items-start justify-between gap-6 mb-8">
+                       <div className="w-20 h-20 bg-gradient-to-br from-primary/20 to-purple-500/10 rounded-3xl flex items-center justify-center text-primary border border-primary/20">
+                          <Briefcase className="w-10 h-10" />
+                       </div>
+                       <div className="flex gap-2">
+                          <Button variant="outline" size="icon" className="rounded-xl h-12 w-12 border-border/50 hover:bg-accent">
+                             <Share2 className="w-5 h-5" />
+                          </Button>
+                       </div>
+                    </div>
+                    
+                    <h1 className="text-4xl md:text-5xl font-black mb-6 tracking-tight">{job.title}</h1>
+                    
+                    <div className="flex flex-wrap items-center gap-x-6 gap-y-3 text-base text-muted-foreground font-medium mb-8">
+                       <span className="flex items-center gap-2"><MapPin className="w-5 h-5 text-primary/70" /> {job.location}</span>
+                       <span className="flex items-center gap-2"><Clock className="w-5 h-5 text-primary/70" /> Posted {formatDate(job.createdAt)}</span>
+                       <span className="flex items-center gap-2"><Users className="w-5 h-5 text-primary/70" /> {job._count.applications} applicants</span>
+                    </div>
 
-              <div className="flex flex-wrap gap-3">
-                <Badge variant="secondary">{getJobTypeLabel(job.type)}</Badge>
-                <Badge variant="secondary">{getEmploymentTypeLabel(job.employmentType)}</Badge>
-                <Badge variant="outline">
-                  <Briefcase className="w-3 h-3 mr-1" />
-                  {job.experienceLevel}
-                </Badge>
-                <Badge variant="outline">
-                  <Clock className="w-3 h-3 mr-1" />
-                  Posted {formatDate(job.createdAt)}
-                </Badge>
-              </div>
-            </CardHeader>
-          </Card>
+                    <div className="flex flex-wrap gap-3">
+                       <Badge variant="secondary" className="rounded-full px-4 py-1 bg-primary/10 text-primary border-primary/20 uppercase text-[10px] tracking-widest font-bold">
+                          {getJobTypeLabel(job.type)}
+                       </Badge>
+                       <Badge variant="secondary" className="rounded-full px-4 py-1 bg-blue-500/10 text-blue-500 border-blue-500/20 uppercase text-[10px] tracking-widest font-bold">
+                          {getEmploymentTypeLabel(job.employmentType)}
+                       </Badge>
+                       <Badge variant="secondary" className="rounded-full px-4 py-1 bg-emerald-500/10 text-emerald-500 border-emerald-500/20 uppercase text-[10px] tracking-widest font-bold">
+                          {job.experienceLevel}
+                       </Badge>
+                    </div>
+                 </CardHeader>
 
-          {/* Job Description */}
-          <Card className="glass border-white/10 mb-6">
-            <CardHeader>
-              <CardTitle>About the Role</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-muted-foreground whitespace-pre-wrap">{job.description}</p>
-            </CardContent>
-          </Card>
+                 <div className="h-px bg-border/50 mb-8" />
 
-          {/* Required Skills */}
-          <Card className="glass border-white/10 mb-6">
-            <CardHeader>
-              <CardTitle>Required Skills</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="flex flex-wrap gap-2">
-                {job.skills.map((skill: string) => (
-                  <Badge key={skill} variant="outline">
-                    {skill}
-                  </Badge>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
+                 <div className="space-y-4">
+                    <h2 className="text-2xl font-bold">About the Role</h2>
+                    <p className="text-lg text-muted-foreground leading-relaxed whitespace-pre-wrap">
+                       {job.description}
+                    </p>
+                 </div>
+              </Card>
 
-          {/* Company Info */}
-          <Card className="glass border-white/10">
-            <CardHeader>
-              <CardTitle>About the Company</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-muted-foreground">
-                Posted by {job.recruiter.name}
-              </p>
-              <p className="text-sm text-muted-foreground mt-2">
-                {job._count.applications} candidates have applied for this position
-              </p>
-            </CardContent>
-          </Card>
+              {/* Skills Card */}
+              <Card className="glass border-white/10 rounded-[2.5rem] p-8">
+                 <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
+                    <Sparkles className="w-6 h-6 text-amber-500" /> Key Competencies
+                 </h2>
+                 <div className="flex flex-wrap gap-3">
+                    {job.skills.map((skill: string) => (
+                       <Badge key={skill} variant="outline" className="rounded-xl px-5 py-2 text-sm font-bold border-border/50 hover:border-primary/50 transition-colors">
+                          {skill}
+                       </Badge>
+                    ))}
+                 </div>
+              </Card>
+           </div>
+
+           {/* Sidebar Actions */}
+           <aside className="space-y-8 animate-fade-in [animation-delay:200ms]">
+              <Card className="glass border-white/10 rounded-[2.5rem] p-8 flex flex-col gap-6 sticky top-24">
+                 <div className="space-y-2">
+                    <h3 className="text-xl font-bold">Ready to apply?</h3>
+                    <p className="text-sm text-muted-foreground font-medium">Join a growing team and make an impact.</p>
+                 </div>
+                 
+                 <Button 
+                    size="lg" 
+                    onClick={handleApply} 
+                    disabled={job.status !== "OPEN"}
+                    className="w-full h-16 rounded-2xl text-lg font-bold shadow-xl shadow-primary/20 group"
+                 >
+                    {job.status === "OPEN" ? (
+                       <>
+                          Apply for this position
+                          <ChevronRight className="w-5 h-5 ml-2 transition-transform group-hover:translate-x-1" />
+                       </>
+                    ) : "Application Closed"}
+                 </Button>
+
+                 <div className="h-px bg-border/50" />
+
+                 <div className="space-y-6">
+                    <div className="flex items-start gap-4">
+                       <div className="w-10 h-10 rounded-xl bg-accent flex items-center justify-center text-muted-foreground flex-shrink-0">
+                          <Shield className="w-5 h-5" />
+                       </div>
+                       <div>
+                          <p className="text-sm font-bold">Verified Listing</p>
+                          <p className="text-xs text-muted-foreground mt-0.5">This job was posted directly by the company recruiter.</p>
+                       </div>
+                    </div>
+
+                    <div className="flex items-start gap-4">
+                       <div className="w-10 h-10 rounded-xl bg-accent flex items-center justify-center text-muted-foreground flex-shrink-0">
+                          <Globe className="w-5 h-5" />
+                       </div>
+                       <div>
+                          <p className="text-sm font-bold">Location Aware</p>
+                          <p className="text-xs text-muted-foreground mt-0.5">{job.location} based role with remote flexibility options.</p>
+                       </div>
+                    </div>
+                 </div>
+
+                 <div className="bg-primary/5 rounded-2xl p-6 border border-primary/10">
+                    <p className="text-xs font-black uppercase tracking-widest text-primary mb-2">Company Insights</p>
+                    <p className="text-sm font-medium leading-relaxed">
+                       You're viewing a role at <span className="text-primary font-bold">{job.recruiter.name}'s</span> organization. 
+                       Their team is currently hiring across {job.location}.
+                    </p>
+                 </div>
+              </Card>
+           </aside>
         </div>
       </div>
     </div>

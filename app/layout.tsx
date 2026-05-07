@@ -39,16 +39,34 @@ export const metadata: Metadata = {
   },
 }
 
+import { ThemeProvider } from "@/components/theme-provider"
+import { SessionProvider } from "@/components/session-provider"
+import { Navbar } from "@/components/navbar"
+
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" className="dark">
+    <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
-        {children}
-        <Toaster position="top-right" richColors />
+        <SessionProvider>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="dark"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <div className="relative min-h-screen flex flex-col page-bg">
+              <Navbar />
+              <main className="flex-1">
+                {children}
+              </main>
+            </div>
+            <Toaster position="top-right" richColors />
+          </ThemeProvider>
+        </SessionProvider>
       </body>
     </html>
   )
