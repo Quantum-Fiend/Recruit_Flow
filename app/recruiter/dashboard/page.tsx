@@ -1,250 +1,192 @@
 'use client'
 
-import { useEffect, useState } from "react"
+import { useEffect, useState, useCallback } from "react"
 import Link from "next/link"
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { getJobsAction } from "@/app/actions/jobs"
-import { Briefcase, Users, TrendingUp, Plus, LayoutDashboard, Sparkles, ChevronRight, ArrowUpRight, Search, Filter } from "lucide-react"
-import { Skeleton } from "@/components/ui/skeleton"
 import { Badge } from "@/components/ui/badge"
-import { cn, formatDate } from "@/lib/utils"
-
-interface RecentJob {
-  id: string
-  title: string
-  location: string
-  status: string
-  createdAt: Date
-  _count: {
-    applications: number
-  }
-}
+import { getRecruiterDashboardAction } from "@/app/actions/recruiter"
+import { Briefcase, Users, FileText, Plus, ChevronRight, LayoutDashboard, Search, Filter, TrendingUp, UserPlus, Zap, Target } from "lucide-react"
+import { Skeleton } from "@/components/ui/skeleton"
+import { getJobTypeLabel, formatDate } from "@/lib/utils"
+import { motion, AnimatePresence } from "framer-motion"
 
 export default function RecruiterDashboard() {
-  const [stats, setStats] = useState({
-    totalJobs: 0,
-    openJobs: 0,
-    totalApplications: 0,
-  })
-  const [recentJobs, setRecentJobs] = useState<RecentJob[]>([])
+  const [stats, setStats] = useState<any>(null)
   const [loading, setLoading] = useState(true)
 
-  useEffect(() => {
-    let ignore = false;
-
-    async function init() {
-      const result = await getJobsAction({})
-      if (!ignore && result.success && result.jobs) {
-        const jobs = result.jobs as RecentJob[]
-        const openJobs = jobs.filter((j) => j.status === "OPEN")
-        const totalApplications = jobs.reduce((sum, j) => sum + j._count.applications, 0)
-
-        setStats({
-          totalJobs: jobs.length,
-          openJobs: openJobs.length,
-          totalApplications,
-        })
-        setRecentJobs(jobs.slice(0, 5))
-        setLoading(false)
-      }
+  const loadDashboard = useCallback(async () => {
+    setLoading(true)
+    const result = await getRecruiterDashboardAction()
+    if (result.success && result.data) {
+      setStats(result.data)
     }
-
-    init()
-    return () => { ignore = true }
+    setLoading(false)
   }, [])
 
+  useEffect(() => {
+    loadDashboard()
+  }, [loadDashboard])
+
   return (
-    <div className="flex flex-col min-h-screen">
-      {/* Page Header */}
-      <div className="bg-accent/30 border-b border-border py-12 md:py-16">
-        <div className="container-wide">
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 animate-fade-in">
-             <div className="max-w-3xl">
-                <div className="flex items-center gap-3 mb-6">
-                   <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
-                      <LayoutDashboard className="w-6 h-6" />
-                   </div>
-                   <h1 className="text-4xl md:text-5xl font-black tracking-tight">
-                     Talent <span className="gradient-text">Console</span>
-                   </h1>
-                </div>
-                <p className="text-lg text-muted-foreground">
-                  Monitor your hiring lifecycle, manage job listings, and find your next top performer.
-                </p>
+    <motion.div 
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="flex flex-col w-full animate-slide-up"
+    >
+      {/* Dashboard Header */}
+      <header className="w-full mb-16 flex flex-col md:flex-row md:items-end justify-between gap-8">
+        <div className="max-w-2xl">
+           <div className="flex items-center gap-3 mb-6">
+              <div className="w-10 h-10 rounded-xl bg-foreground/5 flex items-center justify-center">
+                 <LayoutDashboard className="w-5 h-5" />
+              </div>
+              <span className="text-xs font-black uppercase tracking-[0.2em] text-muted-foreground">Talent Console</span>
+           </div>
+           <h1 className="text-6xl md:text-8xl font-black tracking-tighter mb-4">Command <span className="opacity-30">Center</span></h1>
+           <p className="text-xl text-muted-foreground font-medium">Enterprise talent acquisition and pipeline management.</p>
+        </div>
+        
+        <div className="flex items-center gap-4">
+           <Link href="/recruiter/jobs/new">
+              <Button className="h-16 px-10 rounded-2xl bg-foreground text-background font-black hover:opacity-90 shadow-2xl shadow-foreground/10 flex items-center gap-3">
+                <Plus className="w-6 h-6" />
+                <span>Deploy New Opening</span>
+              </Button>
+           </Link>
+        </div>
+      </header>
+
+      {/* Stats Summary Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-16">
+        {loading ? (
+          Array(4).fill(0).map((_, i) => <Skeleton key={i} className="h-32 rounded-3xl glass" />)
+        ) : (
+          <>
+            <StatBox label="Active Roles" value={stats.activeJobsCount} icon={<Briefcase />} />
+            <StatBox label="Incoming Flow" value={stats.totalApplicationsCount} icon={<TrendingUp />} />
+            <StatBox label="Awaiting Review" value={stats.pendingApplicationsCount} icon={<UserPlus />} />
+            <StatBox label="Hiring Velocity" value="84%" icon={<Zap />} />
+          </>
+        )}
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        {/* Active Openings Feed */}
+        <div className="lg:col-span-2 space-y-6">
+           <div className="flex items-center justify-between px-4 mb-4">
+              <h2 className="text-2xl font-black tracking-tight">Deployment Pipeline</h2>
+              <Link href="/recruiter/jobs" className="text-[10px] font-black uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors">
+                View All Missions
+              </Link>
+           </div>
+           
+           {loading ? (
+             <div className="space-y-4">
+               {[1, 2, 3].map(i => <Skeleton key={i} className="h-44 rounded-3xl glass" />)}
              </div>
-             
-             <Link href="/recruiter/jobs/new">
-                <Button size="lg" className="rounded-2xl h-14 px-8 bg-primary hover:bg-primary/90 shadow-xl shadow-primary/20 font-bold group">
-                  <Plus className="w-5 h-5 mr-2" />
-                  Create New Job Listing
-                  <Sparkles className="w-4 h-4 ml-2 opacity-0 group-hover:opacity-100 transition-opacity" />
-                </Button>
-             </Link>
-          </div>
+           ) : stats.recentJobs.length === 0 ? (
+             <div className="text-center py-32 glass border-dashed flex flex-col items-center">
+                <Briefcase className="w-16 h-16 mb-6 text-muted-foreground/20" />
+                <h3 className="text-2xl font-black mb-2">No active missions</h3>
+                <Link href="/recruiter/jobs/new">
+                   <Button variant="outline" className="mt-6 rounded-xl font-black px-8 h-12">Create First Job</Button>
+                </Link>
+             </div>
+           ) : (
+             <div className="space-y-4">
+               {stats.recentJobs.map((job: any, index: number) => (
+                 <JobConsoleCard key={job.id} job={job} index={index} />
+               ))}
+             </div>
+           )}
+        </div>
+
+        {/* Global Pipeline Activity */}
+        <div className="space-y-6">
+           <div className="flex items-center justify-between px-4 mb-4">
+              <h2 className="text-2xl font-black tracking-tight">Recent Activity</h2>
+           </div>
+           
+           <div className="glass p-8 space-y-8">
+              {loading ? (
+                Array(4).fill(0).map((_, i) => <Skeleton key={i} className="h-12 w-full" />)
+              ) : stats.recentApplications.length === 0 ? (
+                <p className="text-center text-muted-foreground font-medium py-10">Waiting for talent input...</p>
+              ) : (
+                <div className="space-y-8 relative">
+                   <div className="absolute left-2.5 top-2 bottom-2 w-px bg-border/50" />
+                   {stats.recentApplications.map((app: any, index: number) => (
+                     <div key={app.id} className="flex gap-6 relative group">
+                        <div className="w-5 h-5 rounded-full bg-background border-2 border-foreground/20 mt-1 relative z-10 group-hover:border-foreground transition-colors" />
+                        <div className="flex-1 space-y-1">
+                           <p className="text-sm font-bold">
+                             <span className="text-foreground">{app.applicant.name}</span>
+                             <span className="text-muted-foreground font-medium"> applied for </span>
+                             <span className="text-foreground">{app.job.title}</span>
+                           </p>
+                           <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60">{formatDate(app.appliedAt)}</p>
+                        </div>
+                     </div>
+                   ))}
+                </div>
+              )}
+           </div>
+           
+           {/* CTA Card */}
+           <div className="glass p-8 bg-foreground/5 flex flex-col gap-6 group overflow-hidden relative">
+              <Sparkles className="w-12 h-12 text-foreground/10 absolute -top-2 -right-2 rotate-12 group-hover:scale-150 transition-transform duration-1000" />
+              <h3 className="text-xl font-black tracking-tight leading-tight">Automate Your <br />Selection Flow</h3>
+              <p className="text-xs font-medium text-muted-foreground leading-relaxed">Leverage RecruitFlow's intelligent filtering to find the perfect candidate 70% faster.</p>
+              <Button className="w-full rounded-xl bg-foreground text-background font-black h-12 text-xs">Unlock Intelligence</Button>
+           </div>
         </div>
       </div>
-
-      <div className="container-wide py-12 flex-1">
-        {/* Statistics Overview */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12 animate-fade-in [animation-delay:100ms]">
-          <MetricCard
-            icon={<Briefcase className="w-6 h-6" />}
-            title="Active Listings"
-            value={stats.openJobs}
-            trend="+12% from last month"
-            color="text-primary"
-          />
-          <MetricCard
-            icon={<Users className="w-6 h-6" />}
-            title="Total Candidates"
-            value={stats.totalApplications}
-            trend="+24 new today"
-            color="text-blue-500"
-          />
-          <MetricCard
-            icon={<TrendingUp className="w-6 h-6" />}
-            title="Hiring Velocity"
-            value="14 Days"
-            trend="-2 days improvement"
-            color="text-emerald-500"
-          />
-        </div>
-
-        <div className="grid lg:grid-cols-3 gap-8 items-start animate-fade-in [animation-delay:200ms]">
-          {/* Recent Listings Section */}
-          <div className="lg:col-span-2 space-y-6">
-            <div className="flex items-center justify-between px-2">
-               <h2 className="text-xl font-bold flex items-center gap-2">
-                  <Sparkles className="w-5 h-5 text-amber-500" /> Recent Job Postings
-               </h2>
-               <Link href="/recruiter/jobs">
-                  <Button variant="ghost" size="sm" className="text-primary font-bold">View Pipeline <ChevronRight className="w-4 h-4 ml-1" /></Button>
-               </Link>
-            </div>
-
-            {loading ? (
-              <div className="space-y-4">
-                 {[1, 2, 3].map(i => <Skeleton key={i} className="h-32 w-full rounded-3xl glass" />)}
-              </div>
-            ) : recentJobs.length === 0 ? (
-              <Card className="glass border-dashed border-2 border-border/50 text-center py-20 rounded-[3rem]">
-                <CardContent>
-                  <Briefcase className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
-                  <h3 className="text-xl font-bold mb-2">No jobs posted yet</h3>
-                  <p className="text-muted-foreground mb-6">Start building your team today.</p>
-                  <Link href="/recruiter/jobs/new">
-                    <Button className="rounded-xl">Create First Job</Button>
-                  </Link>
-                </CardContent>
-              </Card>
-            ) : (
-              <div className="space-y-4">
-                {recentJobs.map((job) => (
-                  <JobListItem key={job.id} job={job} />
-                ))}
-              </div>
-            )}
-          </div>
-
-          {/* Quick Actions / Activity Feed Sidebar */}
-          <aside className="space-y-8">
-             <Card className="glass border-white/10 rounded-[2.5rem] p-6 overflow-hidden relative">
-                <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 rounded-full blur-3xl -z-10" />
-                <h3 className="text-lg font-bold mb-6 flex items-center gap-2">
-                   <Plus className="w-5 h-5 text-primary" /> Hiring Toolkit
-                </h3>
-                <div className="space-y-3">
-                   <QuickAction icon={<Search />} label="Search Candidates" />
-                   <QuickAction icon={<Users />} label="Team Collaboration" />
-                   <QuickAction icon={<Filter />} label="Workflow Settings" />
-                   <QuickAction icon={<TrendingUp />} label="Recruiting Reports" />
-                </div>
-             </Card>
-
-             <Card className="glass border-white/10 rounded-[2.5rem] p-6">
-                <h3 className="text-lg font-bold mb-6">System Health</h3>
-                <div className="space-y-4">
-                   <HealthMetric label="API Performance" value="99.9%" />
-                   <HealthMetric label="Database Sync" value="Optimized" />
-                   <HealthMetric label="Email Delivery" value="Enabled" />
-                </div>
-             </Card>
-          </aside>
-        </div>
-      </div>
-    </div>
+    </motion.div>
   )
 }
 
-function MetricCard({ icon, title, value, trend, color }: { icon: React.ReactNode; title: string; value: number | string; trend: string; color: string }) {
+function JobConsoleCard({ job, index }: { job: any; index: number }) {
   return (
-    <Card className="glass border-white/10 rounded-[2.5rem] p-8 hover-card relative overflow-hidden group">
-      <div className="absolute -top-4 -right-4 w-24 h-24 bg-primary/5 rounded-full group-hover:scale-150 transition-transform duration-700" />
-      <div className="flex items-center justify-between mb-8">
-        <div className={cn("w-12 h-12 rounded-2xl bg-muted/50 flex items-center justify-center", color)}>
+    <motion.div
+      initial={{ opacity: 0, x: -20 }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ duration: 0.5, delay: index * 0.05 }}
+    >
+      <Link href={`/recruiter/jobs/${job.id}`} className="block group">
+        <Card className="glass glass-hover p-8 border-none flex flex-col md:flex-row md:items-center justify-between gap-8">
+           <div className="flex items-center gap-6 flex-1">
+              <div className="w-16 h-16 rounded-2xl bg-foreground/5 flex items-center justify-center group-hover:bg-foreground group-hover:text-background transition-all duration-700">
+                 <Briefcase className="w-8 h-8" />
+              </div>
+              <div className="space-y-2">
+                 <h3 className="text-3xl font-black tracking-tighter">{job.title}</h3>
+                 <div className="flex items-center gap-6 text-[10px] font-black uppercase tracking-widest text-muted-foreground/60">
+                    <span>{job.location}</span>
+                    <span className="w-1 h-1 bg-border rounded-full" />
+                    <span className="flex items-center gap-1.5"><Users className="w-3.5 h-3.5" /> {job._count.applications} Profiles</span>
+                 </div>
+              </div>
+           </div>
+           
+           <div className="flex items-center gap-4">
+              <div className="badge-premium">{job.status}</div>
+              <ChevronRight className="w-6 h-6 text-muted-foreground group-hover:translate-x-1 transition-transform" />
+           </div>
+        </Card>
+      </Link>
+    </motion.div>
+  )
+}
+
+function StatBox({ label, value, icon }: { label: string; value: number | string; icon: React.ReactNode }) {
+  return (
+    <Card className="glass glass-hover p-8 text-center border-none flex flex-col items-center group">
+       <div className="w-12 h-12 rounded-2xl bg-foreground/5 flex items-center justify-center text-muted-foreground group-hover:bg-foreground group-hover:text-background transition-all duration-500 mb-6">
           {icon}
-        </div>
-        <ArrowUpRight className="w-5 h-5 text-muted-foreground group-hover:text-primary transition-colors" />
-      </div>
-      <div>
-        <h4 className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] mb-1">{title}</h4>
-        <div className="text-4xl font-black mb-2 tracking-tight">{value}</div>
-        <p className="text-[10px] font-bold text-emerald-500 uppercase tracking-wider">{trend}</p>
-      </div>
+       </div>
+       <div className="text-4xl font-black mb-2 tracking-tighter">{value}</div>
+       <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">{label}</p>
     </Card>
   )
 }
-
-function JobListItem({ job }: { job: RecentJob }) {
-  return (
-    <Link href={`/recruiter/jobs/${job.id}/applicants`} className="group block">
-      <Card className="glass border-white/10 rounded-[2rem] p-6 hover-card transition-all">
-        <div className="flex items-center justify-between gap-4">
-          <div className="flex items-center gap-5">
-            <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-all">
-              <Briefcase className="w-6 h-6" />
-            </div>
-            <div>
-              <h3 className="font-bold text-lg group-hover:text-primary transition-colors">{job.title}</h3>
-              <p className="text-sm text-muted-foreground font-medium">
-                {job.location} • Posted {formatDate(job.createdAt)}
-              </p>
-            </div>
-          </div>
-          
-          <div className="flex items-center gap-6">
-            <div className="text-right">
-               <div className="text-xl font-black">{job._count.applications}</div>
-               <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Candidates</div>
-            </div>
-            <div className="h-10 w-px bg-border/50 hidden sm:block" />
-            <Badge className="hidden sm:flex rounded-full px-4 bg-emerald-500/10 text-emerald-500 border-emerald-500/20 uppercase text-[10px] tracking-widest font-bold">
-               {job.status}
-            </Badge>
-            <ChevronRight className="w-5 h-5 text-muted-foreground group-hover:translate-x-1 transition-transform" />
-          </div>
-        </div>
-      </Card>
-    </Link>
-  )
-}
-
-function QuickAction({ icon, label }: { icon: React.ReactNode; label: string }) {
-  return (
-    <Button variant="ghost" className="w-full justify-start gap-3 h-12 rounded-xl hover:bg-primary/10 hover:text-primary text-muted-foreground transition-all">
-       <span className="opacity-70">{icon}</span>
-       <span className="font-bold text-sm">{label}</span>
-    </Button>
-  )
-}
-
-function HealthMetric({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="flex items-center justify-between text-sm">
-       <span className="text-muted-foreground font-medium">{label}</span>
-       <span className="font-bold text-primary">{value}</span>
-    </div>
-  )
-}
-

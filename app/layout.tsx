@@ -9,9 +9,8 @@ import { Navbar } from "@/components/navbar"
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"),
-  title: "RecruitFlow | Next-Generation Talent Acquisition",
-  description: "Experience the future of hiring with RecruitFlow's minimalist, high-performance applicant tracking system.",
+  title: "RecruitFlow | The Advanced Hiring Engine",
+  description: "A premium, minimalist, and high-performance applicant tracking system built for the next generation of talent.",
 }
 
 export default function RootLayout({
@@ -21,36 +20,60 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${inter.className} dark bg-[#050507] selection:bg-white selection:text-black`}>
+      <body className={inter.className}>
         <SessionProvider>
           <ThemeProvider
             attribute="class"
             defaultTheme="dark"
-            enableSystem={false}
+            enableSystem
             disableTransitionOnChange
           >
-            {/* Global Atmosphere & Background Effects */}
-            <div className="atmosphere" />
+            {/* Advanced Background Layer */}
+            <div className="ambient-glow" />
             
             <div className="relative min-h-screen flex flex-col">
               <Navbar />
               
-              {/* Centered App Container */}
-              <main className="flex-1 w-full max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+              <main className="flex-1 w-full premium-container py-12 md:py-20">
                 {children}
               </main>
 
-              {/* Global Footer (Centered) */}
-              <footer className="w-full border-t border-white/5 py-12 mt-auto">
-                 <div className="max-w-[1400px] mx-auto px-4 text-center">
-                    <p className="text-sm text-muted-foreground font-medium">
-                       &copy; {new Date().getFullYear()} RecruitFlow Engine. Built for the modern talent stack.
-                    </p>
+              <footer className="w-full border-t border-border py-20 mt-auto">
+                 <div className="premium-container grid md:grid-cols-4 gap-12">
+                    <div className="col-span-2">
+                       <h2 className="text-xl font-black tracking-tighter mb-4">RECRUITFLOW</h2>
+                       <p className="text-sm text-muted-foreground max-w-xs font-medium leading-relaxed">
+                          The high-performance talent acquisition engine designed for teams who prioritize speed, clarity, and excellence.
+                       </p>
+                    </div>
+                    <div>
+                       <h4 className="text-xs font-black uppercase tracking-[0.2em] mb-4">Platform</h4>
+                       <ul className="space-y-3 text-sm font-medium text-muted-foreground">
+                          <li className="hover:text-foreground cursor-pointer">Network</li>
+                          <li className="hover:text-foreground cursor-pointer">Pipelines</li>
+                          <li className="hover:text-foreground cursor-pointer">Integrations</li>
+                       </ul>
+                    </div>
+                    <div>
+                       <h4 className="text-xs font-black uppercase tracking-[0.2em] mb-4">Support</h4>
+                       <ul className="space-y-3 text-sm font-medium text-muted-foreground">
+                          <li className="hover:text-foreground cursor-pointer">Documentation</li>
+                          <li className="hover:text-foreground cursor-pointer">Help Center</li>
+                          <li className="hover:text-foreground cursor-pointer">API Status</li>
+                       </ul>
+                    </div>
+                 </div>
+                 <div className="premium-container border-t border-border mt-12 pt-8 flex justify-between items-center text-[10px] font-black uppercase tracking-widest text-muted-foreground">
+                    <span>&copy; {new Date().getFullYear()} RecruitFlow Inc.</span>
+                    <span className="flex gap-6">
+                       <span className="hover:text-foreground cursor-pointer">Privacy</span>
+                       <span className="hover:text-foreground cursor-pointer">Terms</span>
+                    </span>
                  </div>
               </footer>
             </div>
             
-            <Toaster position="bottom-center" richColors theme="dark" />
+            <Toaster position="bottom-right" richColors expand={false} />
           </ThemeProvider>
         </SessionProvider>
       </body>

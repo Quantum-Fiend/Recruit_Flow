@@ -1,113 +1,135 @@
+"use client"
+
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { Briefcase, Users, Zap, Shield, Sparkles, ArrowRight, Globe, Star } from "lucide-react"
+import { Briefcase, Users, Zap, Shield, Sparkles, ArrowRight, Globe, Star, Command, MousePointer2, Layout } from "lucide-react"
+import { motion, type Variants } from "framer-motion"
 
 export default function LandingPage() {
-  return (
-    <div className="flex flex-col items-center w-full">
-      {/* Hero Section - Centered & Premium */}
-      <section className="w-full py-20 md:py-32 flex flex-col items-center text-center animate-fade-in">
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs font-bold uppercase tracking-widest text-white/70 mb-10">
-          <Sparkles className="w-4 h-4 text-white" />
-          <span>The New Standard in Recruitment</span>
-        </div>
-        
-        <h1 className="heading-xl text-gradient mb-8 max-w-4xl">
-          Hire Smarter. <br />
-          <span className="text-white">Build Faster.</span>
-        </h1>
-        
-        <p className="text-xl md:text-2xl text-white/50 max-w-2xl font-medium leading-relaxed mb-12">
-          RecruitFlow is the high-performance talent engine designed for modern teams who prioritize speed, clarity, and excellence.
-        </p>
+  const containerVariants: Variants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: { staggerChildren: 0.1, delayChildren: 0.2 }
+    }
+  }
 
-        <div className="flex flex-col sm:flex-row items-center gap-4 w-full justify-center px-4">
+  const itemVariants: Variants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: { y: 0, opacity: 1, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } }
+  }
+
+  return (
+    <motion.div 
+      initial="hidden"
+      animate="visible"
+      variants={containerVariants}
+      className="flex flex-col items-center w-full"
+    >
+      {/* Hero Section - The 'Advanced' Look */}
+      <section className="w-full pt-10 pb-32 flex flex-col items-center text-center">
+        <motion.div variants={itemVariants} className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-foreground/5 border border-foreground/10 text-[10px] font-black uppercase tracking-[0.2em] text-foreground/70 mb-12">
+          <Command className="w-3.5 h-3.5" />
+          <span>System Version 4.0 Stable</span>
+        </motion.div>
+        
+        <motion.h1 variants={itemVariants} className="text-hero text-7xl md:text-9xl mb-12 max-w-5xl">
+          The Talent <br />
+          <span className="opacity-40">Operating</span> System
+        </motion.h1>
+        
+        <motion.p variants={itemVariants} className="text-xl md:text-2xl text-muted-foreground max-w-3xl font-medium leading-relaxed mb-16 px-4">
+          Experience the most advanced talent engine ever built. Minimalist design. Maximum performance. Built for the speed of tomorrow.
+        </motion.p>
+
+        <motion.div variants={itemVariants} className="flex flex-col sm:flex-row items-center gap-6 w-full justify-center px-4">
           <Link href="/signup" className="w-full sm:w-auto">
-            <Button className="btn-premium w-full sm:w-auto text-lg group">
-              Get Started Now
+            <Button className="btn-advanced h-16 px-12 bg-foreground text-background hover:bg-foreground/90 w-full sm:w-auto text-xl shadow-2xl shadow-foreground/10 group">
+              Start Building Your Team
               <ArrowRight className="w-5 h-5 ml-2 transition-transform group-hover:translate-x-1" />
             </Button>
           </Link>
           <Link href="/jobs" className="w-full sm:w-auto">
-            <Button variant="outline" className="h-14 px-8 rounded-2xl border-white/10 hover:bg-white/5 w-full sm:w-auto font-bold text-lg">
-              Explore Opportunities
+            <Button variant="ghost" className="h-16 px-12 rounded-2xl border-border hover:bg-foreground/5 w-full sm:w-auto font-black text-lg">
+              Explore The Pipeline
             </Button>
           </Link>
-        </div>
+        </motion.div>
+      </section>
 
-        {/* Trust Indicators */}
-        <div className="mt-20 flex flex-wrap justify-center items-center gap-x-12 gap-y-6 opacity-40 grayscale contrast-200">
-           <span className="font-black text-2xl tracking-tighter">VOLT</span>
-           <span className="font-black text-2xl tracking-tighter">ZENITH</span>
-           <span className="font-black text-2xl tracking-tighter">ORION</span>
-           <span className="font-black text-2xl tracking-tighter">SPECTRA</span>
+      {/* Advanced Bento Feature Section */}
+      <section className="w-full py-32 border-t border-border">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-6xl mx-auto">
+           {/* Primary Feature */}
+           <motion.div variants={itemVariants} className="md:col-span-2 glass glass-hover p-12 flex flex-col justify-between group min-h-[400px]">
+              <div className="w-16 h-16 rounded-3xl bg-foreground/5 border border-foreground/10 flex items-center justify-center group-hover:bg-foreground group-hover:text-background transition-all duration-700">
+                 <Zap className="w-8 h-8" />
+              </div>
+              <div>
+                 <h2 className="text-4xl font-black mb-4 tracking-tighter">Hyper-Fast Pipelines</h2>
+                 <p className="text-lg text-muted-foreground font-medium max-w-md">Our proprietary engine processes thousands of applications per second with zero latency. Review candidates as fast as you can think.</p>
+              </div>
+           </motion.div>
+
+           {/* Secondary Feature */}
+           <motion.div variants={itemVariants} className="glass glass-hover p-12 flex flex-col gap-8 group">
+              <div className="w-12 h-12 rounded-2xl bg-foreground/5 border border-foreground/10 flex items-center justify-center group-hover:scale-110 transition-transform duration-500">
+                 <Shield className="w-6 h-6" />
+              </div>
+              <div>
+                 <h3 className="text-2xl font-black mb-2 tracking-tight">Core Encryption</h3>
+                 <p className="text-muted-foreground font-medium text-sm leading-relaxed">Enterprise-grade security built into the fundamental architecture of the platform.</p>
+              </div>
+           </motion.div>
+
+           {/* Small Bento Item */}
+           <motion.div variants={itemVariants} className="glass glass-hover p-8 flex items-center gap-6 group">
+              <MousePointer2 className="w-8 h-8 text-foreground/40 group-hover:text-foreground transition-colors" />
+              <span className="font-black uppercase tracking-widest text-[10px]">Precision Selection</span>
+           </motion.div>
+
+           {/* Small Bento Item 2 */}
+           <motion.div variants={itemVariants} className="glass glass-hover p-8 flex items-center gap-6 group">
+              <Layout className="w-8 h-8 text-foreground/40 group-hover:text-foreground transition-colors" />
+              <span className="font-black uppercase tracking-widest text-[10px]">Unified Interface</span>
+           </motion.div>
+
+           {/* Final Bento Item */}
+           <motion.div variants={itemVariants} className="glass glass-hover p-10 flex flex-col justify-center group">
+              <div className="flex gap-1 mb-4">
+                 {[1,2,3].map(i => <Star key={i} className="w-4 h-4 text-foreground/20 fill-foreground/20" />)}
+              </div>
+              <p className="font-bold italic">&ldquo;The UI is simply flawless.&rdquo;</p>
+           </motion.div>
         </div>
       </section>
 
-      {/* Feature Grid - Centered & Clean */}
-      <section className="w-full py-24 border-t border-white/5">
-        <div className="grid md:grid-cols-3 gap-8 w-full max-w-6xl mx-auto">
-           <FeatureCard 
-             icon={<Zap />} 
-             title="Lightning Velocity" 
-             description="Submit applications and review candidates in milliseconds. Zero friction, total speed." 
-           />
-           <FeatureCard 
-             icon={<Shield />} 
-             title="Enterprise Security" 
-             description="Production-grade encryption and data isolation for all your talent acquisition needs." 
-           />
-           <FeatureCard 
-             icon={<Globe />} 
-             title="Global Pipeline" 
-             description="Reach top talent across the globe with automated job distribution and insights." 
-           />
-        </div>
-      </section>
-
-      {/* Social Proof - Premium Cards */}
-      <section className="w-full py-24 bg-white/[0.02] border-y border-white/5">
-         <div className="max-w-4xl mx-auto text-center px-4">
-            <div className="flex justify-center gap-1 mb-6">
-               {[1,2,3,4,5].map(i => <Star key={i} className="w-5 h-5 text-white fill-white" />)}
-            </div>
-            <blockquote className="text-3xl md:text-4xl font-bold leading-tight mb-10 tracking-tight">
-              &ldquo;RecruitFlow has transformed our hiring process. It's clean, insanely fast, and built for modern scale.&rdquo;
-            </blockquote>
-            <div className="flex items-center justify-center gap-4">
-               <div className="w-12 h-12 rounded-full bg-gradient-to-br from-white/20 to-white/5 border border-white/10" />
-               <div className="text-left">
-                  <p className="font-bold text-lg">Marcus Chen</p>
-                  <p className="text-sm text-white/50 font-medium tracking-wide">CTO @ Nebula Dynamics</p>
+      {/* Visual Break - Interactive Gradient Block */}
+      <section className="w-full py-32 flex flex-col items-center">
+         <motion.div 
+           whileHover={{ scale: 0.98 }}
+           className="w-full max-w-5xl aspect-[21/9] rounded-[3rem] bg-gradient-to-br from-foreground/10 via-foreground/5 to-transparent border border-foreground/5 flex flex-col items-center justify-center p-12 relative overflow-hidden group shadow-2xl"
+         >
+            <div className="absolute top-0 right-0 w-96 h-96 bg-foreground/5 rounded-full blur-[120px] group-hover:bg-foreground/10 transition-colors" />
+            <h2 className="text-5xl md:text-7xl font-black text-center mb-8 leading-tight">Scale Your Vision <br />With Confidence</h2>
+            <div className="flex items-center gap-6">
+               <div className="flex -space-x-4">
+                  {[1,2,3,4].map(i => <div key={i} className="w-12 h-12 rounded-full border-4 border-background bg-foreground/10" />)}
                </div>
+               <span className="text-sm font-bold text-muted-foreground">+2,400 companies joined this week</span>
             </div>
-         </div>
+         </motion.div>
       </section>
 
-      {/* Final Call to Action */}
-      <section className="w-full py-32 flex flex-col items-center text-center">
-         <div className="glass-panel p-12 md:p-20 max-w-4xl w-full relative overflow-hidden group">
-            <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full blur-[100px] -z-10 group-hover:scale-150 transition-transform duration-1000" />
-            <h2 className="text-4xl md:text-6xl font-black mb-8 tracking-tight">Ready to hire your next <br /><span className="text-white/40">superstar?</span></h2>
+      {/* Closing Section */}
+      <section className="w-full py-40 flex flex-col items-center text-center">
+         <motion.h2 variants={itemVariants} className="text-5xl md:text-8xl font-black mb-12 tracking-tighter">Ready for the <span className="opacity-30">Future?</span></motion.h2>
+         <motion.div variants={itemVariants}>
             <Link href="/signup">
-               <Button className="btn-premium px-12 h-16 text-xl">Start Your Journey</Button>
+               <Button className="btn-advanced h-20 px-20 rounded-[2rem] text-2xl bg-foreground text-background">Initialize Profile</Button>
             </Link>
-         </div>
+         </motion.div>
       </section>
-    </div>
-  )
-}
-
-function FeatureCard({ icon, title, description }: { icon: React.ReactNode; title: string; description: string }) {
-  return (
-    <div className="glass-panel p-10 interactive-card flex flex-col items-start text-left gap-6 group">
-      <div className="w-14 h-14 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-white group-hover:bg-white group-hover:text-black transition-all duration-500 shadow-xl shadow-white/5">
-        {icon}
-      </div>
-      <div>
-        <h3 className="text-2xl font-bold mb-3">{title}</h3>
-        <p className="text-white/50 font-medium leading-relaxed">{description}</p>
-      </div>
-    </div>
+    </motion.div>
   )
 }

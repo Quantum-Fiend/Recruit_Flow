@@ -7,159 +7,164 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { signUpAction } from "@/app/actions/auth"
-import { Briefcase, User, Mail, Key, ArrowRight, Sparkles, Check } from "lucide-react"
+import { toast } from "sonner"
+import { Loader2, ArrowRight, User, Mail, Lock, UserCheck, Briefcase, Command, ShieldCheck } from "lucide-react"
+import { motion } from "framer-motion"
 
-export default function SignUpPage() {
+export default function SignupPage() {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
-  const [error, setError] = useState("")
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    password: "",
-    role: "APPLICANT" as "APPLICANT" | "RECRUITER",
-  })
+  const [role, setRole] = useState<"APPLICANT" | "RECRUITER">("APPLICANT")
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setLoading(true)
-    setError("")
 
-    const result = await signUpAction(formData)
+    const formData = new FormData(e.currentTarget)
+    const name = formData.get("name") as string
+    const email = formData.get("email") as string
+    const password = formData.get("password") as string
 
-    if (result.error) {
-      setError(result.error)
-      setLoading(false)
-    } else {
-      if (formData.role === "RECRUITER") {
-        router.push("/recruiter/dashboard")
+    try {
+      const response = await fetch("/api/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, password, role }),
+      })
+
+      if (response.ok) {
+        toast.success("Account initialized successfully.")
+        router.push("/login")
       } else {
-        router.push("/jobs")
+        const error = await response.text()
+        toast.error(error || "Initialization failed.")
       }
+    } catch (error) {
+      toast.error("An unexpected error occurred.")
+    } finally {
+      setLoading(false)
     }
   }
 
   return (
-    <div className="min-h-[calc(100vh-80px)] flex items-center justify-center p-4 relative overflow-hidden">
-       {/* Background Decor */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-lg aspect-square bg-primary/20 rounded-full blur-[150px] -z-10" />
+    <div className="flex flex-col items-center justify-center min-h-screen py-20 w-full animate-slide-up">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="w-full max-w-xl"
+      >
+        <Card className="glass p-4 border-none shadow-2xl relative overflow-hidden">
+          <div className="absolute -top-32 -left-32 w-80 h-80 bg-foreground/5 rounded-full blur-[100px] -z-10" />
+          
+          <CardHeader className="p-12 text-center space-y-8">
+            <div className="w-20 h-20 bg-foreground text-background rounded-[2rem] flex items-center justify-center mx-auto shadow-2xl shadow-foreground/10 group">
+              <Command className="w-10 h-10 group-hover:rotate-180 transition-transform duration-700" />
+            </div>
+            <div className="space-y-3">
+              <CardTitle className="text-5xl font-black tracking-tighter">Initialize Account</CardTitle>
+              <CardDescription className="text-muted-foreground font-medium text-xl leading-relaxed">Choose your operational role in the ecosystem.</CardDescription>
+            </div>
 
-      <div className="w-full max-w-md animate-fade-in">
-        <div className="text-center mb-10">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-3xl bg-primary/10 border border-primary/20 text-primary mb-6">
-             <Briefcase className="w-8 h-8" />
-          </div>
-          <h1 className="text-4xl font-black tracking-tight mb-2">
-            Get <span className="gradient-text">Started</span>
-          </h1>
-          <p className="text-muted-foreground font-medium">Join the professional network of RecruitFlow</p>
-        </div>
-
-        <Card className="glass border-white/10 rounded-[2.5rem] shadow-2xl overflow-hidden">
-          <CardHeader className="pb-2 text-center">
-            <CardTitle className="text-2xl font-bold">Create Account</CardTitle>
-            <CardDescription>Select your path and join us</CardDescription>
-          </CardHeader>
-          <form onSubmit={handleSubmit}>
-            <CardContent className="space-y-6 pt-4">
-              {error && (
-                <div className="p-4 rounded-2xl bg-destructive/10 border border-destructive/20 text-destructive text-sm font-medium animate-in">
-                  {error}
+            {/* Premium Role Selector */}
+            <div className="grid grid-cols-2 gap-4">
+              <button
+                type="button"
+                onClick={() => setRole("APPLICANT")}
+                className={`p-6 rounded-2xl border-2 transition-all flex flex-col items-center gap-4 group ${
+                  role === "APPLICANT" 
+                  ? "bg-foreground text-background border-foreground shadow-xl shadow-foreground/10" 
+                  : "bg-foreground/5 border-transparent text-muted-foreground hover:bg-foreground/10"
+                }`}
+              >
+                <div className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all ${
+                  role === "APPLICANT" ? "bg-background text-foreground" : "bg-foreground/10"
+                }`}>
+                  <UserCheck className="w-6 h-6" />
                 </div>
-              )}
-
-              <div className="grid grid-cols-2 gap-3">
-                <Button
-                  type="button"
-                  variant={formData.role === "APPLICANT" ? "default" : "outline"}
-                  onClick={() => setFormData({ ...formData, role: "APPLICANT" })}
-                  className={`h-24 flex flex-col gap-2 rounded-2xl transition-all duration-300 border-2 ${formData.role === 'APPLICANT' ? 'border-primary bg-primary/10 text-primary hover:bg-primary/20' : 'border-border/50 hover:bg-accent'}`}
-                >
-                  <User className="w-6 h-6" />
-                  <span className="font-bold">Applicant</span>
-                  {formData.role === 'APPLICANT' && <div className="absolute top-2 right-2 w-5 h-5 bg-primary text-primary-foreground rounded-full flex items-center justify-center"><Check className="w-3 h-3" /></div>}
-                </Button>
-                <Button
-                  type="button"
-                  variant={formData.role === "RECRUITER" ? "default" : "outline"}
-                  onClick={() => setFormData({ ...formData, role: "RECRUITER" })}
-                  className={`h-24 flex flex-col gap-2 rounded-2xl transition-all duration-300 border-2 ${formData.role === 'RECRUITER' ? 'border-primary bg-primary/10 text-primary hover:bg-primary/20' : 'border-border/50 hover:bg-accent'}`}
-                >
-                  <Briefcase className="w-6 h-6" />
-                  <span className="font-bold">Recruiter</span>
-                  {formData.role === 'RECRUITER' && <div className="absolute top-2 right-2 w-5 h-5 bg-primary text-primary-foreground rounded-full flex items-center justify-center"><Check className="w-3 h-3" /></div>}
-                </Button>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="name" className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Full Name</Label>
-                <div className="relative">
-                  <User className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                  <Input
-                    id="name"
-                    placeholder="John Doe"
-                    value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    required
-                    className="pl-12 h-14 rounded-2xl bg-background/50 border-border/50 focus:bg-background transition-all"
-                  />
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="email" className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Work Email</Label>
-                <div className="relative">
-                  <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                  <Input
-                    id="email"
-                    type="email"
-                    placeholder="name@company.com"
-                    value={formData.email}
-                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    required
-                    className="pl-12 h-14 rounded-2xl bg-background/50 border-border/50 focus:bg-background transition-all"
-                  />
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="password" className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Security Key</Label>
-                <div className="relative">
-                  <Key className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                  <Input
-                    id="password"
-                    type="password"
-                    placeholder="At least 8 characters"
-                    value={formData.password}
-                    onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                    required
-                    minLength={8}
-                    className="pl-12 h-14 rounded-2xl bg-background/50 border-border/50 focus:bg-background transition-all"
-                  />
-                </div>
-              </div>
-            </CardContent>
-            <CardFooter className="flex flex-col gap-6 pt-2 pb-10">
-              <Button type="submit" className="w-full h-14 rounded-2xl text-lg font-bold bg-primary hover:bg-primary/90 shadow-xl shadow-primary/20 group" disabled={loading}>
-                {loading ? "Creating Profile..." : "Join RecruitFlow Now"}
-                <ArrowRight className="w-5 h-5 ml-2 transition-transform group-hover:translate-x-1" />
-              </Button>
+                <span className="font-black uppercase tracking-widest text-[10px]">Talent</span>
+              </button>
               
-              <div className="flex flex-col items-center gap-2">
-                <p className="text-sm text-muted-foreground font-medium">
-                  Already have an account?
-                </p>
-                <Link href="/login">
-                   <Button variant="link" className="text-primary font-bold p-0 h-auto hover:no-underline">
-                     Sign In Here
-                   </Button>
-                </Link>
+              <button
+                type="button"
+                onClick={() => setRole("RECRUITER")}
+                className={`p-6 rounded-2xl border-2 transition-all flex flex-col items-center gap-4 group ${
+                  role === "RECRUITER" 
+                  ? "bg-foreground text-background border-foreground shadow-xl shadow-foreground/10" 
+                  : "bg-foreground/5 border-transparent text-muted-foreground hover:bg-foreground/10"
+                }`}
+              >
+                <div className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all ${
+                  role === "RECRUITER" ? "bg-background text-foreground" : "bg-foreground/10"
+                }`}>
+                  <Briefcase className="w-6 h-6" />
+                </div>
+                <span className="font-black uppercase tracking-widest text-[10px]">Recruiter</span>
+              </button>
+            </div>
+          </CardHeader>
+          
+          <CardContent className="p-12 pt-0">
+            <form onSubmit={handleSubmit} className="space-y-8">
+              <div className="grid gap-6">
+                <div className="space-y-3">
+                  <Label htmlFor="name" className="text-xs font-black uppercase tracking-widest text-muted-foreground ml-1">Identity Name</Label>
+                  <div className="relative">
+                    <User className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                    <Input id="name" name="name" placeholder="John Doe" required className="h-14 pl-12 rounded-xl bg-foreground/5 border-none font-bold text-lg" />
+                  </div>
+                </div>
+                <div className="space-y-3">
+                  <Label htmlFor="email" className="text-xs font-black uppercase tracking-widest text-muted-foreground ml-1">Communication Channel</Label>
+                  <div className="relative">
+                    <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                    <Input id="email" name="email" type="email" placeholder="john@example.com" required className="h-14 pl-12 rounded-xl bg-foreground/5 border-none font-bold text-lg" />
+                  </div>
+                </div>
+                <div className="space-y-3">
+                  <Label htmlFor="password" className="text-xs font-black uppercase tracking-widest text-muted-foreground ml-1">Secure Key</Label>
+                  <div className="relative">
+                    <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                    <Input id="password" name="password" type="password" required className="h-14 pl-12 rounded-xl bg-foreground/5 border-none font-bold text-lg" />
+                  </div>
+                </div>
               </div>
-            </CardFooter>
-          </form>
+              
+              <Button 
+                type="submit" 
+                className="w-full h-20 rounded-[2rem] bg-foreground text-background font-black text-2xl shadow-2xl shadow-foreground/10 hover:opacity-90 group transition-all" 
+                disabled={loading}
+              >
+                {loading ? (
+                  <Loader2 className="w-8 h-8 animate-spin" />
+                ) : (
+                  <span className="flex items-center gap-4">
+                    Deploy Profile
+                    <ArrowRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
+                  </span>
+                )}
+              </Button>
+            </form>
+          </CardContent>
+          
+          <CardFooter className="p-12 border-t border-foreground/5 justify-center bg-foreground/[0.01]">
+            <p className="text-sm font-medium text-muted-foreground">
+              Already integrated?{" "}
+              <Link href="/login" className="text-foreground font-black hover:underline underline-offset-4">
+                Access System
+              </Link>
+            </p>
+          </CardFooter>
         </Card>
-      </div>
+
+        {/* Legal Disclaimer */}
+        <div className="mt-12 flex flex-col items-center gap-4 text-center opacity-30 px-10">
+           <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest">
+              <ShieldCheck className="w-4 h-4" />
+              <span>Identity Protection Active</span>
+           </div>
+           <p className="text-[10px] font-medium leading-relaxed">By initializing an account, you agree to our Enterprise Terms of Service and Global Privacy Protocol.</p>
+        </div>
+      </motion.div>
     </div>
   )
 }
