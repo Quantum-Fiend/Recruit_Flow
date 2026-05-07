@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { getJobByIdAction } from "@/app/actions/jobs"
 import { getJobTypeLabel, getEmploymentTypeLabel, formatDate } from "@/lib/utils"
-import { MapPin, Briefcase, Clock, ArrowLeft, Share2, Shield, Globe, Users, ChevronRight, Sparkles, Target, Zap, Globe2 } from "lucide-react"
+import { MapPin, Briefcase, Clock, ArrowLeft, ArrowRight, Share2, Shield, Globe, Users, ChevronRight, Sparkles, Target, Zap, Globe2 } from "lucide-react"
 import { Skeleton } from "@/components/ui/skeleton"
 import { motion } from "framer-motion"
 

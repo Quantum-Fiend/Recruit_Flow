@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { Upload, X, FileText, CheckCircle2, AlertCircle, Loader2, Sparkles, Command } from 'lucide-react'
+import { Upload, X, FileText, CheckCircle2, AlertCircle, Loader2, Sparkles, Command, ArrowRight } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { toast } from 'sonner'
 import { motion, AnimatePresence } from 'framer-motion'
