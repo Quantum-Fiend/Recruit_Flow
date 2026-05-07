@@ -8,9 +8,9 @@ import { Button } from "@/components/ui/button"
 import { getMyApplicationsAction, withdrawApplicationAction, declineOfferAction } from "@/app/actions/applications"
 import { toast } from "sonner"
 import { getStatusColor, formatDate, getJobTypeLabel } from "@/lib/utils"
-import { Briefcase, MapPin, Calendar, FileText, ArrowRight, XCircle, AlertCircle, CheckCircle2, LayoutDashboard, Sparkles } from "lucide-react"
-import { cn } from "@/lib/utils"
+import { Briefcase, MapPin, Calendar, FileText, ArrowRight, XCircle, LayoutDashboard, Sparkles, ChevronRight, Zap } from "lucide-react"
 import { Skeleton } from "@/components/ui/skeleton"
+import { cn } from "@/lib/utils"
 
 interface Application {
   id: string
@@ -42,59 +42,48 @@ export default function ApplicantDashboard() {
   }, [loadApplications])
 
   return (
-    <div className="flex flex-col min-h-screen">
-      {/* Page Header */}
-      <div className="bg-accent/30 border-b border-border py-12 md:py-16">
-        <div className="container-wide">
-          <div className="max-w-3xl animate-fade-in">
-             <div className="flex items-center gap-3 mb-6">
-                <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
-                   <LayoutDashboard className="w-6 h-6" />
-                </div>
-                <h1 className="text-4xl md:text-5xl font-black tracking-tight">
-                  My <span className="gradient-text">Journey</span>
-                </h1>
-             </div>
-             <p className="text-lg text-muted-foreground">
-               Track and manage all your active job applications in one centralized dashboard.
-             </p>
-          </div>
+    <div className="flex flex-col items-center w-full animate-fade-in">
+      {/* Header Section */}
+      <header className="w-full text-center mb-16 space-y-6">
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-[10px] font-black uppercase tracking-widest text-white/70">
+           <LayoutDashboard className="w-3 h-3" />
+           <span>Candidate Dashboard</span>
         </div>
+        <h1 className="heading-xl text-gradient">
+          My <span className="text-white">Journey</span>
+        </h1>
+        <p className="text-xl text-white/50 max-w-2xl mx-auto font-medium">
+          Track and manage your professional opportunities in real-time.
+        </p>
+      </header>
+
+      {/* Stats Summary */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-6 w-full mb-16">
+         <StatBox label="Active" value={applications.filter(a => !['WITHDRAWN', 'REJECTED', 'OFFER_DECLINED'].includes(a.status)).length} icon={<Zap />} />
+         <StatBox label="Interviews" value={applications.filter(a => a.status === 'INTERVIEW').length} icon={<Calendar />} />
+         <StatBox label="Offers" value={applications.filter(a => a.status === 'OFFER').length} icon={<Sparkles />} />
+         <StatBox label="History" value={applications.length} icon={<Briefcase />} />
       </div>
 
-      <div className="container-wide py-12 flex-1">
-        {/* Statistics or Overview Summary */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12 animate-fade-in [animation-delay:100ms]">
-           <StatBox label="Active Applications" value={applications.filter(a => !['WITHDRAWN', 'REJECTED', 'OFFER_DECLINED'].includes(a.status)).length} icon={<Briefcase />} color="text-primary" />
-           <StatBox label="Interviews" value={applications.filter(a => a.status === 'INTERVIEW').length} icon={<Calendar />} color="text-blue-500" />
-           <StatBox label="Offers" value={applications.filter(a => a.status === 'OFFER').length} icon={<Sparkles />} color="text-amber-500" />
-           <StatBox label="Total Applied" value={applications.length} icon={<CheckCircle2 />} color="text-emerald-500" />
-        </div>
-
-        {/* Applications List */}
+      {/* Application Pipeline */}
+      <div className="w-full max-w-5xl space-y-8">
         {loading ? (
-          <div className="space-y-6">
+          <div className="space-y-6 w-full">
             {[1, 2, 3].map(i => (
-              <Skeleton key={i} className="h-40 w-full rounded-[2rem] glass" />
+              <Skeleton key={i} className="h-44 w-full rounded-[2.5rem] glass-panel" />
             ))}
           </div>
         ) : applications.length === 0 ? (
-          <Card className="glass border-dashed border-2 border-border/50 text-center py-24 rounded-[3rem] animate-fade-in [animation-delay:200ms]">
-            <CardContent>
-              <div className="w-20 h-20 bg-muted/50 rounded-full flex items-center justify-center mx-auto mb-6 text-muted-foreground">
-                 <Briefcase className="w-10 h-10" />
-              </div>
-              <h3 className="text-2xl font-bold mb-2">No applications yet</h3>
-              <p className="text-muted-foreground mb-8 max-w-sm mx-auto">
-                 Ready to take the next step in your career? Start browsing our open roles.
-              </p>
-              <Link href="/jobs">
-                <Button className="rounded-full px-8 h-12">Browse Available Jobs</Button>
-              </Link>
-            </CardContent>
-          </Card>
+          <div className="text-center py-32 glass-panel w-full border-dashed">
+            <Briefcase className="w-16 h-16 mx-auto mb-6 text-white/20" />
+            <h3 className="text-2xl font-bold mb-2">No applications yet</h3>
+            <p className="text-white/40 mb-10 max-w-sm mx-auto font-medium">Ready to take the next step? Explore our open positions.</p>
+            <Link href="/jobs">
+              <Button className="btn-premium h-14 px-10 rounded-2xl text-lg">Browse Available Jobs</Button>
+            </Link>
+          </div>
         ) : (
-          <div className="space-y-6 animate-fade-in [animation-delay:200ms]">
+          <div className="space-y-6 w-full">
             {applications.map((application) => (
               <ApplicationCard 
                 key={application.id} 
@@ -114,102 +103,90 @@ function ApplicationCard({ application, onRefresh }: { application: Application;
   const isOffer = application.status === 'OFFER'
 
   return (
-    <Card className="glass border-white/10 rounded-[2.5rem] p-2 hover-card group">
-      <CardContent className="p-6 md:p-8 flex flex-col md:flex-row md:items-center justify-between gap-8">
+    <Card className="glass-panel p-2 interactive-card border-none flex flex-col md:flex-row md:items-center justify-between gap-8 group">
+      <CardContent className="p-8 flex flex-col md:flex-row md:items-center gap-8 w-full">
+        {/* Job Info */}
         <div className="flex items-center gap-6 flex-1">
-           <div className="w-16 h-16 rounded-3xl bg-gradient-to-br from-primary/20 to-purple-500/10 flex items-center justify-center text-primary border border-primary/10">
+           <div className="w-16 h-16 rounded-3xl bg-white/5 border border-white/10 flex items-center justify-center text-white/80 group-hover:bg-white group-hover:text-black transition-all duration-500 shadow-xl shadow-white/5">
               <Briefcase className="w-8 h-8" />
            </div>
-           <div className="space-y-1">
-             <div className="flex items-center gap-3 flex-wrap">
-               <h3 className="text-2xl font-bold">{application.job.title}</h3>
-               <Badge className={cn("rounded-full px-3 py-0.5 text-[10px] font-bold uppercase tracking-wider", getStatusColor(application.status))}>
+           <div className="space-y-2">
+             <div className="flex items-center gap-4 flex-wrap">
+               <h3 className="text-2xl font-black tracking-tight">{application.job.title}</h3>
+               <Badge className={cn("rounded-full px-4 py-1 text-[10px] font-black uppercase tracking-[0.2em] border-none", getStatusColor(application.status))}>
                  {application.status}
                </Badge>
              </div>
-             <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-muted-foreground font-medium">
-               <span className="flex items-center gap-1.5"><MapPin className="w-4 h-4 text-primary/70" /> {application.job.location}</span>
-               <span className="w-1 h-1 bg-muted rounded-full" />
-               <span className="flex items-center gap-1.5">{getJobTypeLabel(application.job.type)}</span>
-               <span className="w-1 h-1 bg-muted rounded-full" />
-               <span className="flex items-center gap-1.5"><Calendar className="w-4 h-4 text-primary/70" /> Applied {formatDate(application.appliedAt)}</span>
+             <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-white/40 font-bold">
+               <span className="flex items-center gap-2"><MapPin className="w-4 h-4 text-white/60" /> {application.job.location}</span>
+               <span className="flex items-center gap-2"><Calendar className="w-4 h-4 text-white/60" /> {formatDate(application.appliedAt)}</span>
+               <span className="flex items-center gap-2 text-white/60"><FileText className="w-4 h-4" /> {application.resumeName}</span>
              </div>
            </div>
         </div>
 
-        <div className="flex items-center gap-3">
-           <div className="hidden lg:flex flex-col items-end mr-4 text-right">
-              <span className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em]">Attached Resume</span>
-              <span className="text-sm font-medium flex items-center gap-2 mt-1">
-                 <FileText className="w-4 h-4 text-primary" /> {application.resumeName}
-              </span>
-           </div>
+        {/* Actions */}
+        <div className="flex items-center gap-3 w-full md:w-auto">
+           <Link href={`/jobs/${application.job.id}`} className="flex-1 md:flex-none">
+              <Button variant="outline" className="h-12 px-6 rounded-xl border-white/10 hover:bg-white/5 w-full font-bold">
+                 View Position
+              </Button>
+           </Link>
 
-           <div className="flex gap-2 w-full md:w-auto">
-             <Link href={`/jobs/${application.job.id}`} className="flex-1 md:flex-none">
-               <Button variant="outline" className="rounded-2xl h-12 px-6 w-full md:w-auto hover:bg-primary/5 hover:border-primary/50 transition-all">
-                 View Details
-               </Button>
-             </Link>
-
-             {isOffer && (
-               <Button 
-                 variant="destructive" 
-                 className="rounded-2xl h-12 px-6 shadow-lg shadow-destructive/20"
-                 onClick={async () => {
-                   if(confirm('Are you sure you want to decline this offer?')) {
-                     const result = await declineOfferAction(application.id)
-                     if (result.success) {
-                       toast.success("Offer declined successfully")
-                       onRefresh()
-                     } else {
-                       toast.error(result.error || "Failed to decline offer")
-                     }
+           {isOffer && (
+             <Button 
+               variant="destructive" 
+               className="h-12 px-6 rounded-xl font-bold bg-white text-black hover:bg-zinc-200 border-none shadow-lg shadow-white/5"
+               onClick={async () => {
+                 if(confirm('Are you sure you want to decline this offer?')) {
+                   const result = await declineOfferAction(application.id)
+                   if (result.success) {
+                     toast.success("Offer declined")
+                     onRefresh()
+                   } else {
+                     toast.error(result.error)
                    }
-                 }}
-               >
-                 Decline Offer
-               </Button>
-             )}
+                 }
+               }}
+             >
+               Decline
+             </Button>
+           )}
 
-             {isActionable && (
-               <Button 
-                 variant="ghost" 
-                 className="rounded-2xl h-12 px-6 text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-all"
-                 onClick={async () => {
-                   if(confirm('Are you sure you want to withdraw your application? This action cannot be undone.')) {
-                     const result = await withdrawApplicationAction(application.id)
-                     if (result.success) {
-                       toast.success("Application withdrawn")
-                       onRefresh()
-                     } else {
-                       toast.error(result.error || "Failed to withdraw application")
-                     }
+           {isActionable && (
+             <Button 
+               variant="ghost" 
+               className="h-12 px-6 rounded-xl font-bold text-white/40 hover:text-white hover:bg-white/5"
+               onClick={async () => {
+                 if(confirm('Withdraw this application?')) {
+                   const result = await withdrawApplicationAction(application.id)
+                   if (result.success) {
+                     toast.success("Withdrawn")
+                     onRefresh()
+                   } else {
+                     toast.error(result.error)
                    }
-                 }}
-               >
-                 <XCircle className="w-4 h-4 mr-2" />
-                 Withdraw
-               </Button>
-             )}
-           </div>
+                 }
+               }}
+             >
+               <XCircle className="w-5 h-5 mr-2" />
+               Withdraw
+             </Button>
+           )}
         </div>
       </CardContent>
     </Card>
   )
 }
 
-function StatBox({ label, value, icon, color }: { label: string; value: number | string; icon: React.ReactNode; color: string }) {
+function StatBox({ label, value, icon }: { label: string; value: number | string; icon: React.ReactNode }) {
   return (
-    <Card className="glass border-white/10 rounded-3xl p-6">
-       <div className="flex items-center justify-between mb-4">
-          <div className={cn("w-10 h-10 rounded-xl bg-muted/50 flex items-center justify-center", color)}>
-             {icon}
-          </div>
-          <span className="text-3xl font-black">{value}</span>
+    <Card className="glass-panel p-8 text-center border-none interactive-card group">
+       <div className="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-white/40 mx-auto mb-6 group-hover:bg-white group-hover:text-black transition-all">
+          {icon}
        </div>
-       <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">{label}</p>
+       <div className="text-4xl font-black mb-2">{value}</div>
+       <p className="text-[10px] font-black text-white/40 uppercase tracking-[0.2em]">{label}</p>
     </Card>
   )
 }
-

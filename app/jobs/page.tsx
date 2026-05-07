@@ -1,223 +1,132 @@
 'use client'
 
-import { useEffect, useState } from "react"
+import { useEffect, useState, useCallback } from "react"
 import Link from "next/link"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
 import { getJobsAction } from "@/app/actions/jobs"
-import { getJobTypeLabel, getEmploymentTypeLabel } from "@/lib/utils"
-import { Briefcase, MapPin, Clock, Search, Filter, Sparkles, ChevronRight } from "lucide-react"
+import { Search, MapPin, Briefcase, Clock, Filter, Sparkles, ArrowRight, ChevronRight } from "lucide-react"
 import { Skeleton } from "@/components/ui/skeleton"
-
-interface Job {
-  id: string
-  title: string
-  description: string
-  location: string
-  type: string
-  employmentType: string
-  experienceLevel: string
-  skills: string[]
-  _count: {
-    applications: number
-  }
-}
+import { getJobTypeLabel, formatDate } from "@/lib/utils"
 
 export default function JobsPage() {
-  const [jobs, setJobs] = useState<Job[]>([])
+  const [jobs, setJobs] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState("")
 
+  const loadJobs = useCallback(async (query = "") => {
+    setLoading(true)
+    const result = await getJobsAction({ search: query })
+    if (result.success && result.jobs) {
+      setJobs(result.jobs)
+    }
+    setLoading(false)
+  }, [])
+
   useEffect(() => {
-    let ignore = false;
-    
-    async function loadJobs() {
-      setLoading(true)
-      const result = await getJobsAction({ search })
-      if (!ignore) {
-        if (result.success && result.jobs) {
-          setJobs(result.jobs)
-        }
-        setLoading(false)
-      }
-    }
+    loadJobs()
+  }, [loadJobs])
 
-    const timer = setTimeout(() => {
-      loadJobs()
-    }, 400) // Slightly faster debounce
-
-    return () => {
-      ignore = true
-      clearTimeout(timer)
-    }
-  }, [search])
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault()
+    loadJobs(search)
+  }
 
   return (
-    <div className="flex flex-col min-h-screen">
-      {/* Background Decor */}
-      <div className="absolute top-0 right-0 w-1/3 h-1/3 bg-primary/5 rounded-full blur-[100px] -z-10" />
+    <div className="flex flex-col items-center w-full animate-fade-in">
+      {/* Header Section */}
+      <section className="w-full text-center mb-16 space-y-6">
+        <h1 className="heading-xl text-gradient">
+          Career <span className="text-white">Forge</span>
+        </h1>
+        <p className="text-xl text-white/50 max-w-2xl mx-auto font-medium">
+          Discover high-impact roles in world-class organizations.
+        </p>
+      </section>
 
-      <div className="container-wide py-12 md:py-20 flex-1">
-        {/* Header Section */}
-        <div className="max-w-4xl mx-auto text-center mb-16 animate-fade-in">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-bold mb-6">
-            <Sparkles className="w-3 h-3" />
-            <span>EXPLORE OPPORTUNITIES</span>
+      {/* Search Section */}
+      <div className="w-full max-w-4xl mb-16">
+        <form onSubmit={handleSearch} className="relative group">
+          <div className="absolute inset-0 bg-white/10 rounded-[2.5rem] blur-2xl opacity-0 group-hover:opacity-30 transition-opacity duration-700 -z-10" />
+          <div className="relative glass-panel p-2 flex items-center gap-2">
+             <div className="flex-1 relative">
+               <Search className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-white/30" />
+               <Input 
+                 placeholder="Search by title, role or keywords..." 
+                 className="h-16 pl-14 pr-6 bg-transparent border-none text-lg font-medium focus-visible:ring-0 placeholder:text-white/20"
+                 value={search}
+                 onChange={(e) => setSearch(e.target.value)}
+               />
+             </div>
+             <Button type="submit" className="btn-premium h-14 rounded-2xl px-10 text-lg hidden sm:flex">
+               Search Roles
+             </Button>
           </div>
-          <h1 className="text-5xl md:text-6xl font-black mb-6 tracking-tight">
-            Find Your <span className="gradient-text">Next Chapter</span>
-          </h1>
-          <p className="text-xl text-muted-foreground mb-10 max-w-2xl mx-auto">
-            Discover a variety of professional roles across leading companies. 
-            Filtered and curated just for you.
-          </p>
+        </form>
+      </div>
 
-          {/* Search Bar Refined */}
-          <div className="max-w-2xl mx-auto relative group">
-            <div className="absolute -inset-1 bg-gradient-to-r from-primary to-purple-600 rounded-2xl blur opacity-25 group-hover:opacity-40 transition duration-1000"></div>
-            <div className="relative">
-              <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-muted-foreground w-5 h-5 group-hover:text-primary transition-colors" />
-              <Input
-                type="text"
-                placeholder="Search jobs by title, skills, or location..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                className="pl-14 h-16 text-lg rounded-2xl border-border/50 bg-background/50 backdrop-blur-sm focus:bg-background transition-all"
-              />
-              <div className="absolute right-3 top-1/2 -translate-y-1/2">
-                <Button size="sm" className="rounded-xl h-10 px-4 bg-primary hover:bg-primary/90">
-                   Search
-                </Button>
-              </div>
-            </div>
+      {/* Content Grid */}
+      <div className="w-full">
+        {loading ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {[1, 2, 3, 4].map(i => (
+              <Skeleton key={i} className="h-64 w-full rounded-[2.5rem] glass-panel" />
+            ))}
           </div>
-        </div>
-
-        {/* Main Content */}
-        <div className="flex flex-col lg:flex-row gap-8">
-           {/* Filters Sidebar (Optional/Placeholder) */}
-           <aside className="hidden lg:block w-64 space-y-8 animate-fade-in [animation-delay:200ms]">
-              <div className="space-y-4">
-                 <h3 className="font-bold text-sm uppercase tracking-widest flex items-center gap-2">
-                    <Filter className="w-4 h-4" /> Filters
-                 </h3>
-                 <div className="h-px bg-border/50" />
-                 <div className="space-y-2">
-                    <p className="text-sm font-medium">Job Type</p>
-                    <div className="flex flex-wrap gap-2">
-                       {['Full-time', 'Part-time', 'Contract', 'Internship'].map(t => (
-                          <Badge key={t} variant="secondary" className="cursor-pointer hover:bg-primary/20 hover:text-primary transition-colors">{t}</Badge>
-                       ))}
-                    </div>
-                 </div>
-              </div>
-              
-              <div className="glass rounded-2xl p-6 border-primary/10">
-                 <h4 className="font-bold mb-2">Job Alerts</h4>
-                 <p className="text-xs text-muted-foreground mb-4">Never miss an opportunity. Get notified about new jobs.</p>
-                 <Button className="w-full text-xs h-8 rounded-lg" variant="outline">Set Up Alert</Button>
-              </div>
-           </aside>
-
-           {/* Jobs List */}
-           <div className="flex-1 space-y-6">
-              <div className="flex items-center justify-between mb-2 px-2">
-                 <h2 className="font-bold text-lg">
-                    {loading ? "Searching..." : `${jobs.length} Positions Available`}
-                 </h2>
-                 <div className="flex gap-2">
-                    <Button variant="ghost" size="sm" className="h-8 rounded-lg text-xs">Recently Added</Button>
-                 </div>
-              </div>
-
-              {loading ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                   {[1, 2, 4, 5, 6].map(i => (
-                     <Skeleton key={i} className="h-64 w-full rounded-[2rem] glass" />
-                   ))}
-                </div>
-              ) : jobs.length === 0 ? (
-                <Card className="glass border-dashed border-2 border-border/50 text-center py-24 rounded-[3rem]">
-                  <CardContent>
-                    <div className="w-20 h-20 bg-muted/50 rounded-full flex items-center justify-center mx-auto mb-6">
-                       <Search className="w-10 h-10 text-muted-foreground" />
-                    </div>
-                    <h3 className="text-2xl font-bold mb-2">No jobs found</h3>
-                    <p className="text-muted-foreground mb-8 max-w-sm mx-auto">
-                       Try adjusting your search terms or filters to find what you're looking for.
-                    </p>
-                    <Button variant="outline" onClick={() => setSearch("")} className="rounded-xl">Clear Search</Button>
-                  </CardContent>
-                </Card>
-              ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {jobs.map((job) => (
-                    <JobCard key={job.id} job={job} />
-                  ))}
-                </div>
-              )}
-           </div>
-        </div>
+        ) : jobs.length === 0 ? (
+          <div className="text-center py-32 glass-panel w-full max-w-3xl mx-auto border-dashed">
+            <Briefcase className="w-16 h-16 mx-auto mb-6 text-white/20" />
+            <h3 className="text-2xl font-bold mb-2">No matching roles found</h3>
+            <p className="text-white/40 mb-8 max-w-sm mx-auto font-medium">We couldn't find any jobs matching your criteria. Try different keywords.</p>
+            <Button variant="outline" onClick={() => { setSearch(""); loadJobs(""); }} className="rounded-xl px-8 h-12 border-white/10 hover:bg-white/5 font-bold">
+              View All Listings
+            </Button>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full">
+            {jobs.map((job) => (
+              <JobCard key={job.id} job={job} />
+            ))}
+          </div>
+        )}
       </div>
     </div>
   )
 }
 
-function JobCard({ job }: { job: Job }) {
+function JobCard({ job }: { job: any }) {
   return (
-    <Link href={`/jobs/${job.id}`} className="group block h-full">
-      <Card className="glass border-white/10 rounded-[2rem] p-4 h-full flex flex-col hover-card overflow-hidden">
-        <CardHeader className="pb-4 relative">
-          <div className="flex items-start justify-between gap-4 mb-4">
-             <div className="w-14 h-14 bg-gradient-to-br from-primary/20 to-purple-500/10 rounded-2xl flex items-center justify-center text-primary border border-primary/20 group-hover:scale-110 transition-transform">
-                <Briefcase className="w-7 h-7" />
-             </div>
-             <Badge className="rounded-full px-4 bg-primary/10 text-primary border-primary/20 hover:bg-primary/20 transition-colors uppercase text-[10px] tracking-widest font-bold">
-               {getJobTypeLabel(job.type)}
-             </Badge>
+    <Link href={`/jobs/${job.id}`} className="block group h-full">
+      <Card className="glass-panel h-full interactive-card border-none p-2 flex flex-col justify-between">
+        <CardHeader className="p-8 pb-4">
+          <div className="flex justify-between items-start mb-6">
+            <div className="w-14 h-14 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-white/80 group-hover:bg-white group-hover:text-black transition-all duration-500">
+              <Briefcase className="w-7 h-7" />
+            </div>
+            <Badge variant="outline" className="rounded-full px-4 py-1 border-white/10 bg-white/5 text-[10px] font-black tracking-[0.2em] uppercase text-white/70">
+              {getJobTypeLabel(job.type)}
+            </Badge>
           </div>
-          
-          <CardTitle className="text-2xl font-bold group-hover:text-primary transition-colors line-clamp-1">{job.title}</CardTitle>
-          <CardDescription className="flex items-center gap-3 mt-2 font-medium">
-            <span className="flex items-center gap-1.5"><MapPin className="w-4 h-4 text-primary/70" /> {job.location}</span>
-            <span className="w-1 h-1 bg-muted rounded-full" />
-            <span className="flex items-center gap-1.5">{getEmploymentTypeLabel(job.employmentType)}</span>
-          </CardDescription>
+          <CardTitle className="text-2xl font-black mb-4 tracking-tight group-hover:text-white transition-colors">
+            {job.title}
+          </CardTitle>
+          <div className="flex flex-wrap items-center gap-4 text-sm text-white/40 font-bold">
+            <span className="flex items-center gap-1.5"><MapPin className="w-4 h-4 text-white/60" /> {job.location}</span>
+            <span className="w-1 h-1 bg-white/20 rounded-full" />
+            <span className="flex items-center gap-1.5"><Clock className="w-4 h-4 text-white/60" /> {formatDate(job.createdAt)}</span>
+          </div>
         </CardHeader>
-
-        <CardContent className="flex-1 flex flex-col justify-between pt-0">
-          <p className="text-sm text-muted-foreground line-clamp-3 mb-6 leading-relaxed">
-            {job.description}
-          </p>
-
-          <div className="space-y-6">
-            <div className="flex flex-wrap gap-2">
-              {job.skills.slice(0, 3).map((skill: string) => (
-                <Badge key={skill} variant="secondary" className="text-[10px] rounded-lg bg-accent/50 text-muted-foreground px-2 py-0.5">
-                  {skill}
-                </Badge>
-              ))}
-              {job.skills.length > 3 && (
-                <Badge variant="ghost" className="text-[10px] px-0 text-muted-foreground">
-                  +{job.skills.length - 3} more
-                </Badge>
-              )}
-            </div>
-
-            <div className="h-px bg-border/50" />
-
-            <div className="flex items-center justify-between">
-               <div className="flex items-center gap-4 text-xs font-bold text-muted-foreground/70">
-                  <span className="flex items-center gap-1.5 uppercase tracking-tighter"><Clock className="w-3.5 h-3.5" /> {job._count.applications} Applicants</span>
-               </div>
-               <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-all">
-                  <ChevronRight className="w-5 h-5" />
-               </div>
-            </div>
-          </div>
-        </CardContent>
+        <CardFooter className="p-8 pt-0 mt-auto flex items-center justify-between">
+           <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-[10px] font-black">RF</div>
+              <span className="text-sm font-bold text-white/60">{job.recruiter.name}</span>
+           </div>
+           <div className="flex items-center gap-1 text-white font-black text-sm group-hover:gap-2 transition-all">
+              Apply Now <ChevronRight className="w-4 h-4" />
+           </div>
+        </CardFooter>
       </Card>
     </Link>
   )

@@ -2,46 +2,17 @@ import type { Metadata } from "next"
 import { Inter } from "next/font/google"
 import "./globals.css"
 import { Toaster } from "sonner"
+import { ThemeProvider } from "@/components/theme-provider"
+import { SessionProvider } from "@/components/session-provider"
+import { Navbar } from "@/components/navbar"
 
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"),
-  title: "RecruitFlow | Modern Applicant Tracking System",
-  description: "Streamline your hiring process with RecruitFlow. Manage job postings, track applications, and optimize your recruitment workflow with our production-grade ATS.",
-  keywords: ["ATS", "recruitment", "hiring", "job board", "applicant tracking", "hiring software", "recruiter tools"],
-  authors: [{ name: "RecruitFlow Team" }],
-  openGraph: {
-    title: "RecruitFlow | Modern Applicant Tracking System",
-    description: "Streamline your hiring process with RecruitFlow.",
-    url: "https://recruitflow.vercel.app",
-    siteName: "RecruitFlow",
-    images: [
-      {
-        url: "/og-image.png",
-        width: 1200,
-        height: 630,
-        alt: "RecruitFlow Dashboard preview",
-      },
-    ],
-    locale: "en_US",
-    type: "website",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "RecruitFlow | Modern Applicant Tracking System",
-    description: "Streamline your hiring process with RecruitFlow.",
-    images: ["/og-image.png"],
-  },
-  robots: {
-    index: true,
-    follow: true,
-  },
+  title: "RecruitFlow | Next-Generation Talent Acquisition",
+  description: "Experience the future of hiring with RecruitFlow's minimalist, high-performance applicant tracking system.",
 }
-
-import { ThemeProvider } from "@/components/theme-provider"
-import { SessionProvider } from "@/components/session-provider"
-import { Navbar } from "@/components/navbar"
 
 export default function RootLayout({
   children,
@@ -50,21 +21,36 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={inter.className}>
+      <body className={`${inter.className} dark bg-[#050507] selection:bg-white selection:text-black`}>
         <SessionProvider>
           <ThemeProvider
             attribute="class"
             defaultTheme="dark"
-            enableSystem
+            enableSystem={false}
             disableTransitionOnChange
           >
-            <div className="relative min-h-screen flex flex-col page-bg">
+            {/* Global Atmosphere & Background Effects */}
+            <div className="atmosphere" />
+            
+            <div className="relative min-h-screen flex flex-col">
               <Navbar />
-              <main className="flex-1">
+              
+              {/* Centered App Container */}
+              <main className="flex-1 w-full max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
                 {children}
               </main>
+
+              {/* Global Footer (Centered) */}
+              <footer className="w-full border-t border-white/5 py-12 mt-auto">
+                 <div className="max-w-[1400px] mx-auto px-4 text-center">
+                    <p className="text-sm text-muted-foreground font-medium">
+                       &copy; {new Date().getFullYear()} RecruitFlow Engine. Built for the modern talent stack.
+                    </p>
+                 </div>
+              </footer>
             </div>
-            <Toaster position="top-right" richColors />
+            
+            <Toaster position="bottom-center" richColors theme="dark" />
           </ThemeProvider>
         </SessionProvider>
       </body>
