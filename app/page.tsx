@@ -30,8 +30,8 @@ export default function LandingPage() {
       variants={containerVariants}
       className="flex flex-col items-center w-full"
     >
-      {/* Hero Section - The Sapphire Tier */}
-      <section className="w-full pt-16 pb-40 flex flex-col items-center text-center relative">
+      {/* Hero Section */}
+      <section className="w-full premium-container pt-8 pb-32 flex flex-col items-center text-center relative">
         <motion.div 
           variants={itemVariants}
           className="inline-flex items-center gap-3 px-5 py-2 rounded-2xl bg-primary/10 border border-primary/20 text-xs font-black uppercase tracking-[0.25em] text-primary mb-12 shadow-2xl shadow-primary/5"
@@ -71,9 +71,9 @@ export default function LandingPage() {
         </motion.div>
       </section>
 
-      {/* Creative Bento Grid - Intelligence Section */}
-      <section className="w-full py-40 border-t border-border/50">
-        <div className="bento-container max-w-7xl mx-auto px-4">
+      {/* Bento Grid - Intelligence Section */}
+      <section className="w-full py-24 border-t border-border/30">
+        <div className="bento-container premium-container">
            {/* Primary Intelligence Block */}
            <motion.div variants={itemVariants} className="bento-item lg:col-span-8 creative-card glass-morphism min-h-[500px] flex flex-col justify-end group">
               <div className="absolute top-12 right-12 w-32 h-32 bg-primary/10 rounded-full blur-[60px] group-hover:bg-primary/20 transition-all duration-1000" />
@@ -123,9 +123,9 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Social Verification Section */}
-      <section className="w-full py-40 flex flex-col items-center">
-         <div className="max-w-5xl mx-auto px-4 w-full">
+      {/* Social Proof Section */}
+      <section className="w-full py-24 flex flex-col items-center">
+         <div className="premium-container w-full">
             <motion.div 
               variants={itemVariants}
               className="text-center mb-24"
@@ -143,13 +143,16 @@ export default function LandingPage() {
          </div>
       </section>
 
-      {/* Interactive Closing Section */}
-      <section className="w-full py-60 flex flex-col items-center text-center relative overflow-hidden">
-         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full sapphire-aura opacity-50" />
-         <motion.div variants={itemVariants} className="relative z-10 px-6">
-            <h2 className="h-xl text-sapphire mb-12 tracking-tighter">Build Your <br /><span className="text-primary">Legacy.</span></h2>
-            <Link href="/signup">
-               <Button className="btn-sapphire h-20 px-20 rounded-[2rem] text-2xl shadow-2xl">Initialize Deployment</Button>
+      {/* CTA Closing Section */}
+      <section className="w-full py-32 flex flex-col items-center text-center relative overflow-hidden">
+         <div className="absolute inset-0 pointer-events-none" style={{background: 'radial-gradient(ellipse 60% 80% at 50% 50%, hsla(217,91%,60%,0.08) 0%, transparent 70%)'}} />
+         <motion.div variants={itemVariants} className="relative z-10 px-6 premium-container">
+            <h2 className="h-xl text-sapphire mb-10 tracking-tighter">Build Your <br /><span className="text-primary">Legacy.</span></h2>
+            <Link
+               href="/signup"
+               className="btn-sapphire h-20 px-20 rounded-[2rem] text-xl shadow-2xl inline-flex items-center"
+            >
+               Initialize Deployment
             </Link>
             <p className="mt-10 text-muted-foreground font-black uppercase tracking-widest text-xs">Join 500+ Engineering Teams This Month</p>
          </motion.div>

@@ -109,9 +109,9 @@ export default function ApplyPage() {
     <motion.div 
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="max-w-[1000px] mx-auto py-12 md:py-20 px-6"
+      className="page-wrapper animate-slide-up"
     >
-      <div className="max-w-3xl mx-auto space-y-12">
+      <div className="max-w-2xl mx-auto space-y-10">
          {/* Top Navigation */}
          <Link href={`/jobs/${params.id}`}>
             <Button variant="ghost" className="rounded-2xl h-12 px-6 group font-bold text-muted-foreground hover:text-foreground">

@@ -32,7 +32,7 @@ export default function RecruiterDashboard() {
     <motion.div 
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="flex flex-col w-full animate-slide-up pt-12"
+      className="page-wrapper animate-slide-up"
     >
       {/* Dashboard Header */}
       <header className="w-full mb-16 flex flex-col md:flex-row md:items-end justify-between gap-10">

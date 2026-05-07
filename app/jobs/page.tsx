@@ -35,7 +35,7 @@ export default function JobsPage() {
   }
 
   return (
-    <div className="flex flex-col items-center w-full pt-12 animate-slide-up">
+    <div className="page-wrapper animate-slide-up">
       {/* Header Section */}
       <section className="w-full mb-20 space-y-12">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-10">

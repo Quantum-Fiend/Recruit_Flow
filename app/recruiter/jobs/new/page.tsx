@@ -51,9 +51,9 @@ export default function NewJobPage() {
     <motion.div 
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="w-full"
+      className="page-wrapper animate-slide-up"
     >
-      <div className="max-w-3xl mx-auto space-y-12">
+      <div className="max-w-2xl mx-auto space-y-10">
          {/* Navigation */}
          <Link href="/recruiter/dashboard">
             <Button variant="ghost" className="rounded-2xl h-12 px-6 group font-bold text-muted-foreground hover:text-foreground">

@@ -92,7 +92,7 @@ export default function JobDetailsPage() {
     <motion.div 
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="w-full"
+      className="page-wrapper animate-slide-up"
     >
       {/* Navigation & Actions */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-8 mb-16">
