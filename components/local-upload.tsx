@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Upload, X, FileText, Loader2, Sparkles, CheckCircle2 } from "lucide-react"
 import { toast } from "sonner"
 import { cn } from "@/lib/utils"
+import { Badge } from "@/components/ui/badge"
 
 interface LocalUploadProps {
   onUploadComplete: (res: { url: string; name: string }) => void

@@ -117,7 +117,7 @@ export async function updateApplicationStatusAction(data: UpdateApplicationStatu
     }
 
     // Update status and history in a transaction
-    await prisma.$transaction(async (tx) => {
+    await prisma.$transaction(async (tx: any) => {
       await tx.application.update({
         where: { id: validated.applicationId },
         data: { status: validated.status },
