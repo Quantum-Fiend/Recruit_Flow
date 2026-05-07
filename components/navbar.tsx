@@ -43,7 +43,7 @@ export function Navbar() {
           : "bg-transparent py-8"
       )}
     >
-      <div className="max-w-[1400px] mx-auto px-6 flex items-center justify-between">
+      <div className="premium-container flex items-center justify-between">
         <Link 
           href="/" 
           className="flex items-center gap-3 group transition-all"

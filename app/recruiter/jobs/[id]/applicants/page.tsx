@@ -132,7 +132,7 @@ export default function ApplicantsPage() {
     <motion.div 
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="max-w-[1300px] mx-auto py-12 md:py-20 px-6 animate-slide-up"
+      className="flex flex-col w-full animate-slide-up"
     >
       {/* Header Section */}
       <header className="w-full mb-16 flex flex-col md:flex-row md:items-end justify-between gap-10">
