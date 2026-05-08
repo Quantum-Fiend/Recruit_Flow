@@ -108,7 +108,7 @@ export default function LandingPage() {
                variants={itemVariants} 
                className="sticky top-32 group"
              >
-                <div className="premium-card h-[700px] p-12 md:p-24 flex flex-col items-center justify-center text-center glass-panel backdrop-blur-3xl shadow-2xl relative overflow-hidden">
+                <div className="premium-card h-[800px] p-12 md:p-24 flex flex-col items-center justify-center text-center glass-panel backdrop-blur-3xl shadow-2xl relative overflow-hidden">
                    {/* Background Telemetry Visualization */}
                    <div className="absolute inset-0 opacity-[0.03] pointer-events-none grid grid-cols-24 gap-1 px-4 py-8">
                       {Array.from({ length: 288 }).map((_, i) => (
@@ -116,7 +116,7 @@ export default function LandingPage() {
                       ))}
                    </div>
                    
-                   <div className="absolute top-20 w-24 h-24 sapphire-gradient rounded-3xl flex items-center justify-center text-white shadow-2xl group-hover:scale-110 transition-transform duration-700">
+                   <div className="w-24 h-24 sapphire-gradient rounded-3xl flex items-center justify-center text-white shadow-2xl group-hover:scale-110 transition-transform duration-700 mb-16 relative z-10">
                       <Cpu className="w-12 h-12" />
                    </div>
                    
@@ -157,12 +157,14 @@ export default function LandingPage() {
                variants={itemVariants} 
                className="sticky top-40 group"
              >
-                <div className="premium-card h-[700px] p-12 md:p-24 flex flex-col items-center justify-center text-center bg-amber-500/5 border-amber-500/10 backdrop-blur-3xl shadow-2xl relative overflow-hidden">
+                <div className="premium-card h-[800px] p-12 md:p-24 flex flex-col items-center justify-center text-center bg-amber-500/5 border-amber-500/10 backdrop-blur-3xl shadow-2xl relative overflow-hidden">
                    <div className="absolute inset-0 opacity-[0.02] pointer-events-none flex items-center justify-center">
                       <div className="w-[1000px] h-[1000px] border-[60px] border-amber-500 rounded-full animate-pulse" />
                    </div>
 
-                   <Zap className="absolute top-20 w-16 h-16 text-amber-500" />
+                   <div className="w-20 h-20 bg-amber-500/20 rounded-2xl flex items-center justify-center text-amber-500 mb-16 relative z-10">
+                      <Zap className="w-10 h-10" />
+                   </div>
                    
                    <div className="space-y-12 max-w-4xl z-10">
                       <div className="space-y-6">
@@ -202,8 +204,10 @@ export default function LandingPage() {
                variants={itemVariants} 
                className="sticky top-48 group"
              >
-                <div className="premium-card h-[700px] p-12 md:p-24 flex flex-col items-center justify-center text-center bg-emerald-500/5 border-emerald-500/10 backdrop-blur-3xl shadow-2xl relative overflow-hidden">
-                   <Globe2 className="absolute top-20 w-16 h-16 text-emerald-500" />
+                <div className="premium-card h-[800px] p-12 md:p-24 flex flex-col items-center justify-center text-center bg-emerald-500/5 border-emerald-500/10 backdrop-blur-3xl shadow-2xl relative overflow-hidden">
+                   <div className="w-20 h-20 bg-emerald-500/20 rounded-2xl flex items-center justify-center text-emerald-500 mb-16 relative z-10">
+                      <Globe2 className="w-10 h-10" />
+                   </div>
                    
                    <div className="space-y-12 max-w-4xl z-10">
                       <div className="space-y-6">
@@ -235,12 +239,14 @@ export default function LandingPage() {
                variants={itemVariants} 
                className="sticky top-56 group"
              >
-                <div className="premium-card h-[600px] p-12 md:p-20 flex flex-col items-center justify-center text-center sapphire-gradient border-none shadow-2xl relative overflow-hidden">
-                   <Shield className="absolute top-16 w-20 h-20 text-white/20" />
+                <div className="premium-card h-[800px] p-12 md:p-24 flex flex-col items-center justify-center text-center sapphire-gradient border-none shadow-2xl relative overflow-hidden">
+                   <div className="w-24 h-24 bg-white/10 rounded-3xl flex items-center justify-center text-white mb-16 relative z-10">
+                      <Shield className="w-12 h-12" />
+                   </div>
                    
-                   <div className="space-y-10 max-w-3xl z-10">
-                      <div className="space-y-4">
-                         <h3 className="text-6xl md:text-8xl font-black tracking-tighter text-white leading-none">Hardened <br />Protocols.</h3>
+                   <div className="space-y-12 max-w-4xl z-10">
+                      <div className="space-y-6">
+                         <h3 className="text-6xl md:text-9xl font-black tracking-tighter text-white leading-none">Hardened <br />Protocols.</h3>
                          <p className="text-xl text-white/70 font-medium leading-relaxed max-w-xl mx-auto">Military-grade end-to-end encryption for every technical application, resume, and internal telemetry note.</p>
                       </div>
 
