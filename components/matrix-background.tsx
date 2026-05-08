@@ -23,18 +23,18 @@ export const MatrixBackground: React.FC = () => {
 
     const draw = () => {
       // Very light trails
-      ctx.fillStyle = 'rgba(0, 0, 0, 0.05)'
+      const matrixFade = getComputedStyle(canvas).getPropertyValue('--matrix-fade') || 'rgba(0, 0, 0, 0.05)'
+      ctx.fillStyle = matrixFade
       ctx.fillRect(0, 0, width, height)
 
       ctx.font = '15px monospace'
 
+      // Get color from CSS variable
+      const matrixColor = getComputedStyle(canvas).getPropertyValue('--matrix-color') || 'rgba(59, 130, 246, 0.1)'
+      ctx.fillStyle = matrixColor
+      
       for (let i = 0; i < drops.length; i++) {
         const text = charArray[Math.floor(Math.random() * charArray.length)]
-        
-        // Use primary color with varying opacity for the "light" matrix look
-        const opacity = Math.random() * 0.15 + 0.05
-        ctx.fillStyle = `rgba(59, 130, 246, ${opacity})` 
-        
         ctx.fillText(text, i * 20, drops[i] * 20)
 
         if (drops[i] * 20 > height && Math.random() > 0.975) {

@@ -40,20 +40,22 @@
 }
 
 :root {
-  --background: hsl(0 0% 100%);
-  --foreground: hsl(224 71% 4%);
+  --background: hsl(210 40% 99%);
+  --foreground: hsl(222 47% 11%);
   --card: hsl(0 0% 100%);
-  --card-foreground: hsl(224 71% 4%);
+  --card-foreground: hsl(222 47% 11%);
   --popover: hsl(0 0% 100%);
-  --popover-foreground: hsl(224 71% 4%);
-  --secondary: hsl(220 14% 96%);
-  --secondary-foreground: hsl(224 71% 4%);
-  --muted: hsl(220 14% 96%);
-  --muted-foreground: hsl(220 9% 46%);
-  --accent: hsl(220 14% 96%);
-  --accent-foreground: hsl(224 71% 4%);
-  --border: hsl(220 13% 91%);
-  --input: hsl(220 13% 91%);
+  --popover-foreground: hsl(222 47% 11%);
+  --secondary: hsl(210 40% 96.1%);
+  --secondary-foreground: hsl(222 47% 11.2%);
+  --muted: hsl(210 40% 96.1%);
+  --muted-foreground: hsl(215.4 16.3% 46.9%);
+  --accent: hsl(210 40% 96.1%);
+  --accent-foreground: hsl(222 47% 11.2%);
+  --border: hsl(214.3 31.8% 91.4%);
+  --input: hsl(214.3 31.8% 91.4%);
+  --matrix-color: rgba(59, 130, 246, 0.08);
+  --matrix-fade: rgba(255, 255, 255, 0.1);
 }
 
 .dark {
@@ -71,6 +73,8 @@
   --accent-foreground: hsl(210 20% 98%);
   --border: hsl(215 28% 12%);
   --input: hsl(215 28% 10%);
+  --matrix-color: rgba(59, 130, 246, 0.2);
+  --matrix-fade: rgba(0, 0, 0, 0.1);
 }
 
 /* ========== Base Reset ========== */
@@ -164,10 +168,16 @@ body {
   width: 120%;
   height: 120%;
   background: 
-    radial-gradient(circle at 20% 30%, color-mix(in srgb, var(--color-primary), transparent 90%), transparent 40%),
-    radial-gradient(circle at 80% 70%, color-mix(in srgb, #6d28d9, transparent 92%), transparent 40%);
+    radial-gradient(circle at 20% 30%, color-mix(in srgb, var(--color-primary), transparent 98%), transparent 40%),
+    radial-gradient(circle at 80% 70%, color-mix(in srgb, #6d28d9, transparent 98%), transparent 40%);
   filter: blur(140px);
   animation: atmosphere-drift 40s ease-in-out infinite alternate;
+}
+
+.dark .quantum-atmosphere::before {
+  background: 
+    radial-gradient(circle at 20% 30%, color-mix(in srgb, var(--color-primary), transparent 90%), transparent 40%),
+    radial-gradient(circle at 80% 70%, color-mix(in srgb, #6d28d9, transparent 92%), transparent 40%);
 }
 
 @keyframes atmosphere-drift {
@@ -177,15 +187,16 @@ body {
 
 /* Linear-inspired Glassmorphism */
 .glass-panel {
-  background: color-mix(in srgb, var(--color-background), transparent 96%);
+  background: color-mix(in srgb, var(--color-background), transparent 92%);
   backdrop-filter: blur(20px);
-  border: 1px solid color-mix(in srgb, var(--color-foreground), transparent 94%);
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  border: 1px solid color-mix(in srgb, var(--color-foreground), transparent 92%);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.04);
 }
 
 .dark .glass-panel {
   background: rgba(255, 255, 255, 0.015);
   border: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
 }
 
 /* Premium Card Interaction (Linear Style) */
@@ -196,20 +207,29 @@ body {
   border-radius: var(--radius-2xl);
   transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
   overflow: hidden;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
 }
 
 .premium-card::after {
   content: "";
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at var(--x, 50%) var(--y, 50%), rgba(255,255,255,0.06), transparent 100%);
+  background: radial-gradient(circle at var(--x, 50%) var(--y, 50%), rgba(0,0,0,0.02), transparent 100%);
   opacity: 0;
   transition: opacity 0.5s ease;
+}
+
+.dark .premium-card::after {
+  background: radial-gradient(circle at var(--x, 50%) var(--y, 50%), rgba(255,255,255,0.06), transparent 100%);
 }
 
 .premium-card:hover {
   transform: translateY(-2px);
   border-color: color-mix(in srgb, var(--color-foreground), transparent 85%);
+  box-shadow: 0 20px 40px -20px rgba(0, 0, 0, 0.1);
+}
+
+.dark .premium-card:hover {
   box-shadow: 0 20px 40px -20px rgba(0, 0, 0, 0.5);
 }
 
