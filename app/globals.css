@@ -5,34 +5,44 @@
 @theme {
   --font-sans: var(--font-jakarta), ui-sans-serif, system-ui, sans-serif;
 
-  /* Dark Theme Colors */
-  --color-background: hsl(222 47% 4%);
-  --color-foreground: hsl(210 40% 98%);
-
-  --color-card: hsl(222 47% 6%);
-  --color-card-foreground: hsl(210 40% 98%);
-
-  --color-popover: hsl(222 47% 5%);
-  --color-popover-foreground: hsl(210 40% 98%);
-
+  /* Light Theme Colors (Default) */
+  --color-background: hsl(0 0% 100%);
+  --color-foreground: hsl(222 47% 4%);
+  --color-card: hsl(0 0% 98%);
+  --color-card-foreground: hsl(222 47% 4%);
+  --color-popover: hsl(0 0% 100%);
+  --color-popover-foreground: hsl(222 47% 4%);
   --color-primary: hsl(217 91% 60%);
-  --color-primary-foreground: hsl(222 47% 4%);
-
-  --color-secondary: hsl(222 20% 12%);
-  --color-secondary-foreground: hsl(210 40% 98%);
-
-  --color-muted: hsl(222 20% 10%);
-  --color-muted-foreground: hsl(215 20% 55%);
-
-  --color-accent: hsl(222 20% 12%);
-  --color-accent-foreground: hsl(210 40% 98%);
-
-  --color-destructive: hsl(0 72% 51%);
+  --color-primary-foreground: hsl(210 40% 98%);
+  --color-secondary: hsl(210 40% 96%);
+  --color-secondary-foreground: hsl(222 47% 4%);
+  --color-muted: hsl(210 40% 96%);
+  --color-muted-foreground: hsl(215 16% 47%);
+  --color-accent: hsl(210 40% 96%);
+  --color-accent-foreground: hsl(222 47% 4%);
+  --color-destructive: hsl(0 84% 60%);
   --color-destructive-foreground: hsl(210 40% 98%);
-
-  --color-border: hsl(222 20% 12%);
-  --color-input: hsl(222 20% 10%);
+  --color-border: hsl(214 32% 91%);
+  --color-input: hsl(214 32% 91%);
   --color-ring: hsl(217 91% 60%);
+
+  /* Dark Theme Overrides */
+  @variant dark {
+    --color-background: hsl(222 47% 4%);
+    --color-foreground: hsl(210 40% 98%);
+    --color-card: hsl(222 47% 6%);
+    --color-card-foreground: hsl(210 40% 98%);
+    --color-popover: hsl(222 47% 5%);
+    --color-popover-foreground: hsl(210 40% 98%);
+    --color-secondary: hsl(222 20% 12%);
+    --color-secondary-foreground: hsl(210 40% 98%);
+    --color-muted: hsl(222 20% 10%);
+    --color-muted-foreground: hsl(215 20% 55%);
+    --color-accent: hsl(222 20% 12%);
+    --color-accent-foreground: hsl(210 40% 98%);
+    --color-border: hsl(222 20% 12%);
+    --color-input: hsl(222 20% 10%);
+  }
 
   --radius-lg: 1rem;
   --radius-md: 0.75rem;
@@ -162,13 +172,15 @@ body {
 
 /* Advanced Glassmorphism */
 .glass-morphism {
-  background: rgba(14, 20, 36, 0.4);
-  backdrop-filter: blur(24px) saturate(180%);
-  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  background: color-mix(in srgb, var(--color-background), transparent 95%);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid color-mix(in srgb, var(--color-foreground), transparent 92%);
+}
+
+.dark .glass-morphism {
+  background: rgba(255, 255, 255, 0.03);
   border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 
-    0 8px 32px 0 rgba(0, 0, 0, 0.37),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.03);
 }
 
 /* Premium Card Interaction */

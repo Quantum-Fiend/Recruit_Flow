@@ -88,7 +88,7 @@ export function Navbar() {
                 variant="outline"
                 size="icon"
                 className="w-10 h-10 rounded-xl border-white/10 hover:bg-white/5 hover:border-destructive/50 transition-all group"
-                onClick={() => signOut()}
+                onClick={() => signOut({ callbackUrl: "/" })}
               >
                 <LogOut className="w-4 h-4 text-muted-foreground group-hover:text-destructive transition-colors" />
               </Button>

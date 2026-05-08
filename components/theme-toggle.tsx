@@ -21,7 +21,7 @@ export function ThemeToggle() {
     <Button
       variant="ghost"
       size="icon"
-      className="relative w-12 h-12 rounded-2xl bg-white/5 border border-white/5 hover:bg-white/10 group transition-all duration-500 overflow-hidden"
+      className="relative w-16 h-16 rounded-[1.5rem] bg-white/5 border border-white/5 hover:bg-white/10 group transition-all duration-500 overflow-hidden"
       onClick={() => setTheme(theme === "light" ? "dark" : "light")}
     >
       <AnimatePresence mode="wait">
