@@ -4,7 +4,6 @@ import { useEffect, useState, useCallback } from "react"
 import { useParams } from "next/navigation"
 import Link from "next/link"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
@@ -12,7 +11,7 @@ import { getJobApplicationsAction, addApplicationNoteAction } from "@/app/action
 import { getJobByIdAction } from "@/app/actions/jobs"
 import { getStatusColor, formatDate } from "@/lib/utils"
 import { getPossibleNextStatuses } from "@/lib/workflow"
-import { ArrowLeft, FileText, MessageSquare, Target, Users, Zap, Briefcase, ChevronRight, Activity, Globe, LayoutDashboard } from "lucide-react"
+import { ArrowLeft, FileText, Users, Zap, ChevronRight, MessageSquare } from "lucide-react"
 import { toast } from "sonner"
 import { ApplicationStatus } from "@prisma/client"
 import { motion, AnimatePresence } from "framer-motion"
@@ -74,6 +73,7 @@ export default function ApplicantsPage() {
   }, [params.id])
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     loadData()
   }, [loadData])
 

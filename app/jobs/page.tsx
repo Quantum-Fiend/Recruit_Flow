@@ -26,7 +26,6 @@ export default function JobsPage() {
   const [search, setSearch] = useState("")
 
   const loadJobs = useCallback(async (query = "") => {
-    setLoading(true)
     const result = await getJobsAction({ search: query })
     if (result.success && result.jobs) {
       setJobs(result.jobs)
@@ -35,7 +34,6 @@ export default function JobsPage() {
   }, [])
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     loadJobs();
   }, [loadJobs])
 

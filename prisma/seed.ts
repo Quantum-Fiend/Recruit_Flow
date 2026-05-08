@@ -93,7 +93,8 @@ async function main() {
 
   for (const job of jobsData) {
     await prisma.job.create({
-      data: job as any, // Keeping as any for simplicity in seed if it's dynamic
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      data: job as any, 
     })
   }
 

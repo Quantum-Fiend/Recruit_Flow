@@ -2,12 +2,11 @@
 
 import { useEffect, useState, useCallback } from "react"
 import Link from "next/link"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
+import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { getJobsAction, closeJobAction } from "@/app/actions/jobs"
-import { getStatusColor, getJobTypeLabel, formatDate } from "@/lib/utils"
-import { Plus, MapPin, Users, Briefcase, ChevronRight, Activity, Zap, Globe, ArrowLeft, Target, Eye, XCircle } from "lucide-react"
+import { getStatusColor, formatDate } from "@/lib/utils"
+import { Plus, MapPin, Users, Briefcase, Activity, ArrowLeft, Eye, XCircle } from "lucide-react"
 import { toast } from "sonner"
 import { motion, AnimatePresence } from "framer-motion"
 import { cn } from "@/lib/utils"
@@ -30,7 +29,6 @@ export default function RecruiterJobsPage() {
   const [loading, setLoading] = useState(true)
 
   const loadJobs = useCallback(async () => {
-    setLoading(true)
     const result = await getJobsAction({})
     if (result.success && result.jobs) {
       setJobs(result.jobs as RecruiterJob[])
@@ -39,6 +37,7 @@ export default function RecruiterJobsPage() {
   }, [])
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     loadJobs()
   }, [loadJobs])
 

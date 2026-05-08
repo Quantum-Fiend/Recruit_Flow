@@ -3,13 +3,13 @@
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { createJobAction } from "@/app/actions/jobs"
-import { ArrowLeft, Plus, Zap, Sparkles, Globe, Target, Shield, ArrowRight, Loader2, Command } from "lucide-react"
+import { ArrowLeft, Plus, Zap, Target, Shield, ArrowRight, Loader2 } from "lucide-react"
 import { toast } from "sonner"
 import { motion } from "framer-motion"
 import { cn } from "@/lib/utils"
@@ -162,7 +162,7 @@ export default function NewJobPage() {
                               key={type}
                               type="button"
                               variant="ghost"
-                              onClick={() => setFormData({ ...formData, type: type as any })}
+                              onClick={() => setFormData({ ...formData, type: type as "FULL_TIME" | "PART_TIME" | "CONTRACT" | "INTERNSHIP" })}
                               className={cn(
                                 "h-11 rounded-xl font-bold text-[10px] uppercase tracking-widest border border-transparent transition-all",
                                 formData.type === type ? "bg-primary/10 text-primary border-primary/20" : "bg-foreground/5 hover:bg-foreground/10"
@@ -181,7 +181,7 @@ export default function NewJobPage() {
                               key={type}
                               type="button"
                               variant="ghost"
-                              onClick={() => setFormData({ ...formData, employmentType: type as any })}
+                              onClick={() => setFormData({ ...formData, employmentType: type as "OFFICE" | "REMOTE" | "HYBRID" })}
                               className={cn(
                                 "h-11 rounded-xl font-bold text-[10px] uppercase tracking-widest border border-transparent transition-all",
                                 formData.employmentType === type ? "bg-primary/10 text-primary border-primary/20" : "bg-foreground/5 hover:bg-foreground/10"
@@ -243,7 +243,7 @@ export default function NewJobPage() {
                <Shield className="w-4 h-4" />
                <span>Enterprise Compliance Verified</span>
             </div>
-            <p className="text-[10px] font-medium leading-relaxed">By deploying this position, you confirm that all specifications adhere to global employment standards and RecruitFlow's fair recruitment protocol.</p>
+            <p className="text-[10px] font-medium leading-relaxed">By deploying this position, you confirm that all specifications adhere to global employment standards and RecruitFlow&apos;s fair recruitment protocol.</p>
          </div>
       </div>
     </motion.div>
