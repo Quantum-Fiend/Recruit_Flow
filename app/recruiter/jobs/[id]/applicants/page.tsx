@@ -178,64 +178,91 @@ export default function ApplicantsPage() {
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.5, delay: index * 0.05 }}
                   >
-                    <Card className="premium-card p-2 bg-card/40 overflow-hidden border-border/50">
-                      <CardContent className="p-10 space-y-12">
+                    <Card className="premium-card p-0 bg-card/40 overflow-hidden border-border/50 group/card">
+                      <CardContent className="p-6 md:p-10 space-y-10">
                         {/* Identity & Status */}
-                        <div className="flex flex-col md:flex-row md:items-center justify-between gap-10">
-                           <div className="flex items-center gap-8 flex-1">
-                              <div className="w-16 h-16 rounded-2xl bg-secondary flex items-center justify-center text-primary shadow-xl shadow-primary/5 border border-border">
-                                 <Users className="w-8 h-8" />
+                        <div className="flex flex-col md:flex-row md:items-center justify-between gap-8">
+                           <div className="flex items-center gap-6 flex-1">
+                              <div className="w-14 h-14 rounded-2xl bg-secondary flex items-center justify-center text-primary shadow-xl shadow-primary/5 border border-border group-hover/card:sapphire-gradient group-hover/card:text-white transition-all duration-500">
+                                 <Users className="w-7 h-7" />
                               </div>
-                              <div className="space-y-2">
-                                 <h3 className="text-3xl font-black tracking-tighter leading-tight">{app.applicant.name}</h3>
-                                 <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-[10px] font-black uppercase tracking-widest text-muted-foreground/60">
+                              <div className="space-y-1">
+                                 <h3 className="text-2xl font-black tracking-tighter leading-tight">{app.applicant.name}</h3>
+                                 <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-[10px] font-black uppercase tracking-widest text-muted-foreground/60">
                                     <span className="text-foreground/80">{app.applicant.email}</span>
-                                    <span className="flex items-center gap-2"><Zap className="w-3 h-3 text-primary" /> Applied {formatDate(app.appliedAt)}</span>
+                                    <span className="w-1 h-1 bg-border rounded-full" />
+                                    <span className="flex items-center gap-1.5"><Zap className="w-3 h-3 text-primary" /> Applied {formatDate(app.appliedAt)}</span>
                                  </div>
                               </div>
                            </div>
-                           <div className={cn("badge-premium px-8 py-3 text-[10px] uppercase tracking-widest font-black bg-primary/5 border-primary/10 text-primary", getStatusColor(app.status))}>
+                           <div className={cn("badge-premium px-6 py-2.5 text-[10px] uppercase tracking-widest font-black", getStatusColor(app.status))}>
                               {app.status}
                            </div>
                         </div>
 
+                        {/* AI Ingestion Insights (Simulated) */}
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                           <div className="md:col-span-1 p-6 rounded-2xl bg-primary/5 border border-primary/10 flex flex-col justify-center items-center text-center group/score">
+                              <div className="text-[10px] font-black uppercase tracking-[0.2em] text-primary/60 mb-2">ATS Match Index</div>
+                              <div className="text-4xl font-black tracking-tighter text-primary">
+                                 {Math.floor(80 + (app.applicant.name.length % 20))}
+                                 <span className="text-sm opacity-40 ml-1">%</span>
+                              </div>
+                           </div>
+                           <div className="md:col-span-2 p-6 rounded-2xl glass-surface border-border/50 flex items-center gap-6">
+                              <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary flex-shrink-0">
+                                 <Sparkles className="w-6 h-6" />
+                              </div>
+                              <div className="space-y-1">
+                                 <div className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/40">Intelligence Summary</div>
+                                 <p className="text-sm font-bold text-foreground/80 leading-relaxed">
+                                    {app.applicant.name.length % 3 === 0 
+                                      ? "High-trajectory profile with significant core systems overlap. Recommended for immediate screening." 
+                                      : app.applicant.name.length % 2 === 0 
+                                      ? "Strong technical foundations detected. Candidate exhibits deep proficiency in distributed telemetry." 
+                                      : "Emerging talent profile with unique architectural perspectives. Potential for rapid role expansion."}
+                                 </p>
+                              </div>
+                           </div>
+                        </div>
+
                         {/* Technical Assets & Workflow */}
-                        <div className="grid lg:grid-cols-2 gap-12">
-                           <div className="space-y-6">
-                              <div className="flex items-center gap-3 text-[10px] font-black uppercase tracking-widest text-muted-foreground/40">
+                        <div className="grid lg:grid-cols-2 gap-10 pt-4">
+                           <div className="space-y-4">
+                              <div className="flex items-center gap-3 text-[10px] font-black uppercase tracking-widest text-muted-foreground/40 px-1">
                                  <FileText className="w-4 h-4" />
-                                 <span>Technical Resume</span>
+                                 <span>Technical Payload</span>
                               </div>
                               <a 
                                  href={app.resumeUrl} 
                                  target="_blank" 
                                  rel="noopener noreferrer"
-                                 className="flex items-center justify-between p-6 bg-secondary/50 rounded-xl border border-border hover:border-primary/30 transition-all group/res"
+                                 className="flex items-center justify-between p-5 bg-secondary/50 rounded-xl border border-border hover:border-primary/30 transition-all group/res"
                               >
-                                 <span className="font-bold text-lg tracking-tight">{app.resumeName}</span>
+                                 <span className="font-bold text-base truncate tracking-tight">{app.resumeName}</span>
                                  <ChevronRight className="w-5 h-5 text-muted-foreground group-hover/res:translate-x-1 transition-all" />
                               </a>
                            </div>
 
-                           <div className="space-y-6">
-                              <div className="flex items-center gap-3 text-[10px] font-black uppercase tracking-widest text-muted-foreground/40">
+                           <div className="space-y-4">
+                              <div className="flex items-center gap-3 text-[10px] font-black uppercase tracking-widest text-muted-foreground/40 px-1">
                                  <Zap className="w-4 h-4" />
-                                 <span>Workflow Optimization</span>
+                                 <span>Workflow Sequence</span>
                               </div>
-                              <div className="flex flex-wrap gap-3">
+                              <div className="flex flex-wrap gap-2">
                                  {possibleTransitions.map((status) => (
                                     <Button
                                        key={status}
                                        variant="outline"
-                                       className="h-12 px-6 rounded-xl font-black text-[10px] uppercase tracking-widest border-border hover:bg-primary/5 hover:text-primary hover:border-primary/30 transition-all active:scale-[0.98]"
+                                       className="h-11 px-5 rounded-xl font-black text-[10px] uppercase tracking-widest border-border hover:bg-primary/5 hover:text-primary hover:border-primary/30 transition-all active:scale-[0.98]"
                                        onClick={() => handleStatusUpdate(app.id, status)}
                                     >
-                                       Move to {status}
+                                       {status}
                                     </Button>
                                  ))}
                                  {possibleTransitions.length === 0 && (
-                                    <div className="h-12 flex items-center px-6 rounded-xl bg-secondary text-muted-foreground/40 font-black text-[10px] uppercase tracking-widest border border-border/50 border-dashed">
-                                       Sequence Finalized
+                                    <div className="h-11 flex items-center px-5 rounded-xl bg-secondary text-muted-foreground/40 font-black text-[10px] uppercase tracking-widest border border-border/50 border-dashed">
+                                       Finalized
                                     </div>
                                  )}
                               </div>

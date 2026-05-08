@@ -121,7 +121,9 @@ export async function getJobsAction(filters?: {
     const limit = filters?.limit || 10
     const skip = (page - 1) * limit
 
-    const where: Prisma.JobWhereInput = {}
+    const where: Prisma.JobWhereInput = {
+      deletedAt: null,
+    }
 
     if (filters?.status) {
       where.status = filters.status as JobStatus

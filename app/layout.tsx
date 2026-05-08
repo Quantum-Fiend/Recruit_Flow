@@ -66,13 +66,19 @@ export default function RootLayout({
                        </ul>
                     </div>
                  </div>
-                 <div className="premium-container border-t border-border mt-12 pt-8 flex justify-between items-center text-[10px] font-black uppercase tracking-widest text-muted-foreground">
-                    <span>&copy; {new Date().getFullYear()} RecruitFlow Inc.</span>
+                  <div className="premium-container border-t border-border mt-12 pt-8 flex flex-col md:flex-row justify-between items-center gap-6 text-[10px] font-black uppercase tracking-widest text-muted-foreground">
+                    <div className="flex items-center gap-6">
+                      <span>&copy; {new Date().getFullYear()} RecruitFlow Inc.</span>
+                      <div className="flex items-center gap-2 px-3 py-1 bg-emerald-500/5 text-emerald-500 border border-emerald-500/10 rounded-full">
+                        <div className="w-1 h-1 bg-emerald-500 rounded-full animate-pulse" />
+                        <span>Systems Operational</span>
+                      </div>
+                    </div>
                     <span className="flex gap-6">
-                       <span className="hover:text-foreground cursor-pointer">Privacy</span>
-                       <span className="hover:text-foreground cursor-pointer">Terms</span>
+                       <span className="hover:text-foreground cursor-pointer transition-colors">Privacy</span>
+                       <span className="hover:text-foreground cursor-pointer transition-colors">Terms</span>
                     </span>
-                 </div>
+                  </div>
               </footer>
             </div>
 

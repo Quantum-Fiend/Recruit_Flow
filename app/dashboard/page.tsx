@@ -5,7 +5,7 @@ import Link from "next/link"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { getMyApplicationsAction, withdrawApplicationAction, declineOfferAction } from "@/app/actions/applications"
+import { getMyApplicationsAction, withdrawApplicationAction, acceptOfferAction, declineOfferAction } from "@/app/actions/applications"
 import { toast } from "sonner"
 import { getStatusColor, formatDate, getJobTypeLabel } from "@/lib/utils"
 import { Briefcase, MapPin, Calendar, FileText, ArrowRight, XCircle, LayoutDashboard, Sparkles, ChevronRight, Zap, Target, Activity } from "lucide-react"
@@ -156,11 +156,41 @@ function ApplicationListItem({ application, index, onRefresh }: { application: A
              </Link>
 
              {isOffer && (
-               <Button 
-                 className="h-14 px-10 rounded-xl font-black text-xs uppercase tracking-widest sapphire-gradient text-white shadow-xl shadow-primary/20"
-               >
-                 Review Offer
-               </Button>
+                <div className="flex flex-col gap-2">
+                  <Button 
+                    className="h-14 px-10 rounded-xl font-black text-xs uppercase tracking-widest sapphire-gradient text-white shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all"
+                    onClick={async () => {
+                      if(confirm('Officially accept this mission deployment? This will finalize your recruitment sequence.')) {
+                        const result = await acceptOfferAction(application.id)
+                        if (result.success) {
+                          toast.success("Welcome to the team. Initialization complete.")
+                          onRefresh()
+                        } else {
+                          toast.error(result.error)
+                        }
+                      }
+                    }}
+                  >
+                    Accept Offer
+                  </Button>
+                  <Button 
+                    variant="ghost"
+                    className="h-10 rounded-xl font-black text-[10px] uppercase tracking-widest text-muted-foreground hover:text-destructive hover:bg-destructive/5 transition-all"
+                    onClick={async () => {
+                      if(confirm('Decline this offer sequence?')) {
+                        const result = await declineOfferAction(application.id)
+                        if (result.success) {
+                          toast.success("Offer declined. Sequence terminated.")
+                          onRefresh()
+                        } else {
+                          toast.error(result.error)
+                        }
+                      }
+                    }}
+                  >
+                    Decline Offer
+                  </Button>
+                </div>
              )}
 
              {isActionable && (

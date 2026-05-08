@@ -16,12 +16,12 @@ export const signInSchema = z.object({
 
 // Job validations
 export const createJobSchema = z.object({
-  title: z.string().min(3, 'Title must be at least 3 characters'),
-  description: z.string().min(50, 'Description must be at least 50 characters'),
-  location: z.string().min(2, 'Location is required'),
+  title: z.string().min(3, 'Title must be at least 3 characters').max(100, 'Title is too long'),
+  description: z.string().min(50, 'Description must be at least 50 characters').max(5000, 'Description is too long'),
+  location: z.string().min(2, 'Location is required').max(100, 'Location is too long'),
   type: z.enum(['FULL_TIME', 'PART_TIME', 'CONTRACT', 'INTERNSHIP']),
   employmentType: z.enum(['OFFICE', 'REMOTE', 'HYBRID']),
-  experienceLevel: z.string().min(1, 'Experience level is required'),
+  experienceLevel: z.string().min(1, 'Experience level is required').max(100, 'Experience level is too long'),
   skills: z.array(z.string()).min(1, 'At least one skill is required'),
 })
 

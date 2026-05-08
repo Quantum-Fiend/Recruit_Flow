@@ -58,7 +58,8 @@ export async function GET(req: Request) {
 
     // Build filter conditions
     const where: Prisma.JobWhereInput = {
-      status: "OPEN", // Default to open jobs
+      status: "OPEN",
+      deletedAt: null,
     }
 
     if (recruiterId) {

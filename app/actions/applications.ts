@@ -334,6 +334,55 @@ export async function withdrawApplicationAction(applicationId: string) {
   }
 }
 
+export async function acceptOfferAction(applicationId: string) {
+  try {
+    const user = await requireAuth()
+
+    const application = await prisma.application.findUnique({
+      where: { id: applicationId },
+      include: { job: true }
+    })
+
+    if (!application) {
+      return { error: "Application not found" }
+    }
+
+    if (application.applicantId !== user.id) {
+      return { error: "Unauthorized" }
+    }
+
+    if (application.status !== "OFFER") {
+      return { error: "No offer to accept" }
+    }
+
+    // Update status to HIRED
+     await prisma.$transaction([
+      prisma.application.update({
+        where: { id: applicationId },
+        data: { status: "HIRED" },
+      }),
+      prisma.applicationHistory.create({
+        data: {
+          applicationId,
+          oldStatus: "OFFER",
+          newStatus: "HIRED",
+          changedById: user.id,
+        },
+      }),
+      // Automatically close the job if needed? 
+      // For now, just mark the application as hired
+    ])
+
+    revalidatePath("/dashboard")
+    revalidatePath(`/recruiter/jobs/${application.jobId}/applicants`)
+
+    return { success: true }
+  } catch (error) {
+    console.error("Accept offer error:", error)
+    return { error: "Failed to accept offer" }
+  }
+}
+
 export async function declineOfferAction(applicationId: string) {
   try {
     const user = await requireAuth()

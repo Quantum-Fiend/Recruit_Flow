@@ -18,6 +18,22 @@ export async function POST(req: Request) {
       return new NextResponse("No file uploaded", { status: 400 });
     }
 
+    // 10MB limit
+    if (file.size > 10 * 1024 * 1024) {
+      return new NextResponse("File too large (Max 10MB)", { status: 400 });
+    }
+
+    // Allowed types
+    const allowedTypes = [
+      "application/pdf",
+      "application/msword",
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    ];
+
+    if (!allowedTypes.includes(file.type)) {
+      return new NextResponse("Invalid file type (PDF/DOCX only)", { status: 400 });
+    }
+
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
 
@@ -29,7 +45,7 @@ export async function POST(req: Request) {
       // Ignore if directory exists
     }
 
-    const uniqueName = `${uuidv4()}-${file.name}`;
+    const uniqueName = `${uuidv4()}-${file.name.replace(/\s+/g, "_")}`;
     const path = join(uploadDir, uniqueName);
     
     await writeFile(path, buffer);

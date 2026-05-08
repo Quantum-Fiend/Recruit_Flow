@@ -158,7 +158,7 @@ function JobConsoleCard({ job, index }: { job: any; index: number }) {
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.5, delay: index * 0.05 }}
     >
-      <Link href={`/recruiter/jobs/${job.id}`} className="block group">
+      <Link href={`/recruiter/jobs/${job.id}/applicants`} className="block group">
         <Card className="premium-card p-8 flex flex-col md:flex-row md:items-center justify-between gap-10 bg-card/40">
            <div className="flex items-center gap-8 flex-1">
               <div className="w-16 h-16 rounded-2xl bg-primary/5 border border-primary/10 flex items-center justify-center text-primary group-hover:sapphire-gradient group-hover:text-white transition-all duration-500 shadow-lg shadow-primary/5">

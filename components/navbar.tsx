@@ -87,6 +87,7 @@ export function Navbar() {
               <Button
                 variant="ghost"
                 size="icon"
+                aria-label="Sign Out"
                 className="w-11 h-11 rounded-xl bg-secondary hover:bg-destructive/5 border border-border hover:border-destructive/30 transition-all group"
                 onClick={() => signOut({ callbackUrl: "/" })}
               >
@@ -117,6 +118,7 @@ export function Navbar() {
           <button
             className="w-11 h-11 rounded-xl bg-secondary border border-border flex items-center justify-center transition-all hover:bg-secondary/80"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            aria-label={mobileMenuOpen ? "Close Menu" : "Open Menu"}
           >
             {mobileMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
           </button>
