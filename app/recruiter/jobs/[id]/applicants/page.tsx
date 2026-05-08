@@ -11,7 +11,7 @@ import { getJobApplicationsAction, addApplicationNoteAction } from "@/app/action
 import { getJobByIdAction } from "@/app/actions/jobs"
 import { getStatusColor, formatDate } from "@/lib/utils"
 import { getPossibleNextStatuses } from "@/lib/workflow"
-import { ArrowLeft, FileText, Users, Zap, ChevronRight, MessageSquare } from "lucide-react"
+import { ArrowLeft, FileText, Users, Zap, ChevronRight, MessageSquare, Loader2 } from "lucide-react"
 import { toast } from "sonner"
 import { ApplicationStatus } from "@prisma/client"
 import { motion, AnimatePresence } from "framer-motion"
@@ -349,7 +349,5 @@ export default function ApplicantsPage() {
         )}
       </div>
     </div>
-  )
-}
   )
 }

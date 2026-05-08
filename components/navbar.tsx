@@ -33,7 +33,6 @@ export function Navbar() {
   ]
 
   return (
-  return (
     <header
       className={cn(
         "fixed top-0 left-0 right-0 z-50 transition-all duration-700",
@@ -79,9 +78,9 @@ export function Navbar() {
           {session ? (
             <div className="flex items-center gap-6">
               <div className="flex flex-col items-end">
-                <span className="text-xs font-black tracking-tighter leading-tight text-foreground">{session.user.name}</span>
+                <span className="text-xs font-black tracking-tighter leading-tight text-foreground">{session?.user?.name}</span>
                 <span className="text-[10px] text-primary/60 font-black uppercase tracking-widest">
-                  {session.user.role}
+                  {session?.user?.role}
                 </span>
               </div>
               <Button

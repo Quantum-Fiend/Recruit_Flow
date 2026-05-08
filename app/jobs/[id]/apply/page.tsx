@@ -223,17 +223,3 @@ function IntegrityFeature({ icon, label, desc }: { icon: React.ReactNode; label:
     </div>
   )
 }
-  )
-}
-
-function IntegrityFeature({ icon, label, desc }: { icon: React.ReactNode; label: string; desc: string }) {
-  return (
-    <div className="p-6 rounded-2xl bg-secondary/50 border border-border flex items-start gap-4 hover:border-primary/20 transition-all">
-       <div className="text-primary mt-1">{icon}</div>
-       <div className="space-y-1">
-          <p className="text-sm font-black tracking-tight">{label}</p>
-          <p className="text-xs text-muted-foreground font-medium leading-relaxed">{desc}</p>
-       </div>
-    </div>
-  )
-}

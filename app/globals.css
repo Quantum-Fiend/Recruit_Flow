@@ -257,6 +257,7 @@ body {
 .text-gradient {
   background: linear-gradient(180deg, var(--foreground) 0%, color-mix(in srgb, var(--foreground), transparent 40%) 100%);
   -webkit-background-clip: text;
+  -moz-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
 }
