@@ -52,7 +52,7 @@ export default function LandingPage() {
           className="h-xl mb-12 max-w-6xl tracking-tight"
         >
           Architecting <br />
-          <span className="text-gradient italic">The Future</span> of Hiring.
+          <span className="text-gradient">The Future</span> of Hiring.
         </motion.h1>
 
         <motion.p

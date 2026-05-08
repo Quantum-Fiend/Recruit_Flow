@@ -68,7 +68,7 @@ export default function RecruiterJobsPage() {
                  Back to Console
               </Button>
            </Link>
-           <h1 className="h-lg">Mission <br /><span className="text-primary italic">Archives.</span></h1>
+           <h1 className="h-lg">Mission <br /><span className="text-primary">Archives.</span></h1>
            <p className="text-xl text-muted-foreground font-medium text-balance">Historical and active recruitment sequences within your jurisdiction.</p>
         </div>
         

@@ -39,8 +39,7 @@ export default function LoginChoicePage() {
             <span>Secure Access Gateway</span>
           </div>
           <h1 className="h-xl">
-            System <br />
-            <span className="text-primary italic">Access</span> Hub.
+            Access Hub.
           </h1>
           <p className="text-xl text-muted-foreground font-medium max-w-xl mx-auto leading-relaxed text-balance">
             Choose your gateway to authorize access to the RecruitFlow engine.

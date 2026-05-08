@@ -122,7 +122,7 @@ export default function ApplyPage() {
                <span>Sequence Initialization</span>
             </div>
             <h1 className="h-lg text-gradient leading-tight">
-               Deploy for <br /><span className="italic">{job.title}</span>
+               Deploy for <br /><span>{job.title}</span>
             </h1>
             <p className="text-xl text-muted-foreground font-medium opacity-60 max-w-xl leading-relaxed">
                Connecting your talent profile with the <span className="text-foreground font-black">{job.recruiter.name}</span> engineering infrastructure.

@@ -140,7 +140,7 @@ export default function ApplicantsPage() {
               </Button>
            </Link>
            <h1 className="h-lg text-gradient leading-tight">
-             {job?.title} <br /><span className="italic">Telemetry.</span>
+            {job?.title} <br /><span>Telemetry.</span>
            </h1>
            <p className="text-xl text-muted-foreground font-medium opacity-60 leading-relaxed max-w-xl">
              Reviewing and orchestrating the high-performance talent ingestion stream for this sequence.

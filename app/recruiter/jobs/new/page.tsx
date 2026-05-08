@@ -69,7 +69,7 @@ export default function NewJobPage() {
                <span>Mission Deployment</span>
             </div>
             <h1 className="h-lg">
-               Deploy New <br /><span className="text-primary italic">Position.</span>
+               Deploy New <br /><span className="text-primary">Position.</span>
             </h1>
             <p className="text-xl text-muted-foreground font-medium text-balance">
                Initialize a new talent acquisition sequence within the global engineering pipeline.
