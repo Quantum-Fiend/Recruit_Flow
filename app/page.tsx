@@ -94,18 +94,18 @@ export default function LandingPage() {
           {/* Primary Intelligence Block */}
           <motion.div
             variants={itemVariants}
-            className="bento-item lg:col-span-8 creative-card glass-morphism min-h-[500px] flex flex-col justify-end group"
+            className="bento-item lg:col-span-8 creative-card glass-morphism min-h-[400px] md:min-h-[500px] flex flex-col justify-end group p-8 md:p-12"
           >
             <div className="absolute top-12 right-12 w-32 h-32 bg-primary/10 rounded-full blur-[60px] group-hover:bg-primary/20 transition-all duration-1000" />
             <div className="space-y-6">
               <div className="w-16 h-16 rounded-3xl sapphire-gradient flex items-center justify-center text-white shadow-2xl shadow-primary/20">
                 <Cpu className="w-8 h-8" />
               </div>
-              <h2 className="text-5xl font-black tracking-tighter leading-none">
+              <h2 className="text-3xl md:text-5xl font-black tracking-tighter leading-none">
                 AI-Assisted <br />
                 Vector Screening
               </h2>
-              <p className="text-lg text-muted-foreground font-medium max-w-md leading-relaxed">
+              <p className="text-base md:text-lg text-muted-foreground font-medium max-w-md leading-relaxed">
                 Our proprietary algorithms analyze candidate trajectories to
                 predict long-term performance and cultural alignment with 94%
                 accuracy.
@@ -116,13 +116,13 @@ export default function LandingPage() {
           {/* Velocity Block */}
           <motion.div
             variants={itemVariants}
-            className="bento-item lg:col-span-4 creative-card glass-morphism flex flex-col justify-between group"
+            className="bento-item lg:col-span-4 creative-card glass-morphism flex flex-col justify-between group min-h-[300px] p-8"
           >
             <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-all duration-500">
               <Zap className="w-6 h-6" />
             </div>
             <div className="space-y-4">
-              <h3 className="text-3xl font-black tracking-tight">
+              <h3 className="text-2xl md:text-3xl font-black tracking-tight">
                 Zero-Latency Flow
               </h3>
               <p className="text-muted-foreground font-medium text-sm leading-relaxed">
@@ -135,7 +135,7 @@ export default function LandingPage() {
           {/* Global Scale Block */}
           <motion.div
             variants={itemVariants}
-            className="bento-item lg:col-span-4 creative-card glass-morphism flex flex-col gap-8 group"
+            className="bento-item lg:col-span-4 creative-card glass-morphism flex flex-col gap-8 group min-h-[300px] p-8"
           >
             <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
               <Globe2 className="w-6 h-6" />
@@ -152,22 +152,22 @@ export default function LandingPage() {
           {/* Security Block */}
           <motion.div
             variants={itemVariants}
-            className="bento-item lg:col-span-8 creative-card sapphire-gradient p-12 group overflow-hidden"
+            className="bento-item lg:col-span-8 creative-card sapphire-gradient p-8 md:p-12 group overflow-hidden min-h-[400px] md:min-h-0"
           >
             <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10" />
-            <div className="relative z-10 flex flex-col md:flex-row md:items-end justify-between h-full gap-8">
+            <div className="relative z-10 flex flex-col md:flex-row md:items-end justify-between h-full gap-12">
               <div className="max-w-md space-y-6">
                 <Shield className="w-16 h-16 text-white/40 mb-4" />
-                <h2 className="text-5xl font-black text-white tracking-tighter leading-none">
+                <h2 className="text-3xl md:text-5xl font-black text-white tracking-tighter leading-none">
                   Hardened <br />
                   Data Integrity
                 </h2>
-                <p className="text-lg text-white/70 font-medium leading-relaxed">
+                <p className="text-base md:text-lg text-white/70 font-medium leading-relaxed">
                   Bank-grade encryption for every application, resume, and
                   interview note. Your talent data is your most valuable asset.
                 </p>
               </div>
-              <Button className="h-16 px-10 rounded-2xl bg-white text-primary font-black hover:bg-zinc-100 shadow-2xl">
+              <Button className="h-16 px-10 rounded-2xl bg-white text-primary font-black hover:bg-zinc-100 shadow-2xl w-full md:w-auto">
                 View Security Audit
               </Button>
             </div>

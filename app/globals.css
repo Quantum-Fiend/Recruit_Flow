@@ -200,21 +200,22 @@ body {
 
 /* Typography Overrides */
 .h-xl {
-  font-size: clamp(4rem, 10vw, 9rem);
+  font-size: clamp(2.5rem, 8vw, 6.5rem);
   font-weight: 900;
-  letter-spacing: -0.06em;
-  line-height: 0.85;
+  letter-spacing: -0.05em;
+  line-height: 0.95;
   background: linear-gradient(180deg, #fff 0%, rgba(255,255,255,0.7) 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
+  word-wrap: break-word;
 }
 
 .h-lg {
-  font-size: clamp(3rem, 8vw, 6rem);
+  font-size: clamp(2rem, 6vw, 4.5rem);
   font-weight: 900;
-  letter-spacing: -0.05em;
-  line-height: 0.9;
+  letter-spacing: -0.04em;
+  line-height: 1;
   background: linear-gradient(180deg, #fff 20%, rgba(255,255,255,0.6) 100%);
   -webkit-background-clip: text;
   background-clip: text;
@@ -226,6 +227,19 @@ body {
   position: relative;
   overflow: hidden;
   z-index: 1;
+  background: linear-gradient(135deg, #3b82f6 0%, #6d28d9 100%);
+  color: white;
+  transition: all 0.3s ease;
+  border: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-sapphire:hover {
+  opacity: 0.95;
+  transform: translateY(-2px);
+  box-shadow: 0 20px 40px -10px rgba(59, 130, 246, 0.4);
 }
 
 .btn-sapphire::after {
@@ -242,14 +256,39 @@ body {
   transform: translateX(100%);
 }
 
+/* Gradient Utility */
+.sapphire-gradient {
+  background: linear-gradient(135deg, #3b82f6 0%, #6d28d9 100%);
+}
+
+.text-sapphire {
+  background: linear-gradient(135deg, #f8fafc 20%, rgba(148, 163, 184, 0.7) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Page Animations */
+.animate-slide-up {
+  animation: slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
 /* Premium Badge */
 .badge-premium {
   background: rgba(255,255,255,0.03);
   backdrop-filter: blur(8px);
   border: 1px solid rgba(255,255,255,0.08);
-  font-family: var(--font-mono);
-  font-size: 0.55rem;
+  font-family: var(--font-sans);
+  font-size: 0.65rem;
   padding: 0.4rem 1rem;
+  border-radius: 9999px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--color-primary);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 /* Custom Scrollbar Premium */
