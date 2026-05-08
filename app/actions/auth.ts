@@ -43,14 +43,22 @@ export async function signUpAction(data: SignUpInput) {
     logger.logAuthEvent("SIGNUP_SUCCESS", user.id, { role: validated.role })
 
     // Auto sign in after signup
-    await signIn("credentials", {
-      email: validated.email,
-      password: validated.password,
-      redirect: false,
-    })
+    try {
+      await signIn("credentials", {
+        email: validated.email,
+        password: validated.password,
+        redirect: false,
+      })
+    } catch (err) {
+      // Ignore sign-in errors after successful signup for now, 
+      // or re-throw if it's a redirect
+      if ((err as any).digest?.startsWith('NEXT_REDIRECT')) throw err;
+    }
 
     return { success: true }
   } catch (error: unknown) {
+    if ((error as any).digest?.startsWith('NEXT_REDIRECT')) throw error;
+    
     logger.error("Signup error", error as Error, { metadata: { email: data.email } })
     
     // Provide more specific error message in development
@@ -77,6 +85,8 @@ export async function signInAction(email: string, password: string) {
     // Auth success logging is usually handled in NextAuth callbacks
     return { success: true }
   } catch (error) {
+    if ((error as any).digest?.startsWith('NEXT_REDIRECT')) throw error;
+
     if (error instanceof AuthError) {
       logger.logAuthEvent("SIGNIN_FAILURE", undefined, { email, type: error.type })
       switch (error.type) {

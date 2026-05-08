@@ -102,49 +102,61 @@ export default function LandingPage() {
              </motion.p>
           </div>
 
-          <div className="bento-grid auto-rows-[400px]">
+          <div className="flex flex-col gap-24 relative">
              {/* Large Item: AI Screening */}
-             <motion.div variants={itemVariants} className="bento-item md:col-span-8 group">
-                <div className="premium-card h-full p-12 md:p-16 flex flex-col justify-end glass-panel">
-                   <div className="absolute top-12 right-12 w-24 h-24 sapphire-gradient rounded-3xl flex items-center justify-center text-white shadow-2xl group-hover:scale-110 transition-transform duration-700">
+             <motion.div 
+               variants={itemVariants} 
+               className="sticky top-32 group"
+             >
+                <div className="premium-card h-[500px] p-12 md:p-20 flex flex-col justify-end glass-panel backdrop-blur-3xl shadow-2xl">
+                   <div className="absolute top-16 right-16 w-24 h-24 sapphire-gradient rounded-3xl flex items-center justify-center text-white shadow-2xl group-hover:scale-110 transition-transform duration-700">
                       <Cpu className="w-12 h-12" />
                    </div>
-                   <div className="space-y-6">
-                      <h3 className="text-4xl md:text-5xl font-black tracking-tighter">Vector <br />Screening.</h3>
-                      <p className="text-lg text-muted-foreground font-medium max-w-md">Proprietary neural analysis predicting long-term mission alignment and technical velocity.</p>
+                   <div className="space-y-8 max-w-2xl">
+                      <h3 className="text-5xl md:text-7xl font-black tracking-tighter leading-none">Vector <br />Screening.</h3>
+                      <p className="text-xl text-muted-foreground font-medium opacity-60">Proprietary neural analysis predicting long-term mission alignment and technical velocity with 99.4% precision.</p>
                    </div>
                 </div>
              </motion.div>
 
              {/* Small Item: Latency */}
-             <motion.div variants={itemVariants} className="bento-item md:col-span-4 group">
-                <div className="premium-card h-full p-12 flex flex-col justify-between bg-amber-500/5 border-amber-500/10">
-                   <Zap className="w-12 h-12 text-amber-500" />
-                   <div className="space-y-4">
-                      <h3 className="text-3xl font-black tracking-tighter">Zero-Latency.</h3>
-                      <p className="text-sm text-muted-foreground font-medium">Real-time telemetry sync across all recruitment edge nodes.</p>
+             <motion.div 
+               variants={itemVariants} 
+               className="sticky top-40 group"
+             >
+                <div className="premium-card h-[500px] p-12 md:p-20 flex flex-col justify-end bg-amber-500/5 border-amber-500/10 backdrop-blur-3xl shadow-2xl">
+                   <Zap className="absolute top-16 right-16 w-16 h-16 text-amber-500" />
+                   <div className="space-y-8 max-w-2xl">
+                      <h3 className="text-5xl md:text-7xl font-black tracking-tighter leading-none">Zero-Latency <br />Telemetry.</h3>
+                      <p className="text-xl text-muted-foreground font-medium opacity-60">Real-time telemetry synchronization across all global recruitment edge nodes, ensuring instant data parity.</p>
                    </div>
                 </div>
              </motion.div>
 
              {/* Small Item: Global */}
-             <motion.div variants={itemVariants} className="bento-item md:col-span-4 group">
-                <div className="premium-card h-full p-12 flex flex-col justify-between bg-emerald-500/5 border-emerald-500/10">
-                   <Globe2 className="w-12 h-12 text-emerald-500" />
-                   <div className="space-y-4">
-                      <h3 className="text-3xl font-black tracking-tighter">Global Ops.</h3>
-                      <p className="text-sm text-muted-foreground font-medium">Localized compliance and ingestion across 140+ regions.</p>
+             <motion.div 
+               variants={itemVariants} 
+               className="sticky top-48 group"
+             >
+                <div className="premium-card h-[500px] p-12 md:p-20 flex flex-col justify-end bg-emerald-500/5 border-emerald-500/10 backdrop-blur-3xl shadow-2xl">
+                   <Globe2 className="absolute top-16 right-16 w-16 h-16 text-emerald-500" />
+                   <div className="space-y-8 max-w-2xl">
+                      <h3 className="text-5xl md:text-7xl font-black tracking-tighter leading-none">Global Ops <br />Ingestion.</h3>
+                      <p className="text-xl text-muted-foreground font-medium opacity-60">Localized compliance protocols and autonomous ingestion across 140+ sovereign regions and talent markets.</p>
                    </div>
                 </div>
              </motion.div>
 
              {/* Large Item: Security */}
-             <motion.div variants={itemVariants} className="bento-item md:col-span-8 group">
-                <div className="premium-card h-full p-12 md:p-16 flex flex-col justify-end sapphire-gradient border-none">
-                   <Shield className="w-16 h-16 text-white/40 mb-8" />
-                   <div className="space-y-6">
-                      <h3 className="text-4xl md:text-5xl font-black tracking-tighter text-white">Data <br />Hardening.</h3>
-                      <p className="text-lg text-white/70 font-medium max-w-md">Military-grade encryption for every application, resume, and internal interview note.</p>
+             <motion.div 
+               variants={itemVariants} 
+               className="sticky top-56 group"
+             >
+                <div className="premium-card h-[500px] p-12 md:p-20 flex flex-col justify-end sapphire-gradient border-none shadow-2xl">
+                   <Shield className="absolute top-16 right-16 w-20 h-20 text-white/20" />
+                   <div className="space-y-8 max-w-2xl">
+                      <h3 className="text-5xl md:text-7xl font-black tracking-tighter text-white leading-none">Hardened <br />Protocols.</h3>
+                      <p className="text-xl text-white/70 font-medium leading-relaxed">Military-grade end-to-end encryption for every technical application, resume, and internal telemetry note.</p>
                    </div>
                 </div>
              </motion.div>

@@ -5,6 +5,7 @@ import { Toaster } from "sonner"
 import { ThemeProvider } from "@/components/theme-provider"
 import { SessionProvider } from "@/components/session-provider"
 import { Navbar } from "@/components/navbar"
+import { MatrixBackground } from "@/components/matrix-background"
 
 const jakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
@@ -33,6 +34,7 @@ export default function RootLayout({
           >
             {/* Quantum Slate Atmosphere */}
             <div className="quantum-atmosphere" />
+            <MatrixBackground />
 
             <div className="relative min-h-screen flex flex-col">
               <Navbar />
