@@ -81,11 +81,16 @@ export function Navbar() {
           <div className="flex items-center gap-4">
             <AnimatePresence mode="wait">
               {session ? (
-                <div className="flex items-center gap-4">
-                  <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-primary rounded-xl">
-                    <Activity className="w-4 h-4" />
+                <div className="flex items-center gap-3">
+                  <Button
+                    variant="ghost"
+                    onClick={() => signOut({ callbackUrl: "/" })}
+                    className="hidden sm:flex items-center gap-2 h-10 px-4 rounded-xl text-[10px] font-black uppercase tracking-widest text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-all"
+                  >
+                    <LogOut className="w-4 h-4" />
+                    Logout
                   </Button>
-                  
+
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button variant="ghost" className="relative h-10 w-10 rounded-xl glass-panel p-0 overflow-hidden hover:border-primary/50 transition-colors">
@@ -95,30 +100,32 @@ export function Navbar() {
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent className="w-56 glass-panel backdrop-blur-3xl border-border/50 rounded-2xl p-2 mt-4" align="end">
-                      <DropdownMenuLabel className="font-black uppercase tracking-widest text-[10px] text-muted-foreground/60 p-3">System Access</DropdownMenuLabel>
+                      <DropdownMenuLabel className="font-black uppercase tracking-widest text-[10px] text-muted-foreground/60 p-3">
+                        {session.user?.name || 'User'}
+                      </DropdownMenuLabel>
                       <DropdownMenuSeparator className="bg-border/50" />
                       <DropdownMenuItem className="rounded-xl p-3 focus:bg-primary/10 group cursor-pointer">
                          <User className="mr-2 h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
-                         <span className="font-bold">Console Profile</span>
+                         <span className="font-bold">Profile</span>
                       </DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => signOut()} className="rounded-xl p-3 focus:bg-destructive/10 group cursor-pointer text-destructive">
+                      <DropdownMenuItem onClick={() => signOut({ callbackUrl: "/" })} className="rounded-xl p-3 focus:bg-destructive/10 group cursor-pointer text-destructive">
                          <LogOut className="mr-2 h-4 w-4" />
-                         <span className="font-bold">Terminate Session</span>
+                         <span className="font-bold">Logout</span>
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
                 </div>
               ) : (
-                <div className="hidden sm:flex items-center gap-6">
-                  <Link 
-                    href="/login" 
+                <div className="hidden sm:flex items-center gap-4">
+                  <Link
+                    href="/login"
                     className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground hover:text-primary transition-colors"
                   >
-                    Authorize
+                    Login
                   </Link>
                   <Link href="/signup">
-                    <Button className="btn-quantum h-11 px-8 rounded-xl text-[10px] shadow-xl">
-                      Initialize Deployment
+                    <Button className="btn-quantum h-10 px-6 rounded-xl text-[10px] shadow-xl">
+                      Sign Up
                     </Button>
                   </Link>
                 </div>
@@ -161,12 +168,24 @@ export function Navbar() {
                 ))}
               </div>
               <div className="pt-8 border-t border-border/50 flex flex-col gap-4">
-                <Link href="/login" onClick={() => setMobileMenuOpen(false)}>
-                  <Button variant="outline" className="w-full h-14 rounded-2xl font-black uppercase tracking-widest text-[10px]">Authorize Access</Button>
-                </Link>
-                <Link href="/signup" onClick={() => setMobileMenuOpen(false)}>
-                  <Button className="btn-quantum w-full h-14 rounded-2xl text-[10px]">Initialize Deployment</Button>
-                </Link>
+                {session ? (
+                  <Button
+                    variant="outline"
+                    onClick={() => { signOut({ callbackUrl: "/" }); setMobileMenuOpen(false); }}
+                    className="w-full h-14 rounded-2xl font-black uppercase tracking-widest text-[10px] text-destructive border-destructive/30 hover:bg-destructive/10"
+                  >
+                    <LogOut className="w-4 h-4 mr-2" /> Logout
+                  </Button>
+                ) : (
+                  <>
+                    <Link href="/login" onClick={() => setMobileMenuOpen(false)}>
+                      <Button variant="outline" className="w-full h-14 rounded-2xl font-black uppercase tracking-widest text-[10px]">Login</Button>
+                    </Link>
+                    <Link href="/signup" onClick={() => setMobileMenuOpen(false)}>
+                      <Button className="btn-quantum w-full h-14 rounded-2xl text-[10px]">Sign Up</Button>
+                    </Link>
+                  </>
+                )}
               </div>
             </div>
           </motion.div>
