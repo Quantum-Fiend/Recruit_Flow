@@ -88,117 +88,162 @@ export default function LandingPage() {
         </motion.div>
       </section>
 
-      {/* Bento Grid - Intelligence Section */}
-      <section className="w-full py-24 border-t border-border/30">
-        <div className="bento-container premium-container">
-          {/* Primary Intelligence Block */}
-          <motion.div
-            variants={itemVariants}
-            className="bento-item lg:col-span-8 creative-card glass-morphism min-h-[400px] md:min-h-[500px] flex flex-col justify-end group p-8 md:p-12"
-          >
-            <div className="absolute top-12 right-12 w-32 h-32 bg-primary/10 rounded-full blur-[60px] group-hover:bg-primary/20 transition-all duration-1000" />
-            <div className="space-y-6">
-              <div className="w-16 h-16 rounded-3xl sapphire-gradient flex items-center justify-center text-white shadow-2xl shadow-primary/20">
-                <Cpu className="w-8 h-8" />
+      {/* Stacking Intelligence Cards Section */}
+      <section className="w-full py-40 relative">
+        <div className="premium-container max-w-4xl space-y-24 md:space-y-40">
+          <div className="text-center mb-32 space-y-6">
+            <motion.h2 
+              variants={itemVariants}
+              className="h-lg text-sapphire"
+            >
+              System <span className="text-primary">Intelligence.</span>
+            </motion.h2>
+            <motion.p 
+              variants={itemVariants}
+              className="text-lg text-muted-foreground font-medium max-w-xl mx-auto"
+            >
+              The RecruitFlow core engine utilizes advanced telemetry to optimize every stage of the talent sequence.
+            </motion.p>
+          </div>
+
+          <div className="space-y-24">
+            {/* Card 1: AI Screening */}
+            <motion.div 
+              variants={itemVariants}
+              className="sticky top-32 group"
+            >
+              <div className="glass-morphism rounded-[3rem] p-12 md:p-20 creative-card border-none shadow-2xl overflow-hidden min-h-[500px] flex flex-col justify-center">
+                <div className="absolute top-0 right-0 w-96 h-96 bg-primary/10 rounded-full blur-[120px] -z-10 group-hover:bg-primary/20 transition-all duration-1000" />
+                <div className="space-y-8 max-w-2xl">
+                  <div className="w-20 h-20 sapphire-gradient rounded-[2.5rem] flex items-center justify-center text-white shadow-2xl shadow-primary/20 group-hover:scale-110 transition-transform">
+                    <Cpu className="w-10 h-10" />
+                  </div>
+                  <h2 className="text-4xl md:text-7xl font-black tracking-tighter leading-none">
+                    AI-Assisted <br />
+                    Vector Screening
+                  </h2>
+                  <p className="text-xl text-muted-foreground font-medium leading-relaxed opacity-80">
+                    Our proprietary algorithms analyze candidate trajectories to
+                    predict long-term performance and cultural alignment with 94%
+                    accuracy.
+                  </p>
+                  <div className="pt-8 flex items-center gap-6 text-[10px] font-black uppercase tracking-[0.3em] text-primary/50">
+                    <span>Neural Network v4.0</span>
+                    <span className="w-1.5 h-1.5 bg-primary/30 rounded-full" />
+                    <span>94% Accuracy Rate</span>
+                  </div>
+                </div>
               </div>
-              <h2 className="text-3xl md:text-5xl font-black tracking-tighter leading-none">
-                AI-Assisted <br />
-                Vector Screening
-              </h2>
-              <p className="text-base md:text-lg text-muted-foreground font-medium max-w-md leading-relaxed">
-                Our proprietary algorithms analyze candidate trajectories to
-                predict long-term performance and cultural alignment with 94%
-                accuracy.
-              </p>
-            </div>
-          </motion.div>
+            </motion.div>
 
-          {/* Velocity Block */}
-          <motion.div
-            variants={itemVariants}
-            className="bento-item lg:col-span-4 creative-card glass-morphism flex flex-col justify-between group min-h-[300px] p-8"
-          >
-            <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-all duration-500">
-              <Zap className="w-6 h-6" />
-            </div>
-            <div className="space-y-4">
-              <h3 className="text-2xl md:text-3xl font-black tracking-tight">
-                Zero-Latency Flow
-              </h3>
-              <p className="text-muted-foreground font-medium text-sm leading-relaxed">
-                Experience a pipeline that moves as fast as your thoughts.
-                Optimized for extreme recruiting speed.
-              </p>
-            </div>
-          </motion.div>
-
-          {/* Global Scale Block */}
-          <motion.div
-            variants={itemVariants}
-            className="bento-item lg:col-span-4 creative-card glass-morphism flex flex-col gap-8 group min-h-[300px] p-8"
-          >
-            <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
-              <Globe2 className="w-6 h-6" />
-            </div>
-            <div>
-              <h3 className="text-2xl font-black mb-3">Global Sourcing</h3>
-              <p className="text-muted-foreground font-medium text-sm leading-relaxed">
-                Connect with talent across 140+ countries with localized
-                compliance and automated screening.
-              </p>
-            </div>
-          </motion.div>
-
-          {/* Security Block */}
-          <motion.div
-            variants={itemVariants}
-            className="bento-item lg:col-span-8 creative-card sapphire-gradient p-8 md:p-12 group overflow-hidden min-h-[400px] md:min-h-0"
-          >
-            <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10" />
-            <div className="relative z-10 flex flex-col md:flex-row md:items-end justify-between h-full gap-12">
-              <div className="max-w-md space-y-6">
-                <Shield className="w-16 h-16 text-white/40 mb-4" />
-                <h2 className="text-3xl md:text-5xl font-black text-white tracking-tighter leading-none">
-                  Hardened <br />
-                  Data Integrity
-                </h2>
-                <p className="text-base md:text-lg text-white/70 font-medium leading-relaxed">
-                  Bank-grade encryption for every application, resume, and
-                  interview note. Your talent data is your most valuable asset.
-                </p>
+            {/* Card 2: Latency */}
+            <motion.div 
+              variants={itemVariants}
+              className="sticky top-40 group"
+            >
+              <div className="glass-morphism rounded-[3rem] p-12 md:p-20 creative-card border-none shadow-2xl overflow-hidden min-h-[500px] flex flex-col justify-center translate-y-4">
+                <div className="absolute top-0 right-0 w-96 h-96 bg-amber-500/5 rounded-full blur-[120px] -z-10 group-hover:bg-amber-500/10 transition-all duration-1000" />
+                <div className="space-y-8 max-w-2xl">
+                  <div className="w-20 h-20 bg-amber-500/10 rounded-[2.5rem] flex items-center justify-center text-amber-500 shadow-2xl group-hover:rotate-12 transition-transform">
+                    <Zap className="w-10 h-10" />
+                  </div>
+                  <h2 className="text-4xl md:text-7xl font-black tracking-tighter leading-none">
+                    Zero-Latency <br />
+                    Flow Optimization
+                  </h2>
+                  <p className="text-xl text-muted-foreground font-medium leading-relaxed opacity-80">
+                    Experience a pipeline that moves as fast as your thoughts.
+                    Optimized for extreme recruiting speed with integrated real-time telemetry.
+                  </p>
+                  <div className="pt-8 flex items-center gap-6 text-[10px] font-black uppercase tracking-[0.3em] text-amber-500/50">
+                    <span>Low Latency Ops</span>
+                    <span className="w-1.5 h-1.5 bg-amber-500/30 rounded-full" />
+                    <span>Real-time Sync</span>
+                  </div>
+                </div>
               </div>
-              <Button className="h-16 px-10 rounded-2xl bg-white text-primary font-black hover:bg-zinc-100 shadow-2xl w-full md:w-auto">
-                View Security Audit
-              </Button>
-            </div>
-          </motion.div>
+            </motion.div>
+
+            {/* Card 3: Global */}
+            <motion.div 
+              variants={itemVariants}
+              className="sticky top-48 group"
+            >
+              <div className="glass-morphism rounded-[3rem] p-12 md:p-20 creative-card border-none shadow-2xl overflow-hidden min-h-[500px] flex flex-col justify-center translate-y-8">
+                <div className="absolute top-0 right-0 w-96 h-96 bg-emerald-500/5 rounded-full blur-[120px] -z-10 group-hover:bg-emerald-500/10 transition-all duration-1000" />
+                <div className="space-y-8 max-w-2xl">
+                  <div className="w-20 h-20 bg-emerald-500/10 rounded-[2.5rem] flex items-center justify-center text-emerald-500 shadow-2xl group-hover:scale-90 transition-transform">
+                    <Globe2 className="w-10 h-10" />
+                  </div>
+                  <h2 className="text-4xl md:text-7xl font-black tracking-tighter leading-none">
+                    Global Scalable <br />
+                    Talent Sourcing
+                  </h2>
+                  <p className="text-xl text-muted-foreground font-medium leading-relaxed opacity-80">
+                    Connect with talent across 140+ countries with localized
+                    compliance and automated screening powered by global edge nodes.
+                  </p>
+                  <div className="pt-8 flex items-center gap-6 text-[10px] font-black uppercase tracking-[0.3em] text-emerald-500/50">
+                    <span>140+ Regions</span>
+                    <span className="w-1.5 h-1.5 bg-emerald-500/30 rounded-full" />
+                    <span>Edge Compliance</span>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Card 4: Security (Full width, not sticky for exit) */}
+            <motion.div 
+              variants={itemVariants}
+              className="relative z-20 group translate-y-12"
+            >
+              <div className="sapphire-gradient rounded-[3rem] p-12 md:p-20 creative-card border-none shadow-2xl overflow-hidden min-h-[600px] flex flex-col justify-center">
+                <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10" />
+                <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-16">
+                  <div className="max-w-2xl space-y-8">
+                    <Shield className="w-24 h-24 text-white/40 mb-8" />
+                    <h2 className="text-4xl md:text-7xl font-black text-white tracking-tighter leading-none">
+                      Hardened <br />
+                      Data Integrity.
+                    </h2>
+                    <p className="text-xl text-white/70 font-medium leading-relaxed">
+                      Bank-grade encryption for every application, resume, and
+                      interview note. Your talent data is protected by the most advanced security protocols available today.
+                    </p>
+                  </div>
+                  <Button className="h-20 px-16 rounded-2xl bg-white text-primary font-black hover:bg-zinc-100 shadow-2xl text-xl w-full md:w-auto active:scale-95 transition-all">
+                    Security Audit
+                  </Button>
+                </div>
+              </div>
+            </motion.div>
+          </div>
         </div>
       </section>
 
       {/* Social Proof Section */}
-      <section className="w-full py-24 flex flex-col items-center">
-        <div className="premium-container w-full">
-          <motion.div variants={itemVariants} className="text-center mb-24">
-            <h2 className="h-lg text-sapphire mb-6">
-              Trusted by the innovators.
+      <section className="w-full py-40 flex flex-col items-center bg-foreground/[0.02]">
+        <div className="premium-container w-full max-w-5xl">
+          <motion.div variants={itemVariants} className="text-center mb-32 space-y-4">
+            <h2 className="text-sm font-black uppercase tracking-[0.4em] text-muted-foreground/40">
+              Trusted Infrastructure
             </h2>
-            <p className="text-xl text-muted-foreground font-medium">
-              Powering talent acquisition for the world`s most ambitious
-              companies.
-            </p>
+            <h2 className="text-4xl md:text-5xl font-black tracking-tighter text-sapphire">
+              Powering the next generation <br />of technical leadership.
+            </h2>
           </motion.div>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-12 opacity-30 grayscale hover:grayscale-0 transition-all duration-700">
-            <div className="flex items-center justify-center font-black text-3xl tracking-tighter">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-20 opacity-30 grayscale hover:grayscale-0 transition-all duration-1000 items-center">
+            <div className="flex items-center justify-center font-black text-4xl tracking-tighter hover:text-primary transition-colors cursor-default">
               NEXUS
             </div>
-            <div className="flex items-center justify-center font-black text-3xl tracking-tighter">
+            <div className="flex items-center justify-center font-black text-4xl tracking-tighter hover:text-primary transition-colors cursor-default">
               ORBIT
             </div>
-            <div className="flex items-center justify-center font-black text-3xl tracking-tighter">
+            <div className="flex items-center justify-center font-black text-4xl tracking-tighter hover:text-primary transition-colors cursor-default">
               AETHER
             </div>
-            <div className="flex items-center justify-center font-black text-3xl tracking-tighter">
+            <div className="flex items-center justify-center font-black text-4xl tracking-tighter hover:text-primary transition-colors cursor-default">
               PRISM
             </div>
           </div>
