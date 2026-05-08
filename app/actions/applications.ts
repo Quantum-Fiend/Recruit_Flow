@@ -17,8 +17,9 @@ import { logger, analytics } from "@/lib/monitoring"
 import { isValidTransition } from "@/lib/workflow"
 
 export async function createApplicationAction(data: CreateApplicationInput) {
+  const user = await requireAuth()
+  
   try {
-    const user = await requireAuth()
     const validated = createApplicationSchema.parse(data)
 
     // Check if job is still open
@@ -71,6 +72,10 @@ export async function createApplicationAction(data: CreateApplicationInput) {
     
     return { success: true, applicationId: application.id }
   } catch (error) {
+    if (error instanceof Error && error.name === 'ZodError') {
+      // @ts-ignore
+      return { error: error.errors[0].message }
+    }
     console.error("FULL SUBMIT ERROR:", error)
     logger.error("Create application error", error as Error, {
       action: "createApplicationAction",
@@ -82,8 +87,9 @@ export async function createApplicationAction(data: CreateApplicationInput) {
 
 
 export async function updateApplicationStatusAction(data: UpdateApplicationStatusInput) {
+  const user = await requireRecruiter()
+  
   try {
-    const user = await requireRecruiter()
     const validated = updateApplicationStatusSchema.parse(data)
 
     // Get application with job and applicant to verify ownership and send email
@@ -154,6 +160,10 @@ export async function updateApplicationStatusAction(data: UpdateApplicationStatu
     
     return { success: true }
   } catch (error) {
+    if (error instanceof Error && error.name === 'ZodError') {
+      // @ts-ignore
+      return { error: error.errors[0].message }
+    }
     logger.error("Update application status error", error as Error, { 
       action: "updateApplicationStatusAction",
       metadata: { applicationId: data.applicationId }
@@ -163,8 +173,9 @@ export async function updateApplicationStatusAction(data: UpdateApplicationStatu
 }
 
 export async function addApplicationNoteAction(data: CreateNoteInput) {
+  const user = await requireRecruiter()
+  
   try {
-    const user = await requireRecruiter()
     const validated = createNoteSchema.parse(data)
 
     // Verify ownership
@@ -188,6 +199,10 @@ export async function addApplicationNoteAction(data: CreateNoteInput) {
     revalidatePath(`/recruiter/jobs/${application.jobId}/applicants`)
     return { success: true }
   } catch (error) {
+    if (error instanceof Error && error.name === 'ZodError') {
+      // @ts-ignore
+      return { error: error.errors[0].message }
+    }
     console.error("Add note error:", error)
     return { error: "Failed to add note" }
   }

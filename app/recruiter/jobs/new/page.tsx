@@ -106,8 +106,16 @@ export default function NewJobPage() {
                         />
                      </div>
 
-                     <div className="space-y-3">
-                        <Label htmlFor="description" className="text-xs font-black uppercase tracking-widest text-muted-foreground ml-1">Mission Objective</Label>
+                      <div className="space-y-3">
+                        <div className="flex items-center justify-between">
+                           <Label htmlFor="description" className="text-xs font-black uppercase tracking-widest text-muted-foreground ml-1">Mission Objective</Label>
+                           <span className={cn(
+                              "text-[10px] font-black uppercase tracking-widest",
+                              formData.description.length < 50 ? "text-amber-500" : "text-emerald-500"
+                           )}>
+                              {formData.description.length}/50 Min
+                           </span>
+                        </div>
                         <Textarea
                           id="description"
                           placeholder="Describe the technical challenges and expected outcomes..."
@@ -117,7 +125,7 @@ export default function NewJobPage() {
                           rows={8}
                           className="rounded-[2rem] bg-foreground/5 border-none font-medium text-lg focus-visible:ring-1 focus-visible:ring-primary/30 transition-all resize-none p-6"
                         />
-                     </div>
+                      </div>
                   </div>
                </div>
 

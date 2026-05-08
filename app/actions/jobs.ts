@@ -7,30 +7,42 @@ import { revalidatePath } from "next/cache"
 import type { Prisma, JobStatus, JobType } from "@prisma/client"
 
 export async function createJobAction(data: CreateJobInput) {
+  const user = await requireRecruiter()
+  
   try {
-    const user = await requireRecruiter()
     const validated = createJobSchema.parse(data)
 
     const job = await prisma.job.create({
       data: {
-        ...validated,
+        title: validated.title,
+        description: validated.description,
+        location: validated.location,
+        type: validated.type,
+        employmentType: validated.employmentType,
+        experienceLevel: validated.experienceLevel,
         skills: validated.skills.join(','),
         recruiterId: user.id,
       },
     })
 
     revalidatePath("/recruiter/jobs")
+    revalidatePath("/recruiter/dashboard")
+    revalidatePath("/jobs")
     return { success: true, jobId: job.id }
   } catch (error) {
+    if (error instanceof Error && error.name === 'ZodError') {
+      // @ts-ignore
+      return { error: error.errors[0].message }
+    }
     console.error("Create job error:", error)
-    return { error: "Failed to create job" }
+    return { error: "Failed to create job specification." }
   }
 }
 
 export async function updateJobAction(jobId: string, data: UpdateJobInput) {
+  const user = await requireRecruiter()
+  
   try {
-    const user = await requireRecruiter()
-
     // Verify ownership
     const job = await prisma.job.findUnique({
       where: { id: jobId },
@@ -45,24 +57,34 @@ export async function updateJobAction(jobId: string, data: UpdateJobInput) {
     await prisma.job.update({
       where: { id: jobId },
       data: {
-        ...validated,
+        title: validated.title,
+        description: validated.description,
+        location: validated.location,
+        type: validated.type,
+        employmentType: validated.employmentType,
+        experienceLevel: validated.experienceLevel,
         skills: validated.skills ? validated.skills.join(',') : undefined,
       },
     })
 
     revalidatePath("/recruiter/jobs")
     revalidatePath(`/recruiter/jobs/${jobId}`)
+    revalidatePath("/jobs")
     return { success: true }
   } catch (error) {
+    if (error instanceof Error && error.name === 'ZodError') {
+      // @ts-ignore
+      return { error: error.errors[0].message }
+    }
     console.error("Update job error:", error)
-    return { error: "Failed to update job" }
+    return { error: "Failed to update job specification." }
   }
 }
 
 export async function closeJobAction(jobId: string) {
+  const user = await requireRecruiter()
+  
   try {
-    const user = await requireRecruiter()
-
     // Verify ownership
     const job = await prisma.job.findUnique({
       where: { id: jobId },
@@ -78,10 +100,11 @@ export async function closeJobAction(jobId: string) {
     })
 
     revalidatePath("/recruiter/jobs")
+    revalidatePath("/jobs")
     return { success: true }
   } catch (error) {
     console.error("Close job error:", error)
-    return { error: "Failed to close job" }
+    return { error: "Failed to close job specification." }
   }
 }
 
@@ -200,9 +223,9 @@ export async function getJobByIdAction(jobId: string) {
 }
 
 export async function deleteJobAction(jobId: string) {
+  const user = await requireRecruiter()
+  
   try {
-    const user = await requireRecruiter()
-
     // Verify ownership
     const job = await prisma.job.findUnique({
       where: { id: jobId },
@@ -219,9 +242,10 @@ export async function deleteJobAction(jobId: string) {
     })
 
     revalidatePath("/recruiter/jobs")
+    revalidatePath("/jobs")
     return { success: true }
   } catch (error) {
     console.error("Delete job error:", error)
-    return { error: "Failed to delete job" }
+    return { error: "Failed to delete job deployment." }
   }
 }
