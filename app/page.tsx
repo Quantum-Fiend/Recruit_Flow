@@ -32,51 +32,57 @@ export default function LandingPage() {
       initial="hidden"
       animate="visible"
       variants={containerVariants}
-      className="flex flex-col items-center w-full"
+      className="flex flex-col items-center w-full relative"
     >
+      {/* Decorative Grid Background */}
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff05_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)] bg-[size:64px_64px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] pointer-events-none" />
+
       {/* Hero Section */}
-      <section className="w-full premium-container pt-8 pb-32 flex flex-col items-center text-center relative">
+      <section className="w-full premium-container pt-20 pb-40 flex flex-col items-center text-center relative z-10">
         <motion.div
           variants={itemVariants}
-          className="inline-flex items-center gap-3 px-5 py-2 rounded-2xl bg-primary/10 border border-primary/20 text-xs font-black uppercase tracking-[0.25em] text-primary mb-12 shadow-2xl shadow-primary/5"
+          className="inline-flex items-center gap-3 px-6 py-2.5 rounded-full bg-white/5 border border-white/10 text-[10px] font-black uppercase tracking-[0.4em] text-primary mb-16 backdrop-blur-md"
         >
-          <Sparkles className="w-4 h-4" />
-          <span>Next-Gen Talent Acquisition</span>
+          <span className="relative flex h-2 w-2">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+            <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
+          </span>
+          Next-Gen Talent Acquisition
         </motion.div>
 
         <motion.h1
           variants={itemVariants}
-          className="h-xl text-sapphire mb-12 max-w-6xl"
+          className="h-xl text-sapphire mb-16 max-w-6xl"
         >
           Engineering <br />
-          <span className="opacity-40">Elite</span> Teams.
+          <span className="text-primary italic">Elite</span> Infrastructure.
         </motion.h1>
 
         <motion.p
           variants={itemVariants}
-          className="text-xl md:text-2xl text-muted-foreground max-w-3xl font-medium leading-relaxed mb-20 px-6"
+          className="text-xl md:text-2xl text-muted-foreground max-w-3xl font-medium leading-relaxed mb-24 px-6 opacity-80"
         >
-          RecruitFlow is the definitive talent infrastructure for world-class
-          engineering teams. Build your legacy with the most advanced ATS ever
-          conceived.
+          RecruitFlow is the definitive talent operating system for world-class
+          engineering teams. Build your legacy with the most advanced recruitment
+          architecture ever conceived.
         </motion.p>
 
         <motion.div
           variants={itemVariants}
-          className="flex flex-col sm:flex-row items-center gap-6 w-full justify-center px-4"
+          className="flex flex-col sm:flex-row items-center gap-8 w-full justify-center px-4"
         >
           <Link href="/signup" className="w-full sm:w-auto">
-            <Button className="btn-sapphire group min-w-[240px]">
-              Deploy Infrastructure
+            <Button className="btn-sapphire group min-w-[280px] h-16 rounded-2xl text-lg shadow-2xl shadow-primary/30">
+              Initialize Deployment
               <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
             </Button>
           </Link>
           <Link href="/jobs" className="w-full sm:w-auto">
             <Button
               variant="ghost"
-              className="h-14 px-10 rounded-2xl font-black text-lg hover:bg-primary/5 text-foreground/70 hover:text-foreground"
+              className="h-16 px-12 rounded-2xl font-black text-lg hover:bg-white/5 text-foreground/60 hover:text-foreground border border-white/5 transition-all"
             >
-              Explore Network
+              Access Pipeline
             </Button>
           </Link>
         </motion.div>
