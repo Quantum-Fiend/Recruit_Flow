@@ -34,63 +34,96 @@ export default function RecruiterLoginPage() {
       });
 
       if (result?.error) {
-        toast.error("Invalid console credentials.");
+        toast.error("Invalid console credentials. Please verify your telemetry.");
       } else {
-        toast.success("Console Access Granted.");
+        toast.success("Console Access Granted. Initializing Hub.");
         router.push(callbackUrl);
         router.refresh();
       }
     } catch (error) {
-      toast.error("System Error.")
+      toast.error("System Error during authorization.")
     } finally {
       setLoading(false)
     }
   }
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-[85vh] w-full px-6">
+    <div className="flex flex-col items-center justify-center min-h-[90vh] w-full px-6 py-20">
       <motion.div
-        initial={{ opacity: 0, y: 30 }}
+        initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
         className="w-full max-w-[500px]"
       >
-        <div className="text-center mb-12 space-y-4">
-          <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center mx-auto mb-6 border border-primary/20 shadow-xl">
-            <Briefcase className="w-8 h-8 text-primary" />
-          </div>
-          <h1 className="h-lg text-sapphire tracking-tighter">
-            Recruiter <br />Console Login.
-          </h1>
-          <p className="text-lg text-muted-foreground font-medium">
-            Enter the hiring infrastructure.
-          </p>
+        <div className="text-center mb-16 space-y-4">
+           <Link href="/" className="inline-flex items-center gap-3 group mb-8">
+              <div className="w-12 h-12 bg-foreground rounded-2xl flex items-center justify-center shadow-2xl group-hover:scale-110 transition-transform">
+                 <Command className="w-6 h-6 text-background" />
+              </div>
+           </Link>
+           <h1 className="h-lg text-gradient leading-tight">Recruiter <br />Console.</h1>
+           <p className="text-lg text-muted-foreground font-medium opacity-60">Authorize access to the hiring infrastructure.</p>
         </div>
 
-        <Card className="glass-morphism rounded-[2.5rem] p-1 border-none shadow-2xl relative overflow-hidden">
-          <CardContent className="p-10 space-y-8">
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="space-y-2">
-                <Label htmlFor="email" className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Corporate Identifier</Label>
-                <Input id="email" name="email" type="email" placeholder="name@organization.com" required className="h-14 rounded-xl bg-foreground/5 border-none font-bold" />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="password" className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Access Key</Label>
-                <Input id="password" name="password" type="password" required className="h-14 rounded-xl bg-foreground/5 border-none font-bold" />
+        <div className="premium-card glass-panel p-10 md:p-12 space-y-10">
+          <form onSubmit={handleSubmit} className="space-y-8">
+            <div className="space-y-6">
+              <div className="space-y-2.5">
+                <Label htmlFor="email" className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60 ml-1">Corporate Identifier</Label>
+                <div className="relative group">
+                  <Briefcase className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground/40 group-focus-within:text-primary transition-colors" />
+                  <Input
+                    id="email"
+                    name="email"
+                    type="email"
+                    placeholder="name@organization.com"
+                    required
+                    className="h-14 pl-12 bg-background/50 border-border/50 focus:border-primary/50 focus:ring-0 rounded-xl font-bold transition-all"
+                  />
+                </div>
               </div>
 
-              <Button type="submit" className="w-full h-16 rounded-xl bg-primary text-white font-black text-lg shadow-xl shadow-primary/20 hover:opacity-95 transition-all" disabled={loading}>
-                {loading ? <Loader2 className="w-6 h-6 animate-spin" /> : "Authorize Access"}
-              </Button>
-            </form>
-
-            <div className="pt-6 border-t border-foreground/5 text-center">
-              <p className="text-sm font-medium text-muted-foreground">
-                New recruiter? <Link href="/signup/recruiter" className="text-primary font-black hover:underline">Setup Console</Link>
-              </p>
+              <div className="space-y-2.5">
+                <div className="flex items-center justify-between ml-1">
+                  <Label htmlFor="password" className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60">Access Key</Label>
+                  <Link href="#" className="text-[10px] font-black uppercase tracking-widest text-primary/60 hover:text-primary transition-colors">Recover</Link>
+                </div>
+                <div className="relative group">
+                  <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground/40 group-focus-within:text-primary transition-colors" />
+                  <Input
+                    id="password"
+                    name="password"
+                    type="password"
+                    placeholder="••••••••"
+                    required
+                    className="h-14 pl-12 bg-background/50 border-border/50 focus:border-primary/50 focus:ring-0 rounded-xl font-bold transition-all"
+                  />
+                </div>
+              </div>
             </div>
-          </CardContent>
-        </Card>
+
+            <Button
+              type="submit"
+              disabled={loading}
+              className="w-full btn-quantum h-16 rounded-xl"
+            >
+              {loading ? (
+                <Loader2 className="w-6 h-6 animate-spin" />
+              ) : (
+                <>
+                  Authorize Access <ArrowRight className="w-4 h-4 ml-2" />
+                </>
+              )}
+            </Button>
+          </form>
+
+          <div className="pt-8 border-t border-border/50 text-center">
+             <p className="text-sm font-medium text-muted-foreground">
+                New recruiter? <Link href="/signup/recruiter" className="text-primary font-black hover:underline underline-offset-4">Setup Console</Link>
+             </p>
+          </div>
+        </div>
       </motion.div>
     </div>
-  );
+  )
 }

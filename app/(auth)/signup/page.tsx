@@ -14,61 +14,70 @@ import { signUpAction } from "@/app/actions/auth"
 
 export default function SignupChoicePage() {
   return (
-    <div className="flex flex-col items-center justify-center min-h-[85vh] w-full px-6 py-20">
+    <div className="flex flex-col items-center justify-center min-h-[90vh] w-full px-6 py-32">
       <motion.div
-        initial={{ opacity: 0, y: 30 }}
+        initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
-        className="w-full max-w-[800px] text-center space-y-16"
+        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+        className="w-full max-w-5xl text-center space-y-24"
       >
-        <div className="space-y-6">
-          <h1 className="h-xl text-sapphire tracking-tighter">
+        <div className="space-y-8">
+          <h1 className="h-lg text-gradient leading-tight">
             Select Your <br />Deployment Path.
           </h1>
-          <p className="text-xl text-muted-foreground font-medium max-w-xl mx-auto leading-relaxed">
-            Choose your interface to begin the high-performance talent sequence.
+          <p className="text-xl text-muted-foreground font-medium max-w-xl mx-auto leading-relaxed opacity-60">
+            Choose your operational interface to initialize the high-performance talent sequence.
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-8">
+        <div className="grid md:grid-cols-2 gap-10">
           {/* Candidate Path */}
-          <Link href="/signup/candidate" className="group">
-            <Card className="glass-morphism rounded-[3rem] p-12 border-none shadow-2xl hover:scale-[1.02] transition-all duration-500 relative overflow-hidden h-full flex flex-col items-center text-center">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full blur-3xl -z-10 group-hover:bg-primary/10 transition-colors" />
-              <div className="w-20 h-20 sapphire-gradient rounded-[2rem] flex items-center justify-center mb-8 shadow-2xl shadow-primary/20 group-hover:rotate-6 transition-transform">
-                <User className="w-10 h-10 text-white" />
-              </div>
-              <h3 className="text-3xl font-black mb-4 tracking-tight">Candidate</h3>
-              <p className="text-muted-foreground font-medium mb-10 leading-relaxed">
-                Join the global engineering network and apply to world-class positions.
-              </p>
-              <div className="mt-auto flex items-center gap-2 text-primary font-black uppercase tracking-widest text-xs">
-                Initialize Profile <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-              </div>
-            </Card>
+          <Link href="/signup/candidate" className="group h-full">
+            <div className="premium-card h-full glass-panel p-16 flex flex-col items-center text-center space-y-10 group-hover:border-primary/50 transition-all duration-700">
+               <div className="w-24 h-24 rounded-3xl bg-primary/5 border border-primary/10 flex items-center justify-center text-primary group-hover:bg-foreground group-hover:text-background transition-all duration-700 shadow-2xl">
+                  <User className="w-10 h-10" />
+               </div>
+               <div className="space-y-4">
+                  <h3 className="text-3xl font-black tracking-tighter">Candidate</h3>
+                  <p className="text-muted-foreground font-medium text-sm leading-relaxed max-w-[240px]">
+                     Access global pipelines and manage your technical identity.
+                  </p>
+               </div>
+               <div className="pt-4 flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-primary opacity-0 group-hover:opacity-100 group-hover:translate-x-2 transition-all duration-500">
+                  Initialize Profile <ArrowRight className="w-4 h-4" />
+               </div>
+            </div>
           </Link>
 
           {/* Recruiter Path */}
-          <Link href="/signup/recruiter" className="group">
-            <Card className="glass-morphism rounded-[3rem] p-12 border-none shadow-2xl hover:scale-[1.02] transition-all duration-500 relative overflow-hidden h-full flex flex-col items-center text-center">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full blur-3xl -z-10 group-hover:bg-primary/10 transition-colors" />
-              <div className="w-20 h-20 bg-primary/10 border border-primary/20 rounded-[2rem] flex items-center justify-center mb-8 shadow-2xl group-hover:-rotate-6 transition-transform">
-                <Briefcase className="w-10 h-10 text-primary" />
-              </div>
-              <h3 className="text-3xl font-black mb-4 tracking-tight">Recruiter</h3>
-              <p className="text-muted-foreground font-medium mb-10 leading-relaxed">
-                Deploy hiring infrastructure and acquire elite technical talent.
-              </p>
-              <div className="mt-auto flex items-center gap-2 text-primary font-black uppercase tracking-widest text-xs">
-                Setup Console <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-              </div>
-            </Card>
+          <Link href="/signup/recruiter" className="group h-full">
+            <div className="premium-card h-full glass-panel p-16 flex flex-col items-center text-center space-y-10 group-hover:border-primary/50 transition-all duration-700">
+               <div className="w-24 h-24 rounded-3xl bg-primary/5 border border-primary/10 flex items-center justify-center text-primary group-hover:bg-foreground group-hover:text-background transition-all duration-700 shadow-2xl">
+                  <Briefcase className="w-10 h-10" />
+               </div>
+               <div className="space-y-4">
+                  <h3 className="text-3xl font-black tracking-tighter">Recruiter</h3>
+                  <p className="text-muted-foreground font-medium text-sm leading-relaxed max-w-[240px]">
+                     Deploy hiring infrastructure and acquire elite technical talent.
+                  </p>
+               </div>
+               <div className="pt-4 flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-primary opacity-0 group-hover:opacity-100 group-hover:translate-x-2 transition-all duration-500">
+                  Setup Console <ArrowRight className="w-4 h-4" />
+               </div>
+            </div>
           </Link>
         </div>
 
-        <p className="text-sm font-medium text-muted-foreground pt-10">
-          Already have an account? <Link href="/login" className="text-primary font-black hover:underline">Sign In</Link>
-        </p>
+        <div className="pt-12 flex flex-col items-center gap-6">
+           <div className="flex items-center gap-4 text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground/40">
+              <ShieldCheck className="w-4 h-4" />
+              <span>Enterprise Grade Auth</span>
+           </div>
+           <Link href="/login" className="text-sm font-bold text-muted-foreground hover:text-foreground transition-colors">
+              Already have an account? <span className="text-primary underline underline-offset-4">Sign In</span>
+           </Link>
+        </div>
       </motion.div>
     </div>
-  );
+  )
 }

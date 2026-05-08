@@ -43,63 +43,67 @@ export default function ApplicantDashboard() {
   }, [loadApplications])
 
   return (
-    <motion.div 
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      className="page-wrapper animate-slide-up"
-    >
+    <div className="page-wrapper animate-reveal px-6">
       {/* Dashboard Header */}
-      <header className="w-full mb-16 flex flex-col md:flex-row md:items-end justify-between gap-10">
-        <div className="max-w-2xl space-y-6">
-           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full glass-surface text-[10px] font-black uppercase tracking-widest text-primary">
-              <LayoutDashboard className="w-3 h-3" />
+      <header className="w-full mb-24 flex flex-col md:flex-row md:items-end justify-between gap-12">
+        <div className="max-w-3xl space-y-8">
+           <div className="inline-flex items-center gap-3 px-4 py-1.5 rounded-full glass-panel text-[10px] font-black uppercase tracking-[0.3em] text-primary">
+              <LayoutDashboard className="w-3.5 h-3.5" />
               <span>Personal Command Center</span>
            </div>
-           <h1 className="h-lg">My <br /><span className="text-primary">Journey.</span></h1>
-           <p className="text-xl text-muted-foreground font-medium">Tracking your strategic progression across the RecruitFlow ecosystem.</p>
+           <h1 className="h-lg text-gradient leading-tight">My <br />Journey.</h1>
+           <p className="text-xl text-muted-foreground font-medium opacity-60 leading-relaxed max-w-xl">
+             Tracking your professional trajectory across the world's most ambitious technical ecosystems.
+           </p>
         </div>
         
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-6">
            <Link href="/jobs">
-              <Button className="btn-sapphire h-14 px-8 shadow-xl shadow-primary/10 rounded-xl">
-                Browse Network
+              <Button className="btn-quantum h-16 px-10 rounded-2xl shadow-2xl">
+                Explore The Network <ArrowRight className="w-4 h-4 ml-2" />
               </Button>
            </Link>
         </div>
       </header>
 
-      {/* Stats Overview Grid */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-16 w-full">
-         <StatBox label="Live Missions" value={applications.filter(a => !['WITHDRAWN', 'REJECTED', 'OFFER_DECLINED'].includes(a.status)).length} icon={<Activity />} />
-         <StatBox label="Screening" value={applications.filter(a => a.status === 'INTERVIEW').length} icon={<Target />} />
-         <StatBox label="Offers" value={applications.filter(a => a.status === 'OFFER').length} icon={<Sparkles />} />
-         <StatBox label="Total Feed" value={applications.length} icon={<Briefcase />} />
+      {/* Intelligence Grid */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-24 w-full">
+         <StatBox label="Live Sequences" value={applications.filter(a => !['WITHDRAWN', 'REJECTED', 'OFFER_DECLINED'].includes(a.status)).length} icon={<Activity className="w-6 h-6" />} />
+         <StatBox label="Screening" value={applications.filter(a => a.status === 'INTERVIEW').length} icon={<Target className="w-6 h-6" />} />
+         <StatBox label="Offers" value={applications.filter(a => a.status === 'OFFER').length} icon={<Sparkles className="w-6 h-6" />} />
+         <StatBox label="Total Feed" value={applications.length} icon={<Briefcase className="w-6 h-6" />} />
       </div>
 
       {/* Main Pipeline Feed */}
-      <div className="w-full space-y-10">
-        <div className="flex items-center justify-between px-6 mb-4">
-           <h2 className="text-2xl font-black tracking-tighter uppercase text-muted-foreground/40">Active Pipeline</h2>
-           <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60">{applications.length} Sequences Active</span>
+      <div className="w-full space-y-12">
+        <div className="flex items-center justify-between px-4 mb-4">
+           <h2 className="text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground/40">Active Pipeline Sequences</h2>
+           <div className="flex items-center gap-3 text-[10px] font-black uppercase tracking-widest text-primary/60">
+              <span className="relative flex h-2 w-2">
+                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+                 <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
+              </span>
+              <span>Telemetry Sync Active</span>
+           </div>
         </div>
 
         {loading ? (
-          <div className="space-y-6">
+          <div className="space-y-8">
             {[1, 2, 3].map(i => (
-              <Skeleton key={i} className="h-44 w-full rounded-2xl glass-morphism" />
+              <Skeleton key={i} className="h-48 w-full rounded-[2.5rem] glass-panel opacity-40" />
             ))}
           </div>
         ) : applications.length === 0 ? (
-          <div className="text-center py-40 premium-card w-full border-dashed rounded-[2rem] flex flex-col items-center">
-            <Briefcase className="w-16 h-16 mb-8 text-muted-foreground/20" />
-            <h3 className="text-3xl font-black mb-4 tracking-tight">The pipeline is offline</h3>
-            <p className="text-xl text-muted-foreground mb-12 max-w-sm font-medium">Your professional trajectory is waiting for its next mission deployment.</p>
+          <div className="text-center py-48 glass-panel w-full border-dashed rounded-[4rem] flex flex-col items-center">
+            <Briefcase className="w-20 h-20 mb-8 text-muted-foreground/10" />
+            <h3 className="text-4xl font-black mb-4 tracking-tighter">Pipeline offline.</h3>
+            <p className="text-xl text-muted-foreground mb-16 max-w-sm font-medium opacity-60">Your professional trajectory is waiting for its next high-performance mission deployment.</p>
             <Link href="/jobs">
-              <Button variant="outline" className="rounded-xl px-12 h-14 font-black border-border hover:bg-secondary">Initialize Search</Button>
+              <Button variant="outline" className="rounded-2xl px-12 h-16 font-black border-border/50 hover:bg-secondary transition-all">Initialize Search Sequence</Button>
             </Link>
           </div>
         ) : (
-          <div className="space-y-6">
+          <div className="space-y-8">
             <AnimatePresence>
               {applications.map((application, index) => (
                 <ApplicationListItem 
@@ -113,7 +117,7 @@ export default function ApplicantDashboard() {
           </div>
         )}
       </div>
-    </motion.div>
+    </div>
   )
 }
 
@@ -123,42 +127,43 @@ function ApplicationListItem({ application, index, onRefresh }: { application: A
 
   return (
     <motion.div
-      initial={{ opacity: 0, x: -20 }}
-      animate={{ opacity: 1, x: 0 }}
-      transition={{ duration: 0.5, delay: index * 0.05 }}
+      initial={{ opacity: 0, y: 30 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6, delay: index * 0.05, ease: [0.16, 1, 0.3, 1] }}
+      className="group/card"
     >
-      <Card className="premium-card p-2 group bg-card/40">
-        <CardContent className="p-8 flex flex-col md:flex-row md:items-center justify-between gap-10">
-          <div className="flex items-center gap-8 flex-1">
-             <div className="w-16 h-16 rounded-2xl bg-primary/5 border border-primary/10 flex items-center justify-center group-hover:sapphire-gradient group-hover:text-white transition-all duration-500 shadow-lg shadow-primary/5">
-                <Briefcase className="w-8 h-8" />
+      <div className="premium-card p-0 glass-panel border-border/40 group-hover/card:border-primary/30 transition-all duration-700">
+        <div className="p-10 md:p-12 flex flex-col md:flex-row md:items-center justify-between gap-12">
+          <div className="flex items-center gap-10 flex-1">
+             <div className="w-20 h-20 rounded-3xl bg-foreground/5 flex items-center justify-center text-foreground group-hover/card:bg-foreground group-hover/card:text-background transition-all duration-700 shadow-2xl">
+                <Briefcase className="w-10 h-10" />
              </div>
-             <div className="space-y-3">
-               <div className="flex items-center gap-4 flex-wrap">
-                 <h3 className="text-3xl font-black tracking-tighter leading-none group-hover:text-primary transition-colors">{application.job.title}</h3>
-                 <div className={cn("badge-premium", getStatusColor(application.status))}>
+             <div className="space-y-4">
+               <div className="flex items-center gap-6 flex-wrap">
+                 <h3 className="text-3xl font-black tracking-tighter leading-tight group-hover/card:text-primary transition-colors">{application.job.title}</h3>
+                 <div className={cn("px-6 py-2 rounded-xl text-[10px] uppercase tracking-[0.2em] font-black shadow-xl", getStatusColor(application.status))}>
                    {application.status}
                  </div>
                </div>
-               <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-[10px] font-black uppercase tracking-[0.1em] text-muted-foreground/60">
-                 <span className="flex items-center gap-2"><MapPin className="w-4 h-4" /> {application.job.location}</span>
-                 <span className="flex items-center gap-2"><Calendar className="w-4 h-4" /> {formatDate(application.appliedAt)}</span>
-                 <span className="flex items-center gap-2 text-primary/60"><FileText className="w-4 h-4" /> {application.resumeName}</span>
+               <div className="flex flex-wrap items-center gap-x-8 gap-y-2 text-[10px] font-black uppercase tracking-widest text-muted-foreground/40">
+                 <span className="flex items-center gap-3"><MapPin className="w-4 h-4" /> {application.job.location}</span>
+                 <span className="flex items-center gap-3"><Calendar className="w-4 h-4" /> {formatDate(application.appliedAt)}</span>
+                 <span className="flex items-center gap-3 text-primary/60"><FileText className="w-4 h-4" /> {application.resumeName}</span>
                </div>
              </div>
           </div>
 
           <div className="flex items-center gap-4">
              <Link href={`/jobs/${application.job.id}`} className="flex-1 md:flex-none">
-                <Button variant="ghost" className="h-14 px-8 rounded-xl font-black text-xs uppercase tracking-widest hover:bg-secondary transition-all">
+                <Button variant="outline" className="h-14 px-8 rounded-2xl font-black text-[10px] uppercase tracking-widest border-border/50 hover:bg-secondary transition-all shadow-sm">
                    Full Specs
                 </Button>
              </Link>
 
              {isOffer && (
-                <div className="flex flex-col gap-2">
+                <div className="flex items-center gap-3">
                   <Button 
-                    className="h-14 px-10 rounded-xl font-black text-xs uppercase tracking-widest sapphire-gradient text-white shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all"
+                    className="h-14 px-10 rounded-2xl btn-quantum shadow-2xl active:scale-[0.98]"
                     onClick={async () => {
                       if(confirm('Officially accept this mission deployment? This will finalize your recruitment sequence.')) {
                         const result = await acceptOfferAction(application.id)
@@ -175,7 +180,7 @@ function ApplicationListItem({ application, index, onRefresh }: { application: A
                   </Button>
                   <Button 
                     variant="ghost"
-                    className="h-10 rounded-xl font-black text-[10px] uppercase tracking-widest text-muted-foreground hover:text-destructive hover:bg-destructive/5 transition-all"
+                    className="h-14 px-8 rounded-2xl font-black text-[10px] uppercase tracking-widest text-muted-foreground/60 hover:text-destructive hover:bg-destructive/5 transition-all"
                     onClick={async () => {
                       if(confirm('Decline this offer sequence?')) {
                         const result = await declineOfferAction(application.id)
@@ -188,7 +193,7 @@ function ApplicationListItem({ application, index, onRefresh }: { application: A
                       }
                     }}
                   >
-                    Decline Offer
+                    Decline
                   </Button>
                 </div>
              )}
@@ -196,7 +201,7 @@ function ApplicationListItem({ application, index, onRefresh }: { application: A
              {isActionable && (
                 <Button 
                   variant="ghost" 
-                  className="h-14 px-6 rounded-xl text-muted-foreground hover:text-destructive hover:bg-destructive/5 transition-all font-black text-[10px] uppercase tracking-widest gap-3"
+                  className="h-14 px-6 rounded-2xl text-muted-foreground/40 hover:text-destructive hover:bg-destructive/5 transition-all font-black text-[10px] uppercase tracking-widest gap-3"
                   onClick={async () => {
                     if(confirm('Terminate this application sequence?')) {
                       const result = await withdrawApplicationAction(application.id)
@@ -214,20 +219,20 @@ function ApplicationListItem({ application, index, onRefresh }: { application: A
                 </Button>
              )}
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     </motion.div>
   )
 }
 
 function StatBox({ label, value, icon }: { label: string; value: number | string; icon: React.ReactNode }) {
   return (
-    <Card className="premium-card p-10 text-center flex flex-col items-center group bg-card/40">
-       <div className="w-12 h-12 rounded-xl bg-primary/5 flex items-center justify-center text-primary group-hover:sapphire-gradient group-hover:text-white transition-all duration-500 mb-6 shadow-md shadow-primary/5">
+    <div className="premium-card p-10 flex flex-col items-center justify-center text-center group glass-panel border-border/40 hover:border-primary/40 transition-all duration-700">
+       <div className="w-16 h-16 rounded-2xl bg-foreground/[0.03] flex items-center justify-center text-foreground group-hover:bg-primary/10 group-hover:text-primary transition-all duration-700 mb-8 shadow-2xl">
           {icon}
        </div>
-       <div className="text-5xl font-black mb-3 tracking-tighter">{value}</div>
-       <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest opacity-60">{label}</p>
-    </Card>
+       <div className="text-6xl font-black mb-4 tracking-tighter leading-none group-hover:scale-110 transition-transform duration-700">{value}</div>
+       <p className="text-[10px] font-black text-muted-foreground/40 uppercase tracking-[0.4em]">{label}</p>
+    </div>
   )
 }

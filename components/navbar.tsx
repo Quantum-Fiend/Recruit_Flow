@@ -33,33 +33,34 @@ export function Navbar() {
   ]
 
   return (
+  return (
     <header
       className={cn(
         "fixed top-0 left-0 right-0 z-50 transition-all duration-700",
         isScrolled
-          ? "bg-background/40 backdrop-blur-3xl border-b border-border/50 py-3 shadow-2xl shadow-black/10"
-          : "bg-transparent py-6"
+          ? "bg-background/40 backdrop-blur-3xl border-b border-border/50 py-4 shadow-2xl shadow-black/10"
+          : "bg-transparent py-8"
       )}
     >
-      <div className="premium-container flex items-center justify-between gap-6">
+      <div className="premium-container flex items-center justify-between gap-12">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-4 group flex-shrink-0">
-          <div className="w-10 h-10 sapphire-gradient rounded-xl flex items-center justify-center shadow-xl shadow-primary/25 group-hover:scale-105 transition-all duration-500">
-            <Command className="w-5 h-5 text-white" />
+          <div className="w-10 h-10 bg-foreground rounded-xl flex items-center justify-center shadow-2xl shadow-primary/20 group-hover:scale-105 transition-all duration-500">
+            <Command className="w-5 h-5 text-background" />
           </div>
-          <span className="text-xl font-black tracking-tighter uppercase text-foreground group-hover:text-primary transition-colors">
+          <span className="text-xl font-black tracking-tighter uppercase text-gradient group-hover:opacity-80 transition-opacity">
             RecruitFlow
           </span>
         </Link>
 
         {/* Desktop Nav Pill */}
-        <nav className="hidden lg:flex items-center gap-1 bg-secondary/30 border border-border/50 rounded-2xl p-1.5 backdrop-blur-xl">
+        <nav className="hidden lg:flex items-center bg-secondary/20 border border-border/40 rounded-2xl p-1 backdrop-blur-3xl">
           {navLinks.map((link) => (
             <Link
               key={link.href}
               href={link.href}
               className={cn(
-                "flex items-center gap-2.5 px-6 h-10 rounded-xl transition-all duration-500 font-black text-[10px] uppercase tracking-[0.15em] whitespace-nowrap",
+                "flex items-center gap-2.5 px-6 h-10 rounded-xl transition-all duration-500 font-bold text-[11px] uppercase tracking-widest whitespace-nowrap",
                 pathname === link.href
                   ? "bg-background text-primary shadow-lg shadow-black/5"
                   : "text-muted-foreground/60 hover:text-foreground hover:bg-white/5"
@@ -72,15 +73,14 @@ export function Navbar() {
         </nav>
 
         {/* Desktop Right Side */}
-        <div className="hidden md:flex items-center gap-4">
+        <div className="hidden md:flex items-center gap-6">
           <ThemeToggle />
-          <div className="w-px h-6 bg-border/50" />
 
           {session ? (
-            <div className="flex items-center gap-5">
+            <div className="flex items-center gap-6">
               <div className="flex flex-col items-end">
-                <span className="text-sm font-black tracking-tighter leading-tight text-foreground">{session.user.name}</span>
-                <span className="text-[10px] text-primary font-black uppercase tracking-widest opacity-80">
+                <span className="text-xs font-black tracking-tighter leading-tight text-foreground">{session.user.name}</span>
+                <span className="text-[10px] text-primary/60 font-black uppercase tracking-widest">
                   {session.user.role}
                 </span>
               </div>
@@ -88,25 +88,24 @@ export function Navbar() {
                 variant="ghost"
                 size="icon"
                 aria-label="Sign Out"
-                className="w-11 h-11 rounded-xl bg-secondary hover:bg-destructive/5 border border-border hover:border-destructive/30 transition-all group"
+                className="w-11 h-11 rounded-xl bg-secondary/50 hover:bg-destructive/10 border border-border/50 hover:border-destructive/30 transition-all group"
                 onClick={() => signOut({ callbackUrl: "/" })}
               >
                 <LogOut className="w-4 h-4 text-muted-foreground group-hover:text-destructive transition-colors" />
               </Button>
             </div>
           ) : (
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2">
               <Link
                 href="/login"
-                className="px-6 h-11 rounded-xl font-black text-[10px] uppercase tracking-widest text-muted-foreground hover:text-foreground hover:bg-secondary transition-all inline-flex items-center"
+                className="px-6 h-11 rounded-xl font-black text-[11px] uppercase tracking-widest text-muted-foreground hover:text-foreground transition-all inline-flex items-center"
               >
                 Sign In
               </Link>
-              <Link
-                href="/signup"
-                className="px-6 h-11 rounded-xl font-black text-[10px] uppercase tracking-widest sapphire-gradient text-white hover:scale-[1.02] active:scale-[0.98] shadow-xl shadow-primary/20 transition-all inline-flex items-center"
-              >
-                Get Started
+              <Link href="/signup">
+                <Button className="h-11 px-8 rounded-xl font-black text-[11px] uppercase tracking-widest sapphire-gradient text-white hover:scale-[1.05] active:scale-[0.98] shadow-2xl shadow-primary/20 transition-all">
+                  Get Started
+                </Button>
               </Link>
             </div>
           )}

@@ -69,7 +69,7 @@ export default function JobDetailsPage() {
 
     init()
     return () => { ignore = true }
-  }, [params.id])
+  }, [params.id, session])
 
   const handleApply = () => {
     router.push(`/jobs/${params.id}/apply`)
@@ -92,14 +92,14 @@ export default function JobDetailsPage() {
 
   if (loading) {
     return (
-      <div className="max-w-[1200px] mx-auto py-20 px-6 space-y-12">
-         <Skeleton className="h-64 w-full rounded-[3rem] glass-morphism" />
-         <div className="grid lg:grid-cols-3 gap-10">
-            <div className="lg:col-span-2 space-y-8">
-               <Skeleton className="h-96 w-full rounded-[2.5rem] glass-morphism" />
-               <Skeleton className="h-40 w-full rounded-[2.5rem] glass-morphism" />
+      <div className="premium-container py-20 space-y-12">
+         <Skeleton className="h-80 w-full rounded-[3rem] glass-panel opacity-40" />
+         <div className="grid lg:grid-cols-3 gap-12">
+            <div className="lg:col-span-2 space-y-10">
+               <Skeleton className="h-[500px] w-full rounded-[3rem] glass-panel opacity-40" />
+               <Skeleton className="h-60 w-full rounded-[3rem] glass-panel opacity-40" />
             </div>
-            <Skeleton className="h-[600px] w-full rounded-[2.5rem] glass-morphism" />
+            <Skeleton className="h-[700px] w-full rounded-[3rem] glass-panel opacity-40" />
          </div>
       </div>
     )
@@ -107,101 +107,99 @@ export default function JobDetailsPage() {
 
   if (!job) {
     return (
-      <div className="max-w-[1200px] mx-auto py-40 flex flex-col items-center justify-center text-center px-6">
-         <div className="w-24 h-24 bg-foreground/5 rounded-[2.5rem] flex items-center justify-center mb-10">
-            <Briefcase className="w-12 h-12 text-muted-foreground" />
+      <div className="premium-container py-40 flex flex-col items-center justify-center text-center">
+         <div className="w-24 h-24 glass-panel rounded-[2.5rem] flex items-center justify-center mb-10 shadow-2xl">
+            <Briefcase className="w-12 h-12 text-muted-foreground/40" />
          </div>
-         <h1 className="h-lg text-sapphire mb-6">Position Null.</h1>
-         <p className="text-xl text-muted-foreground mb-12 max-w-md font-medium">The target job specification is no longer active in the RecruitFlow ecosystem.</p>
+         <h1 className="h-lg text-gradient mb-8">Position Null.</h1>
+         <p className="text-xl text-muted-foreground mb-12 max-w-md font-medium opacity-60">The target job specification is no longer active in the RecruitFlow ecosystem.</p>
          <Link href="/jobs">
-            <Button className="btn-sapphire px-12 h-16">Return to Pipeline</Button>
+            <Button className="btn-quantum px-12 h-16 shadow-2xl">Return to Pipeline</Button>
          </Link>
       </div>
     )
   }
 
   return (
-    <motion.div 
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      className="page-wrapper animate-slide-up"
-    >
-      {/* Navigation & Actions */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-8 mb-16">
+    <div className="page-wrapper animate-reveal px-6">
+      {/* Navigation & Technical Identity */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-10 mb-20">
          <Link href="/jobs">
-            <Button variant="ghost" className="rounded-xl h-12 px-6 group font-bold text-muted-foreground hover:text-foreground">
+            <Button variant="ghost" className="rounded-xl h-12 px-6 group font-black text-[10px] uppercase tracking-widest text-muted-foreground/60 hover:text-foreground">
                <ArrowLeft className="w-4 h-4 mr-3 transition-transform group-hover:-translate-x-1" />
-               Back to Pipeline
+               Return to Pipeline
             </Button>
          </Link>
          
-         <div className="flex items-center gap-4">
-            <Button variant="outline" className="h-10 w-10 rounded-lg border-border hover:bg-secondary p-0">
-               <Share2 className="w-4 h-4" />
+         <div className="flex items-center gap-6">
+            <div className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/20">Payload-ID: {job.id.split('-')[0]}</div>
+            <Button variant="outline" className="h-12 w-12 rounded-2xl border-border/50 hover:bg-secondary p-0 shadow-sm transition-all">
+               <Share2 className="w-5 h-5" />
             </Button>
-            <div className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/50">Spec ID: {job.id.split('-')[0]}</div>
          </div>
       </div>
 
-      <div className="grid lg:grid-cols-3 gap-10 items-start">
+      <div className="grid lg:grid-cols-3 gap-12 items-start w-full mb-40">
          {/* Main Technical Specs */}
-         <div className="lg:col-span-2 space-y-10">
+         <div className="lg:col-span-2 space-y-12">
             {/* Header Identity */}
-            <Card className="premium-card p-10 group overflow-hidden bg-card/40">
-               <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-[100px] -z-10 group-hover:bg-primary/10 transition-all duration-1000" />
+            <div className="premium-card p-12 md:p-16 glass-panel border-border/40 group overflow-hidden relative">
+               <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-primary/5 rounded-full blur-[120px] -z-10 group-hover:bg-primary/10 transition-all duration-1000" />
                
-               <div className="flex flex-col md:flex-row md:items-start justify-between gap-10 mb-12">
-                  <div className="space-y-6">
-                     <div className="w-16 h-16 sapphire-gradient rounded-2xl flex items-center justify-center text-white shadow-xl shadow-primary/20">
-                        <Briefcase className="w-8 h-8" />
+               <div className="flex flex-col md:flex-row md:items-start justify-between gap-12 mb-16">
+                  <div className="space-y-8">
+                     <div className="w-20 h-20 rounded-3xl bg-foreground/5 flex items-center justify-center text-foreground shadow-2xl group-hover:bg-foreground group-hover:text-background transition-all duration-700">
+                        <Briefcase className="w-10 h-10" />
                      </div>
-                     <h1 className="text-4xl md:text-6xl font-black tracking-tighter leading-tight text-balance">{job.title}</h1>
+                     <h1 className="text-5xl md:text-7xl font-black tracking-tighter leading-[0.9] text-balance">{job.title}</h1>
                   </div>
-                  <div className="flex flex-col items-end gap-3 shrink-0">
-                     <div className="badge-premium bg-primary/5 text-primary border-primary/10 uppercase tracking-widest">{job.status}</div>
+                  <div className="flex flex-col items-end gap-4 shrink-0">
+                     <div className="px-8 py-3 rounded-xl text-[10px] font-black uppercase tracking-[0.2em] bg-primary/10 text-primary border border-primary/20 shadow-xl">{job.status}</div>
                      <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/40">{formatDate(job.createdAt)}</span>
                   </div>
                </div>
 
-               <div className="grid grid-cols-2 md:grid-cols-3 gap-8 pt-8 border-t border-border">
-                  <SpecItem icon={<MapPin className="w-4 h-4" />} label="Location" value={job.location} />
-                  <SpecItem icon={<Clock className="w-4 h-4" />} label="Commitment" value={getJobTypeLabel(job.type)} />
-                  <SpecItem icon={<Target className="w-4 h-4" />} label="Level" value={job.experienceLevel} />
+               <div className="grid grid-cols-2 md:grid-cols-3 gap-12 pt-12 border-t border-border/40">
+                  <SpecItem icon={<MapPin className="w-5 h-5" />} label="Target Location" value={job.location} />
+                  <SpecItem icon={<Clock className="w-5 h-5" />} label="Commitment" value={getJobTypeLabel(job.type)} />
+                  <SpecItem icon={<Target className="w-5 h-5" />} label="Seniority Level" value={job.experienceLevel} />
                </div>
-            </Card>
+            </div>
 
             {/* Description Body */}
-            <Card className="premium-card p-12 bg-card/20">
-               <h2 className="text-2xl font-black mb-8 tracking-tighter uppercase text-muted-foreground/40">Mission Objective</h2>
-               <div className="prose prose-sapphire dark:prose-invert max-w-none">
-                  <p className="text-lg text-muted-foreground font-medium leading-relaxed whitespace-pre-wrap">
+            <div className="premium-card p-12 md:p-16 glass-panel border-border/40">
+               <h2 className="text-[10px] font-black mb-12 tracking-[0.4em] uppercase text-muted-foreground/40">Mission Briefing</h2>
+               <div className="prose prose-invert max-w-none">
+                  <p className="text-xl text-muted-foreground font-medium leading-relaxed whitespace-pre-wrap opacity-80">
                      {job.description}
                   </p>
                </div>
-            </Card>
+            </div>
 
             {/* Competencies */}
-            <Card className="premium-card p-12 bg-card/20">
-               <div className="flex items-center gap-4 mb-10">
+            <div className="premium-card p-12 md:p-16 glass-panel border-border/40">
+               <div className="flex items-center gap-4 mb-12">
                   <Sparkles className="w-6 h-6 text-primary" />
-                  <h2 className="text-2xl font-black tracking-tighter uppercase text-muted-foreground/40">Competencies</h2>
+                  <h2 className="text-[10px] font-black tracking-[0.4em] uppercase text-muted-foreground/40">Required Competencies</h2>
                </div>
-               <div className="flex flex-wrap gap-3">
+               <div className="flex flex-wrap gap-4">
                   {job.skills.map((skill: string) => (
-                     <div key={skill} className="px-5 py-2.5 rounded-xl bg-secondary border border-border text-xs font-black tracking-tight hover:border-primary/30 transition-all cursor-default">
+                     <div key={skill} className="px-8 py-3.5 rounded-2xl bg-foreground/[0.03] border border-border/50 text-[11px] font-black tracking-widest uppercase hover:border-primary/40 hover:bg-primary/5 transition-all cursor-default shadow-sm">
                         {skill}
                      </div>
                   ))}
                </div>
-            </Card>
+            </div>
          </div>
 
          {/* Strategic Action Sidebar */}
-         <aside className="space-y-8 sticky top-32">
-            <Card className="premium-card p-10 space-y-10 shadow-2xl bg-card/40">
-               <div className="space-y-3 text-center">
-                  <h3 className="text-2xl font-black tracking-tighter">Deploy Profile</h3>
-                  <p className="text-sm text-muted-foreground font-medium text-balance">Initialize your application for this position.</p>
+         <aside className="space-y-10 sticky top-32">
+            <div className="premium-card p-10 md:p-12 glass-panel border-border/40 space-y-12 shadow-2xl relative overflow-hidden">
+               <div className="absolute top-0 left-0 w-full h-1 sapphire-gradient opacity-50" />
+               
+               <div className="space-y-4 text-center">
+                  <h3 className="text-3xl font-black tracking-tighter">Initialize Deployment</h3>
+                  <p className="text-base text-muted-foreground font-medium opacity-60 text-balance">Begin your recruitment sequence for this position.</p>
                </div>
 
                {application && application.status !== "WITHDRAWN" ? (
@@ -209,83 +207,84 @@ export default function JobDetailsPage() {
                     onClick={handleWithdraw} 
                     disabled={withdrawing || application.status === "REJECTED"}
                     variant="outline"
-                    className="w-full h-16 rounded-xl text-base font-black border-destructive/20 text-destructive hover:bg-destructive/5 hover:border-destructive/30 transition-all"
+                    className="w-full h-16 rounded-2xl text-xs font-black uppercase tracking-[0.2em] border-destructive/20 text-destructive hover:bg-destructive/5 hover:border-destructive/40 transition-all shadow-sm"
                   >
-                    <span className="flex items-center gap-3">
+                    <span className="flex items-center gap-4">
                       {withdrawing ? <Loader2 className="w-5 h-5 animate-spin" /> : <XCircle className="w-5 h-5" />}
-                      {withdrawing ? "Processing..." : "Withdraw Application"}
+                      {withdrawing ? "Processing..." : "Withdraw Payload"}
                     </span>
                   </Button>
                ) : (
                   <Button 
                     onClick={handleApply} 
                     disabled={job.status !== "OPEN" || (application?.status === "WITHDRAWN")}
-                    className="w-full h-16 rounded-xl text-base font-black sapphire-gradient text-white shadow-xl shadow-primary/20 group overflow-hidden"
+                    className="w-full h-20 rounded-2xl btn-quantum shadow-2xl group overflow-hidden"
                   >
-                    <span className="relative z-10 flex items-center gap-3">
-                      {application?.status === "WITHDRAWN" ? "Application Withdrawn" : job.status === "OPEN" ? "Initialize Application" : "Mission Closed"}
-                      {application?.status !== "WITHDRAWN" && job.status === "OPEN" && <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />}
+                    <span className="relative z-10 flex items-center gap-4 text-xs uppercase tracking-[0.2em] font-black">
+                      {application?.status === "WITHDRAWN" ? "Sequence Terminated" : job.status === "OPEN" ? "Initialize Application" : "Position Inactive"}
+                      {application?.status !== "WITHDRAWN" && job.status === "OPEN" && <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-2" />}
                     </span>
                   </Button>
                )}
 
-               <div className="space-y-8 pt-4">
+               <div className="space-y-10 pt-4">
                   <SidebarInsight 
-                     icon={<Globe2 className="w-5 h-5" />} 
-                     title="Distributed Ready" 
-                     desc="Supports asynchronous workflows and global contribution." 
+                     icon={<Globe2 className="w-6 h-6" />} 
+                     title="Global Operations" 
+                     desc="Fully supports asynchronous, distributed technical contribution." 
                   />
                   <SidebarInsight 
-                     icon={<Shield className="w-5 h-5" />} 
-                     title="Verified Mission" 
-                     desc="Endorsed by RecruitFlow corporate integrity protocols." 
+                     icon={<Shield className="w-6 h-6" />} 
+                     title="Verified Specs" 
+                     desc="Endorsed by RecruitFlow corporate engineering integrity protocols." 
                   />
                   <SidebarInsight 
-                     icon={<Users className="w-5 h-5" />} 
-                     title="Active Pipeline" 
-                     desc={`${job._count.applications}+ profiles currently in screening.`} 
+                     icon={<Users className="w-6 h-6" />} 
+                     title="High Activity" 
+                     desc={`${job._count.applications}+ active telemetry streams currently in screening.`} 
                   />
                </div>
 
-               <div className="p-6 rounded-2xl bg-primary/5 border border-primary/10">
-                  <p className="text-[10px] font-black uppercase tracking-widest text-primary mb-3">Enterprise Insight</p>
-                  <p className="text-xs font-bold leading-relaxed text-muted-foreground/80">
-                    This position is managed by <span className="text-foreground font-black">{job.recruiter.name}</span>. 
-                    They prioritize candidates with high technical autonomy.
+               <div className="p-8 rounded-[2rem] bg-primary/5 border border-primary/10 relative overflow-hidden">
+                  <div className="absolute top-0 right-0 w-20 h-20 bg-primary/10 rounded-full blur-2xl -z-10" />
+                  <p className="text-[10px] font-black uppercase tracking-[0.3em] text-primary mb-4">Lead Intelligence</p>
+                  <p className="text-sm font-bold leading-relaxed text-foreground/80 opacity-90">
+                    Orchestrated by <span className="text-primary font-black underline underline-offset-4 decoration-primary/30">{job.recruiter.name}</span>. 
+                    Expect high-density technical feedback sequences.
                   </p>
                </div>
-            </Card>
+            </div>
 
-            <div className="px-8 text-center opacity-30">
-               <p className="text-[10px] font-black uppercase tracking-widest leading-relaxed">System protected by end-to-end encryption</p>
+            <div className="px-10 text-center opacity-20">
+               <p className="text-[10px] font-black uppercase tracking-[0.5em] leading-relaxed">Secured via Quantum-Slate Protocols</p>
             </div>
          </aside>
       </div>
-    </motion.div>
+    </div>
   )
 }
 
 function SpecItem({ icon, label, value }: { icon: React.ReactNode; label: string; value: string }) {
   return (
-    <div className="space-y-2">
-       <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-muted-foreground/60">
-          <span className="text-primary/60">{icon}</span>
+    <div className="space-y-3">
+       <div className="flex items-center gap-3 text-[10px] font-black uppercase tracking-widest text-muted-foreground/30">
+          <span className="text-primary/40">{icon}</span>
           <span>{label}</span>
        </div>
-       <div className="text-lg font-black tracking-tight">{value}</div>
+       <div className="text-xl font-black tracking-tighter leading-tight">{value}</div>
     </div>
   )
 }
 
 function SidebarInsight({ icon, title, desc }: { icon: React.ReactNode; title: string; desc: string }) {
   return (
-    <div className="flex gap-5 group">
-       <div className="w-10 h-10 rounded-xl bg-secondary flex items-center justify-center text-muted-foreground group-hover:bg-primary/10 group-hover:text-primary transition-all shrink-0">
+    <div className="flex gap-6 group/insight">
+       <div className="w-12 h-12 rounded-2xl bg-foreground/[0.03] flex items-center justify-center text-muted-foreground/40 group-hover/insight:bg-primary/10 group-hover/insight:text-primary transition-all duration-700 shrink-0 shadow-sm">
           {icon}
        </div>
-       <div className="space-y-1">
-          <p className="text-sm font-black">{title}</p>
-          <p className="text-xs text-muted-foreground font-medium leading-relaxed">{desc}</p>
+       <div className="space-y-1.5">
+          <p className="text-sm font-black tracking-tight">{title}</p>
+          <p className="text-xs text-muted-foreground font-medium leading-relaxed opacity-60">{desc}</p>
        </div>
     </div>
   )

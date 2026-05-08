@@ -31,20 +31,20 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            {/* Sapphire Slate Atmosphere */}
-            <div className="sapphire-aura" />
+            {/* Quantum Slate Atmosphere */}
+            <div className="quantum-atmosphere" />
 
             <div className="relative min-h-screen flex flex-col">
               <Navbar />
 
-              <main className="flex-1 w-full pt-24 md:pt-28 pb-16">
+              <main className="flex-1 w-full pt-32 md:pt-40 pb-20">
                 {children}
               </main>
 
-              <footer className="w-full border-t border-border py-20 mt-auto">
-                 <div className="premium-container grid md:grid-cols-4 gap-12">
-                    <div className="col-span-2">
-                       <h2 className="text-xl font-black tracking-tighter mb-4">RECRUITFLOW</h2>
+              <footer className="w-full border-t border-border py-32 mt-auto glass-panel border-x-0 border-b-0">
+                 <div className="premium-container grid md:grid-cols-12 gap-16">
+                    <div className="md:col-span-6 space-y-8">
+                       <h2 className="text-2xl font-black tracking-tighter uppercase text-gradient">RecruitFlow</h2>
                        <p className="text-sm text-muted-foreground max-w-xs font-medium leading-relaxed">
                           The high-performance talent acquisition engine designed for teams who prioritize speed, clarity, and excellence.
                        </p>
