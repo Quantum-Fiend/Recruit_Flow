@@ -164,23 +164,24 @@ function ApplicationListItem({ application, index, onRefresh }: { application: A
              )}
 
              {isActionable && (
-               <Button 
-                 variant="ghost" 
-                 className="h-14 w-14 p-0 rounded-2xl text-muted-foreground hover:text-destructive hover:bg-destructive/5 transition-all"
-                 onClick={async () => {
-                   if(confirm('Terminate this application sequence?')) {
-                     const result = await withdrawApplicationAction(application.id)
-                     if (result.success) {
-                       toast.success("Sequence Terminated")
-                       onRefresh()
-                     } else {
-                       toast.error(result.error)
-                     }
-                   }
-                 }}
-               >
-                 <XCircle className="w-6 h-6" />
-               </Button>
+                <Button 
+                  variant="ghost" 
+                  className="h-14 px-6 rounded-2xl text-muted-foreground hover:text-destructive hover:bg-destructive/5 transition-all font-black text-[10px] uppercase tracking-widest gap-3"
+                  onClick={async () => {
+                    if(confirm('Terminate this application sequence?')) {
+                      const result = await withdrawApplicationAction(application.id)
+                      if (result.success) {
+                        toast.success("Sequence Terminated")
+                        onRefresh()
+                      } else {
+                        toast.error(result.error)
+                      }
+                    }
+                  }}
+                >
+                  <XCircle className="w-5 h-5" />
+                  <span>Withdraw</span>
+                </Button>
              )}
           </div>
         </CardContent>

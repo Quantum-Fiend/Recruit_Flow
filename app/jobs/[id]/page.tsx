@@ -7,10 +7,13 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { getJobByIdAction } from "@/app/actions/jobs"
+import { getMyApplicationsAction, withdrawApplicationAction } from "@/app/actions/applications"
 import { getJobTypeLabel, getEmploymentTypeLabel, formatDate } from "@/lib/utils"
-import { MapPin, Briefcase, Clock, ArrowLeft, ArrowRight, Share2, Shield, Globe, Users, ChevronRight, Sparkles, Target, Zap, Globe2 } from "lucide-react"
+import { MapPin, Briefcase, Clock, ArrowLeft, ArrowRight, Share2, Shield, Globe, Users, ChevronRight, Sparkles, Target, Zap, Globe2, XCircle, Loader2 } from "lucide-react"
 import { Skeleton } from "@/components/ui/skeleton"
-import { motion } from "framer-motion"
+import { motion, AnimatePresence } from "framer-motion"
+import { toast } from "sonner"
+import { useSession } from "next-auth/react"
 
 interface JobDetails {
   id: string
@@ -34,17 +37,31 @@ interface JobDetails {
 export default function JobDetailsPage() {
   const params = useParams()
   const router = useRouter()
+  const { data: session } = useSession()
   const [job, setJob] = useState<JobDetails | null>(null)
   const [loading, setLoading] = useState(true)
+  const [application, setApplication] = useState<{ id: string; status: string } | null>(null)
+  const [withdrawing, setWithdrawing] = useState(false)
 
   useEffect(() => {
     let ignore = false;
     
     async function init() {
-      const result = await getJobByIdAction(params.id as string)
+      const [jobResult, appsResult] = await Promise.all([
+        getJobByIdAction(params.id as string),
+        session?.user ? getMyApplicationsAction() : Promise.resolve({ success: false, applications: [] })
+      ])
+
       if (!ignore) {
-        if (result.success && result.job) {
-          setJob(result.job as JobDetails)
+        if (jobResult.success && jobResult.job) {
+          setJob(jobResult.job as JobDetails)
+        }
+
+        if (appsResult.success && appsResult.applications) {
+          const existingApp = (appsResult.applications as any[]).find(a => a.jobId === params.id)
+          if (existingApp) {
+            setApplication({ id: existingApp.id, status: existingApp.status })
+          }
         }
         setLoading(false)
       }
@@ -56,6 +73,21 @@ export default function JobDetailsPage() {
 
   const handleApply = () => {
     router.push(`/jobs/${params.id}/apply`)
+  }
+
+  const handleWithdraw = async () => {
+    if (!application) return
+    
+    setWithdrawing(true)
+    const result = await withdrawApplicationAction(application.id)
+    
+    if (result.success) {
+      toast.success("Application Withdrawn")
+      setApplication(prev => prev ? { ...prev, status: "WITHDRAWN" } : null)
+    } else {
+      toast.error(result.error || "Failed to withdraw")
+    }
+    setWithdrawing(false)
   }
 
   if (loading) {
@@ -172,16 +204,30 @@ export default function JobDetailsPage() {
                   <p className="text-sm text-muted-foreground font-medium">Initialize your application for this position.</p>
                </div>
 
-               <Button 
-                  onClick={handleApply} 
-                  disabled={job.status !== "OPEN"}
-                  className="w-full h-20 rounded-[2rem] text-xl font-black sapphire-gradient text-white shadow-2xl shadow-primary/20 group overflow-hidden"
-               >
-                  <span className="relative z-10 flex items-center gap-3">
-                     {job.status === "OPEN" ? "Initialize Application" : "Mission Closed"}
-                     <ArrowRight className="w-6 h-6 transition-transform group-hover:translate-x-1" />
-                  </span>
-               </Button>
+               {application && application.status !== "WITHDRAWN" ? (
+                  <Button 
+                    onClick={handleWithdraw} 
+                    disabled={withdrawing || application.status === "REJECTED"}
+                    variant="outline"
+                    className="w-full h-20 rounded-[2rem] text-xl font-black border-destructive/20 text-destructive hover:bg-destructive/10 hover:border-destructive/30 shadow-xl shadow-destructive/5 group overflow-hidden"
+                  >
+                    <span className="relative z-10 flex items-center gap-3">
+                      {withdrawing ? <Loader2 className="w-6 h-6 animate-spin" /> : <XCircle className="w-6 h-6" />}
+                      {withdrawing ? "Processing..." : "Withdraw Application"}
+                    </span>
+                  </Button>
+               ) : (
+                  <Button 
+                    onClick={handleApply} 
+                    disabled={job.status !== "OPEN" || (application?.status === "WITHDRAWN")}
+                    className="w-full h-20 rounded-[2rem] text-xl font-black sapphire-gradient text-white shadow-2xl shadow-primary/20 group overflow-hidden"
+                  >
+                    <span className="relative z-10 flex items-center gap-3">
+                      {application?.status === "WITHDRAWN" ? "Application Withdrawn" : job.status === "OPEN" ? "Initialize Application" : "Mission Closed"}
+                      {application?.status !== "WITHDRAWN" && job.status === "OPEN" && <ArrowRight className="w-6 h-6 transition-transform group-hover:translate-x-1" />}
+                    </span>
+                  </Button>
+               )}
 
                <div className="space-y-8 pt-4">
                   <SidebarInsight 
