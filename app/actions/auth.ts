@@ -47,12 +47,11 @@ export async function signUpAction(data: SignUpInput) {
       await signIn("credentials", {
         email: validated.email,
         password: validated.password,
-        redirect: false,
+        redirectTo: validated.role === 'RECRUITER' ? '/recruiter/dashboard' : '/dashboard',
       })
     } catch (err) {
-      // Ignore sign-in errors after successful signup for now, 
-      // or re-throw if it's a redirect
       if ((err as any).digest?.startsWith('NEXT_REDIRECT')) throw err;
+      // If it's not a redirect, we already have the user created, so we can return success
     }
 
     return { success: true }

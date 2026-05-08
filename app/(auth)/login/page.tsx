@@ -50,39 +50,43 @@ export default function LoginChoicePage() {
         <div className="grid md:grid-cols-2 gap-8 items-stretch">
           {/* Candidate Path */}
           <Link href="/login/candidate" className="group h-full">
-            <Card className="premium-card p-12 flex flex-col items-center text-center h-full bg-card/40">
-              <div className="w-16 h-16 sapphire-gradient rounded-2xl flex items-center justify-center mb-8 shadow-xl shadow-primary/20 group-hover:rotate-6 transition-transform">
-                <User className="w-8 h-8 text-white" />
+            <div className="premium-card p-16 flex flex-col items-center text-center h-full glass-panel group-hover:border-primary/50 transition-all duration-700">
+              <div className="w-20 h-20 sapphire-gradient rounded-2xl flex items-center justify-center mb-10 shadow-2xl group-hover:scale-110 transition-all duration-700">
+                <User className="w-10 h-10 text-white" />
               </div>
-              <h3 className="text-3xl font-black mb-4 tracking-tighter">Candidate</h3>
-              <p className="text-muted-foreground font-medium mb-10 leading-relaxed text-balance">
-                Access your job applications and engineer profile dashboard.
-              </p>
-              <div className="mt-auto flex items-center gap-2 text-primary font-black uppercase tracking-widest text-[10px]">
-                Authorize Profile <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              <div className="space-y-4 mb-10">
+                <h3 className="text-3xl font-black tracking-tighter">Candidate</h3>
+                <p className="text-muted-foreground font-medium text-sm leading-relaxed max-w-[240px] opacity-60">
+                  Access global pipelines and manage your technical identity.
+                </p>
               </div>
-            </Card>
+              <div className="mt-auto flex items-center gap-2 text-primary font-black uppercase tracking-[0.2em] text-[10px] opacity-0 group-hover:opacity-100 group-hover:translate-x-2 transition-all duration-500">
+                Authorize Profile <ArrowRight className="w-4 h-4" />
+              </div>
+            </div>
           </Link>
 
           {/* Recruiter Path */}
           <Link href="/login/recruiter" className="group h-full">
-            <Card className="premium-card p-12 flex flex-col items-center text-center h-full bg-card/40">
-              <div className="w-16 h-16 bg-primary/5 border border-primary/10 rounded-2xl flex items-center justify-center mb-8 shadow-md group-hover:-rotate-6 transition-transform">
-                <Briefcase className="w-8 h-8 text-primary" />
+            <div className="premium-card p-16 flex flex-col items-center text-center h-full glass-panel group-hover:border-emerald-500/50 transition-all duration-700">
+              <div className="w-20 h-20 bg-emerald-500/20 rounded-2xl flex items-center justify-center mb-10 shadow-2xl group-hover:scale-110 transition-all duration-700">
+                <Briefcase className="w-10 h-10 text-emerald-500" />
               </div>
-              <h3 className="text-3xl font-black mb-4 tracking-tighter">Recruiter</h3>
-              <p className="text-muted-foreground font-medium mb-10 leading-relaxed text-balance">
-                Access the recruitment console and manage deployment sequences.
-              </p>
-              <div className="mt-auto flex items-center gap-2 text-primary font-black uppercase tracking-widest text-[10px]">
-                Authorize Console <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              <div className="space-y-4 mb-10">
+                <h3 className="text-3xl font-black tracking-tighter">Recruiter</h3>
+                <p className="text-muted-foreground font-medium text-sm leading-relaxed max-w-[240px] opacity-60">
+                  Deploy hiring infrastructure and manage elite talent sequences.
+                </p>
               </div>
-            </Card>
+              <div className="mt-auto flex items-center gap-2 text-emerald-500 font-black uppercase tracking-[0.2em] text-[10px] opacity-0 group-hover:opacity-100 group-hover:translate-x-2 transition-all duration-500">
+                Authorize Console <ArrowRight className="w-4 h-4" />
+              </div>
+            </div>
           </Link>
         </div>
 
-        <p className="text-sm font-medium text-muted-foreground/60 pt-10">
-          New to the network? <Link href="/signup" className="text-primary font-black hover:underline underline-offset-4">Initialize Account</Link>
+        <p className="text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground/40 pt-16">
+          New to the network? <Link href="/signup" className="text-primary hover:text-foreground transition-colors">Initialize Account</Link>
         </p>
       </motion.div>
     </div>

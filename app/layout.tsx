@@ -6,6 +6,7 @@ import { ThemeProvider } from "@/components/theme-provider"
 import { SessionProvider } from "@/components/session-provider"
 import { Navbar } from "@/components/navbar"
 import { MatrixBackground } from "@/components/matrix-background"
+import { Command } from "lucide-react"
 
 const jakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
