@@ -139,19 +139,19 @@ export default function ApplicantsPage() {
       <header className="w-full mb-16 flex flex-col md:flex-row md:items-end justify-between gap-10">
         <div className="max-w-2xl space-y-6">
            <Link href="/recruiter/jobs">
-              <Button variant="ghost" className="rounded-2xl h-10 px-4 group font-bold text-muted-foreground hover:text-foreground mb-4">
+              <Button variant="ghost" className="rounded-xl h-10 px-4 group font-bold text-muted-foreground hover:text-foreground mb-4">
                  <ArrowLeft className="w-4 h-4 mr-2 transition-transform group-hover:-translate-x-1" />
                  Back to Archives
               </Button>
            </Link>
-           <h1 className="h-lg text-sapphire">{job?.title} <br /><span className="text-primary text-3xl font-black">Talent Ingestion.</span></h1>
-           <p className="text-xl text-muted-foreground font-medium">Review and manage the active telemetry stream for this position.</p>
+           <h1 className="h-lg text-balance">{job?.title} <br /><span className="text-primary italic">Talent Ingestion.</span></h1>
+           <p className="text-xl text-muted-foreground font-medium text-balance">Review and manage the active telemetry stream for this position.</p>
         </div>
         
         <div className="flex items-center gap-4">
-           <div className="px-6 py-3 rounded-2xl bg-foreground/5 border border-foreground/10 flex items-center gap-3">
+           <div className="px-6 py-3 rounded-xl glass-surface border border-border flex items-center gap-3">
               <Users className="w-5 h-5 text-primary" />
-              <span className="text-sm font-black">{applications.length} Profiles</span>
+              <span className="text-sm font-black uppercase tracking-widest">{applications.length} Profiles</span>
            </div>
         </div>
       </header>
@@ -159,13 +159,13 @@ export default function ApplicantsPage() {
       {/* Main Content */}
       <div className="w-full mb-32 space-y-8">
         {applications.length === 0 ? (
-          <div className="text-center py-40 glass-morphism w-full border-dashed rounded-[3rem] flex flex-col items-center">
+          <div className="text-center py-40 glass-surface w-full border-dashed rounded-3xl flex flex-col items-center">
             <FileText className="w-16 h-16 mb-8 text-muted-foreground/10" />
-            <h3 className="text-3xl font-black mb-4 tracking-tight">No data points received</h3>
+            <h3 className="text-3xl font-black mb-4 tracking-tighter">No data points received</h3>
             <p className="text-xl text-muted-foreground max-w-sm font-medium">This deployment has not yet initialized any candidate ingestion sequences.</p>
           </div>
         ) : (
-          <div className="space-y-6">
+          <div className="space-y-8">
             <AnimatePresence>
               {applications.map((app, index) => {
                 const possibleTransitions = getPossibleNextStatuses(app.status as ApplicationStatus)
@@ -178,32 +178,31 @@ export default function ApplicantsPage() {
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.5, delay: index * 0.05 }}
                   >
-                    <Card className="glass-morphism creative-card p-2 border-none group">
-                      <CardContent className="p-10 space-y-10">
+                    <Card className="premium-card p-2 bg-card/40 overflow-hidden border-border/50">
+                      <CardContent className="p-10 space-y-12">
                         {/* Identity & Status */}
                         <div className="flex flex-col md:flex-row md:items-center justify-between gap-10">
                            <div className="flex items-center gap-8 flex-1">
-                              <div className="w-16 h-16 rounded-[1.5rem] bg-primary/5 border border-primary/10 flex items-center justify-center text-primary group-hover:sapphire-gradient group-hover:text-white transition-all duration-700 shadow-xl shadow-primary/5">
+                              <div className="w-16 h-16 rounded-2xl bg-secondary flex items-center justify-center text-primary shadow-xl shadow-primary/5 border border-border">
                                  <Users className="w-8 h-8" />
                               </div>
                               <div className="space-y-2">
-                                 <h3 className="text-3xl font-black tracking-tighter group-hover:text-primary transition-colors">{app.applicant.name}</h3>
-                                 <div className="flex items-center gap-6 text-[10px] font-black uppercase tracking-widest text-muted-foreground/60">
-                                    <span>{app.applicant.email}</span>
-                                    <span className="w-1 h-1 bg-border rounded-full" />
-                                    <span>Applied {formatDate(app.appliedAt)}</span>
+                                 <h3 className="text-3xl font-black tracking-tighter leading-tight">{app.applicant.name}</h3>
+                                 <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-[10px] font-black uppercase tracking-widest text-muted-foreground/60">
+                                    <span className="text-foreground/80">{app.applicant.email}</span>
+                                    <span className="flex items-center gap-2"><Zap className="w-3 h-3 text-primary" /> Applied {formatDate(app.appliedAt)}</span>
                                  </div>
                               </div>
                            </div>
-                           <div className={cn("badge-premium px-8 py-3 text-sm", getStatusColor(app.status))}>
+                           <div className={cn("badge-premium px-8 py-3 text-[10px] uppercase tracking-widest font-black bg-primary/5 border-primary/10 text-primary", getStatusColor(app.status))}>
                               {app.status}
                            </div>
                         </div>
 
                         {/* Technical Assets & Workflow */}
-                        <div className="grid md:grid-cols-2 gap-10">
+                        <div className="grid lg:grid-cols-2 gap-12">
                            <div className="space-y-6">
-                              <div className="flex items-center gap-3 text-[10px] font-black uppercase tracking-widest text-muted-foreground">
+                              <div className="flex items-center gap-3 text-[10px] font-black uppercase tracking-widest text-muted-foreground/40">
                                  <FileText className="w-4 h-4" />
                                  <span>Technical Resume</span>
                               </div>
@@ -211,31 +210,31 @@ export default function ApplicantsPage() {
                                  href={app.resumeUrl} 
                                  target="_blank" 
                                  rel="noopener noreferrer"
-                                 className="flex items-center justify-between p-6 bg-foreground/5 rounded-2xl border border-foreground/10 hover:border-primary/30 transition-all group/res"
+                                 className="flex items-center justify-between p-6 bg-secondary/50 rounded-xl border border-border hover:border-primary/30 transition-all group/res"
                               >
-                                 <span className="font-bold text-lg">{app.resumeName}</span>
+                                 <span className="font-bold text-lg tracking-tight">{app.resumeName}</span>
                                  <ChevronRight className="w-5 h-5 text-muted-foreground group-hover/res:translate-x-1 transition-all" />
                               </a>
                            </div>
 
                            <div className="space-y-6">
-                              <div className="flex items-center gap-3 text-[10px] font-black uppercase tracking-widest text-muted-foreground">
+                              <div className="flex items-center gap-3 text-[10px] font-black uppercase tracking-widest text-muted-foreground/40">
                                  <Zap className="w-4 h-4" />
                                  <span>Workflow Optimization</span>
                               </div>
-                              <div className="flex flex-wrap gap-2">
+                              <div className="flex flex-wrap gap-3">
                                  {possibleTransitions.map((status) => (
                                     <Button
                                        key={status}
                                        variant="outline"
-                                       className="h-12 px-6 rounded-xl font-black text-xs uppercase tracking-widest border-border hover:bg-primary hover:text-white hover:border-primary transition-all"
+                                       className="h-12 px-6 rounded-xl font-black text-[10px] uppercase tracking-widest border-border hover:bg-primary/5 hover:text-primary hover:border-primary/30 transition-all active:scale-[0.98]"
                                        onClick={() => handleStatusUpdate(app.id, status)}
                                     >
                                        Move to {status}
                                     </Button>
                                  ))}
                                  {possibleTransitions.length === 0 && (
-                                    <div className="h-12 flex items-center px-6 rounded-xl bg-foreground/5 text-muted-foreground font-black text-[10px] uppercase tracking-widest">
+                                    <div className="h-12 flex items-center px-6 rounded-xl bg-secondary text-muted-foreground/40 font-black text-[10px] uppercase tracking-widest border border-border/50 border-dashed">
                                        Sequence Finalized
                                     </div>
                                  )}
@@ -244,28 +243,28 @@ export default function ApplicantsPage() {
                         </div>
 
                         {/* Intelligence Notes */}
-                        <div className="space-y-6 pt-6 border-t border-foreground/5">
+                        <div className="space-y-8 pt-10 border-t border-border">
                            <div className="flex items-center justify-between">
-                              <div className="flex items-center gap-3 text-[10px] font-black uppercase tracking-widest text-muted-foreground">
+                              <div className="flex items-center gap-3 text-[10px] font-black uppercase tracking-widest text-muted-foreground/40">
                                  <MessageSquare className="w-4 h-4" />
                                  <span>Internal Intelligence</span>
                               </div>
                               <Button 
                                  variant="ghost" 
-                                 className="h-8 px-4 rounded-lg font-black text-[10px] uppercase tracking-widest hover:bg-foreground/5"
+                                 className="h-8 px-4 rounded-lg font-black text-[10px] uppercase tracking-widest hover:bg-secondary text-muted-foreground hover:text-foreground transition-all"
                                  onClick={() => setSelectedApp(isExpanded ? null : app)}
                               >
-                                 {isExpanded ? "Hide Feed" : "Expand Intelligence"}
+                                 {isExpanded ? "Close Feed" : "Expand Intelligence"}
                               </Button>
                            </div>
 
                            {app.notes.length > 0 && (
                              <div className="space-y-4">
                                 {app.notes.map((note) => (
-                                   <div key={note.id} className="p-6 bg-foreground/5 rounded-2xl border border-foreground/5 space-y-3">
-                                      <p className="text-base font-medium leading-relaxed">{note.note}</p>
-                                      <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-widest text-muted-foreground/50">
-                                         <span>{note.recruiter.name}</span>
+                                   <div key={note.id} className="p-6 bg-secondary/30 rounded-xl border border-border/50 space-y-4 group/note">
+                                      <p className="text-base font-medium leading-relaxed text-foreground/90">{note.note}</p>
+                                      <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-widest text-muted-foreground/40">
+                                         <span className="text-primary/60">{note.recruiter.name}</span>
                                          <span>{formatDate(note.createdAt)}</span>
                                       </div>
                                    </div>
@@ -274,22 +273,28 @@ export default function ApplicantsPage() {
                            )}
 
                            {isExpanded && (
-                             <div className="space-y-4 animate-in slide-in-from-top-2">
+                             <motion.div 
+                               initial={{ opacity: 0, y: -10 }}
+                               animate={{ opacity: 1, y: 0 }}
+                               className="space-y-4"
+                             >
                                 <Textarea
                                    placeholder="Ingest internal note for this profile..."
                                    value={newNote}
                                    onChange={(e) => setNewNote(e.target.value)}
                                    rows={3}
-                                   className="rounded-2xl bg-foreground/5 border-none font-medium text-base focus-visible:ring-1 focus-visible:ring-primary/30"
+                                   className="rounded-xl bg-secondary border-border font-medium text-base focus-visible:ring-1 focus-visible:ring-primary/30 resize-none p-6"
                                 />
-                                <Button
-                                   onClick={handleAddNote}
-                                   disabled={!newNote.trim() || addingNote}
-                                   className="h-12 px-8 rounded-xl sapphire-gradient text-white font-black text-xs uppercase tracking-widest shadow-xl shadow-primary/20"
-                                >
-                                   {addingNote ? "Ingesting..." : "Deploy Note"}
-                                </Button>
-                             </div>
+                                <div className="flex justify-end">
+                                   <Button
+                                      onClick={handleAddNote}
+                                      disabled={!newNote.trim() || addingNote}
+                                      className="h-12 px-8 rounded-xl sapphire-gradient text-white font-black text-[10px] uppercase tracking-widest shadow-xl shadow-primary/20 active:scale-[0.98] transition-all"
+                                   >
+                                      {addingNote ? <span className="flex items-center gap-2"><Loader2 className="w-3 h-3 animate-spin" /> Ingesting</span> : "Deploy Note"}
+                                   </Button>
+                                </div>
+                             </motion.div>
                            )}
                         </div>
                       </CardContent>

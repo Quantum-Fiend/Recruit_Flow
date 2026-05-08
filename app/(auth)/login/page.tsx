@@ -23,59 +23,66 @@ import { Briefcase, User } from "lucide-react";
 
 export default function LoginChoicePage() {
   return (
-    <div className="flex flex-col items-center justify-center min-h-[85vh] w-full px-6 py-20">
+    <div className="flex flex-col items-center justify-center min-h-[90vh] w-full px-6 py-20 relative overflow-hidden">
+      {/* Decorative background element */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-primary/5 rounded-full blur-[120px] -z-10" />
+
       <motion.div
-        initial={{ opacity: 0, y: 30 }}
+        initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
         className="w-full max-w-[800px] text-center space-y-16"
       >
         <div className="space-y-6">
-          <h1 className="h-xl text-sapphire tracking-tighter">
-            System <br />Access Hub.
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full glass-surface text-[10px] font-black uppercase tracking-widest text-primary mb-4 mx-auto">
+            <Lock className="w-3 h-3" />
+            <span>Secure Access Gateway</span>
+          </div>
+          <h1 className="h-xl">
+            System <br />
+            <span className="text-primary italic">Access</span> Hub.
           </h1>
-          <p className="text-xl text-muted-foreground font-medium max-w-xl mx-auto leading-relaxed">
+          <p className="text-xl text-muted-foreground font-medium max-w-xl mx-auto leading-relaxed text-balance">
             Choose your gateway to authorize access to the RecruitFlow engine.
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-8">
+        <div className="grid md:grid-cols-2 gap-8 items-stretch">
           {/* Candidate Path */}
-          <Link href="/login/candidate" className="group">
-            <Card className="glass-morphism rounded-[3rem] p-12 border-none shadow-2xl hover:scale-[1.02] transition-all duration-500 relative overflow-hidden h-full flex flex-col items-center text-center">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full blur-3xl -z-10 group-hover:bg-primary/10 transition-colors" />
-              <div className="w-20 h-20 sapphire-gradient rounded-[2rem] flex items-center justify-center mb-8 shadow-2xl shadow-primary/20 group-hover:rotate-6 transition-transform">
-                <User className="w-10 h-10 text-white" />
+          <Link href="/login/candidate" className="group h-full">
+            <Card className="premium-card p-12 flex flex-col items-center text-center h-full bg-card/40">
+              <div className="w-16 h-16 sapphire-gradient rounded-2xl flex items-center justify-center mb-8 shadow-xl shadow-primary/20 group-hover:rotate-6 transition-transform">
+                <User className="w-8 h-8 text-white" />
               </div>
-              <h3 className="text-3xl font-black mb-4 tracking-tight">Candidate</h3>
-              <p className="text-muted-foreground font-medium mb-10 leading-relaxed">
+              <h3 className="text-3xl font-black mb-4 tracking-tighter">Candidate</h3>
+              <p className="text-muted-foreground font-medium mb-10 leading-relaxed text-balance">
                 Access your job applications and engineer profile dashboard.
               </p>
-              <div className="mt-auto flex items-center gap-2 text-primary font-black uppercase tracking-widest text-xs">
+              <div className="mt-auto flex items-center gap-2 text-primary font-black uppercase tracking-widest text-[10px]">
                 Authorize Profile <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </div>
             </Card>
           </Link>
 
           {/* Recruiter Path */}
-          <Link href="/login/recruiter" className="group">
-            <Card className="glass-morphism rounded-[3rem] p-12 border-none shadow-2xl hover:scale-[1.02] transition-all duration-500 relative overflow-hidden h-full flex flex-col items-center text-center">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full blur-3xl -z-10 group-hover:bg-primary/10 transition-colors" />
-              <div className="w-20 h-20 bg-primary/10 border border-primary/20 rounded-[2rem] flex items-center justify-center mb-8 shadow-2xl group-hover:-rotate-6 transition-transform">
-                <Briefcase className="w-10 h-10 text-primary" />
+          <Link href="/login/recruiter" className="group h-full">
+            <Card className="premium-card p-12 flex flex-col items-center text-center h-full bg-card/40">
+              <div className="w-16 h-16 bg-primary/5 border border-primary/10 rounded-2xl flex items-center justify-center mb-8 shadow-md group-hover:-rotate-6 transition-transform">
+                <Briefcase className="w-8 h-8 text-primary" />
               </div>
-              <h3 className="text-3xl font-black mb-4 tracking-tight">Recruiter</h3>
-              <p className="text-muted-foreground font-medium mb-10 leading-relaxed">
-                Access the recruitment console and manage post-deployment sequences.
+              <h3 className="text-3xl font-black mb-4 tracking-tighter">Recruiter</h3>
+              <p className="text-muted-foreground font-medium mb-10 leading-relaxed text-balance">
+                Access the recruitment console and manage deployment sequences.
               </p>
-              <div className="mt-auto flex items-center gap-2 text-primary font-black uppercase tracking-widest text-xs">
+              <div className="mt-auto flex items-center gap-2 text-primary font-black uppercase tracking-widest text-[10px]">
                 Authorize Console <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </div>
             </Card>
           </Link>
         </div>
 
-        <p className="text-sm font-medium text-muted-foreground pt-10">
-          New to the network? <Link href="/signup" className="text-primary font-black hover:underline">Initialize Account</Link>
+        <p className="text-sm font-medium text-muted-foreground/60 pt-10">
+          New to the network? <Link href="/signup" className="text-primary font-black hover:underline underline-offset-4">Initialize Account</Link>
         </p>
       </motion.div>
     </div>

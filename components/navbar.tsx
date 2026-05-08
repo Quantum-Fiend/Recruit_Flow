@@ -35,34 +35,34 @@ export function Navbar() {
   return (
     <header
       className={cn(
-        "fixed top-0 left-0 right-0 z-50 transition-all duration-500",
+        "fixed top-0 left-0 right-0 z-50 transition-all duration-700",
         isScrolled
-          ? "bg-background/85 backdrop-blur-2xl border-b border-white/5 py-3 shadow-2xl shadow-black/20"
+          ? "bg-background/40 backdrop-blur-3xl border-b border-border/50 py-3 shadow-2xl shadow-black/10"
           : "bg-transparent py-6"
       )}
     >
       <div className="premium-container flex items-center justify-between gap-6">
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-3 group flex-shrink-0">
-          <div className="w-9 h-9 sapphire-gradient rounded-xl flex items-center justify-center shadow-lg shadow-primary/25 group-hover:scale-110 transition-transform duration-500">
+        <Link href="/" className="flex items-center gap-4 group flex-shrink-0">
+          <div className="w-10 h-10 sapphire-gradient rounded-xl flex items-center justify-center shadow-xl shadow-primary/25 group-hover:scale-105 transition-all duration-500">
             <Command className="w-5 h-5 text-white" />
           </div>
-          <span className="text-lg font-black tracking-tighter uppercase text-foreground">
+          <span className="text-xl font-black tracking-tighter uppercase text-foreground group-hover:text-primary transition-colors">
             RecruitFlow
           </span>
         </Link>
 
         {/* Desktop Nav Pill */}
-        <nav className="hidden lg:flex items-center gap-1 bg-white/5 border border-white/8 rounded-2xl p-1.5 backdrop-blur-md">
+        <nav className="hidden lg:flex items-center gap-1 bg-secondary/30 border border-border/50 rounded-2xl p-1.5 backdrop-blur-xl">
           {navLinks.map((link) => (
             <Link
               key={link.href}
               href={link.href}
               className={cn(
-                "flex items-center gap-2 px-5 h-9 rounded-xl transition-all duration-300 font-bold text-xs uppercase tracking-widest whitespace-nowrap",
+                "flex items-center gap-2.5 px-6 h-10 rounded-xl transition-all duration-500 font-black text-[10px] uppercase tracking-[0.15em] whitespace-nowrap",
                 pathname === link.href
-                  ? "bg-background text-foreground shadow-md"
-                  : "text-muted-foreground hover:text-foreground hover:bg-white/5"
+                  ? "bg-background text-primary shadow-lg shadow-black/5"
+                  : "text-muted-foreground/60 hover:text-foreground hover:bg-white/5"
               )}
             >
               <link.icon className="w-3.5 h-3.5" />
@@ -72,38 +72,38 @@ export function Navbar() {
         </nav>
 
         {/* Desktop Right Side */}
-        <div className="hidden md:flex items-center gap-3">
+        <div className="hidden md:flex items-center gap-4">
           <ThemeToggle />
-          <div className="w-px h-5 bg-white/10" />
+          <div className="w-px h-6 bg-border/50" />
 
           {session ? (
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-5">
               <div className="flex flex-col items-end">
-                <span className="text-sm font-bold tracking-tight leading-tight">{session.user.name}</span>
-                <span className="text-[10px] text-muted-foreground font-bold uppercase tracking-[0.15em]">
+                <span className="text-sm font-black tracking-tighter leading-tight text-foreground">{session.user.name}</span>
+                <span className="text-[10px] text-primary font-black uppercase tracking-widest opacity-80">
                   {session.user.role}
                 </span>
               </div>
               <Button
-                variant="outline"
+                variant="ghost"
                 size="icon"
-                className="w-10 h-10 rounded-xl border-white/10 hover:bg-white/5 hover:border-destructive/50 transition-all group"
+                className="w-11 h-11 rounded-xl bg-secondary hover:bg-destructive/5 border border-border hover:border-destructive/30 transition-all group"
                 onClick={() => signOut({ callbackUrl: "/" })}
               >
                 <LogOut className="w-4 h-4 text-muted-foreground group-hover:text-destructive transition-colors" />
               </Button>
             </div>
           ) : (
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-3">
               <Link
                 href="/login"
-                className="px-5 h-9 rounded-xl font-bold text-xs uppercase tracking-widest text-muted-foreground hover:text-foreground hover:bg-white/5 transition-all inline-flex items-center"
+                className="px-6 h-11 rounded-xl font-black text-[10px] uppercase tracking-widest text-muted-foreground hover:text-foreground hover:bg-secondary transition-all inline-flex items-center"
               >
                 Sign In
               </Link>
               <Link
                 href="/signup"
-                className="px-5 h-9 rounded-xl font-bold text-xs uppercase tracking-widest sapphire-gradient text-white hover:opacity-90 shadow-lg shadow-primary/20 transition-all active:scale-95 inline-flex items-center"
+                className="px-6 h-11 rounded-xl font-black text-[10px] uppercase tracking-widest sapphire-gradient text-white hover:scale-[1.02] active:scale-[0.98] shadow-xl shadow-primary/20 transition-all inline-flex items-center"
               >
                 Get Started
               </Link>
@@ -115,7 +115,7 @@ export function Navbar() {
         <div className="flex md:hidden items-center gap-2">
           <ThemeToggle />
           <button
-            className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center transition-colors hover:bg-white/10"
+            className="w-11 h-11 rounded-xl bg-secondary border border-border flex items-center justify-center transition-all hover:bg-secondary/80"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           >
             {mobileMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
@@ -127,23 +127,23 @@ export function Navbar() {
       <AnimatePresence>
         {mobileMenuOpen && (
           <motion.div
-            initial={{ opacity: 0, y: -8 }}
+            initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -8 }}
-            transition={{ duration: 0.2 }}
-            className="md:hidden absolute top-full left-0 w-full bg-background/98 backdrop-blur-3xl border-b border-white/8 shadow-2xl"
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.4, ease: "circOut" }}
+            className="md:hidden absolute top-full left-0 w-full bg-background/98 backdrop-blur-3xl border-b border-border shadow-2xl overflow-hidden"
           >
-            <div className="premium-container py-6 flex flex-col gap-2">
+            <div className="premium-container py-10 flex flex-col gap-3">
               {navLinks.map((link) => (
                 <Link
                   key={link.href}
                   href={link.href}
                   onClick={() => setMobileMenuOpen(false)}
                   className={cn(
-                    "flex items-center gap-4 px-5 py-4 rounded-2xl transition-all font-bold text-sm tracking-tight",
+                    "flex items-center gap-5 px-6 py-5 rounded-2xl transition-all font-black text-xs uppercase tracking-widest",
                     pathname === link.href
-                      ? "bg-primary/10 text-primary"
-                      : "text-muted-foreground hover:bg-white/5 hover:text-foreground"
+                      ? "bg-primary/5 text-primary border border-primary/10"
+                      : "text-muted-foreground hover:bg-secondary hover:text-foreground"
                   )}
                 >
                   <link.icon className="w-5 h-5" />
@@ -151,29 +151,29 @@ export function Navbar() {
                 </Link>
               ))}
 
-              <div className="h-px bg-white/8 my-2" />
+              <div className="h-px bg-border my-4" />
 
               {session ? (
                 <button
                   onClick={() => { signOut(); setMobileMenuOpen(false) }}
-                  className="flex items-center gap-4 px-5 py-4 rounded-2xl text-destructive hover:bg-destructive/10 font-bold text-sm tracking-tight transition-all text-left"
+                  className="flex items-center gap-5 px-6 py-5 rounded-2xl text-destructive hover:bg-destructive/5 border border-transparent hover:border-destructive/10 font-black text-xs uppercase tracking-widest transition-all text-left"
                 >
                   <LogOut className="w-5 h-5" />
                   Sign Out
                 </button>
               ) : (
-                <div className="grid gap-2">
+                <div className="grid gap-3">
                   <Link
                     href="/signup"
                     onClick={() => setMobileMenuOpen(false)}
-                    className="w-full h-12 rounded-xl sapphire-gradient text-white font-bold text-sm flex items-center justify-center"
+                    className="w-full h-14 rounded-2xl sapphire-gradient text-white font-black text-xs uppercase tracking-widest flex items-center justify-center shadow-xl shadow-primary/20"
                   >
                     Get Started
                   </Link>
                   <Link
                     href="/login"
                     onClick={() => setMobileMenuOpen(false)}
-                    className="w-full h-12 rounded-xl border border-white/10 bg-white/5 text-foreground font-bold text-sm flex items-center justify-center hover:bg-white/10 transition-colors"
+                    className="w-full h-14 rounded-2xl border border-border bg-secondary text-foreground font-black text-xs uppercase tracking-widest flex items-center justify-center hover:bg-secondary/80 transition-all"
                   >
                     Sign In
                   </Link>

@@ -25,9 +25,15 @@
   --color-input: var(--input);
   --color-ring: hsl(217 91% 60%);
 
-  --radius-lg: 1rem;
-  --radius-md: 0.75rem;
-  --radius-sm: 0.5rem;
+  --radius-3xl: 2rem;
+  --radius-2xl: 1.5rem;
+  --radius-xl: 1rem;
+  --radius-lg: 0.75rem;
+  --radius-md: 0.5rem;
+  --radius-sm: 0.25rem;
+
+  --shadow-premium: 0 20px 50px -12px rgba(0, 0, 0, 0.5);
+  --shadow-subtle: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
 
   --animate-accordion-down: accordion-down 0.2s ease-out;
   --animate-accordion-up: accordion-up 0.2s ease-out;
@@ -35,36 +41,36 @@
 
 :root {
   --background: hsl(0 0% 100%);
-  --foreground: hsl(222 47% 4%);
-  --card: hsl(0 0% 98%);
-  --card-foreground: hsl(222 47% 4%);
+  --foreground: hsl(224 71% 4%);
+  --card: hsl(0 0% 100%);
+  --card-foreground: hsl(224 71% 4%);
   --popover: hsl(0 0% 100%);
-  --popover-foreground: hsl(222 47% 4%);
-  --secondary: hsl(210 40% 96%);
-  --secondary-foreground: hsl(222 47% 4%);
-  --muted: hsl(210 40% 96%);
-  --muted-foreground: hsl(215 16% 47%);
-  --accent: hsl(210 40% 96%);
-  --accent-foreground: hsl(222 47% 4%);
-  --border: hsl(214 32% 91%);
-  --input: hsl(214 32% 91%);
+  --popover-foreground: hsl(224 71% 4%);
+  --secondary: hsl(220 14% 96%);
+  --secondary-foreground: hsl(224 71% 4%);
+  --muted: hsl(220 14% 96%);
+  --muted-foreground: hsl(220 9% 46%);
+  --accent: hsl(220 14% 96%);
+  --accent-foreground: hsl(224 71% 4%);
+  --border: hsl(220 13% 91%);
+  --input: hsl(220 13% 91%);
 }
 
 .dark {
-  --background: hsl(222 47% 4%);
-  --foreground: hsl(210 40% 98%);
-  --card: hsl(222 47% 6%);
-  --card-foreground: hsl(210 40% 98%);
-  --popover: hsl(222 47% 5%);
-  --popover-foreground: hsl(210 40% 98%);
-  --secondary: hsl(222 20% 12%);
-  --secondary-foreground: hsl(210 40% 98%);
-  --muted: hsl(222 20% 10%);
-  --muted-foreground: hsl(215 20% 55%);
-  --accent: hsl(222 20% 12%);
-  --accent-foreground: hsl(210 40% 98%);
-  --border: hsl(222 20% 12%);
-  --input: hsl(222 20% 10%);
+  --background: hsl(224 71% 4%);
+  --foreground: hsl(210 20% 98%);
+  --card: hsl(224 71% 6%);
+  --card-foreground: hsl(210 20% 98%);
+  --popover: hsl(224 71% 5%);
+  --popover-foreground: hsl(210 20% 98%);
+  --secondary: hsl(215 28% 12%);
+  --secondary-foreground: hsl(210 20% 98%);
+  --muted: hsl(215 28% 10%);
+  --muted-foreground: hsl(215 20% 65%);
+  --accent: hsl(215 28% 12%);
+  --accent-foreground: hsl(210 20% 98%);
+  --border: hsl(215 28% 12%);
+  --input: hsl(215 28% 10%);
 }
 
 /* ========== Base Reset ========== */
@@ -224,30 +230,60 @@ body {
   opacity: 1;
 }
 
-/* Typography Overrides */
+/* Typography Refinement */
 .h-xl {
-  font-size: clamp(2.5rem, 8vw, 6.5rem);
+  font-size: clamp(3rem, 10vw, 7rem);
   font-weight: 900;
-  letter-spacing: -0.05em;
-  line-height: 0.95;
-  background: linear-gradient(180deg, #fff 0%, rgba(255,255,255,0.7) 100%);
+  letter-spacing: -0.06em;
+  line-height: 0.9;
+  background: linear-gradient(180deg, var(--color-foreground) 0%, color-mix(in srgb, var(--color-foreground), transparent 40%) 100%);
   -webkit-background-clip: text;
-  -moz-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
-  word-wrap: break-word;
+  text-wrap: balance;
 }
 
 .h-lg {
-  font-size: clamp(2rem, 6vw, 4.5rem);
-  font-weight: 900;
+  font-size: clamp(2.25rem, 6vw, 4.5rem);
+  font-weight: 850;
   letter-spacing: -0.04em;
   line-height: 1;
-  background: linear-gradient(180deg, #fff 20%, rgba(255,255,255,0.6) 100%);
+  background: linear-gradient(180deg, var(--color-foreground) 20%, color-mix(in srgb, var(--color-foreground), transparent 40%) 100%);
   -webkit-background-clip: text;
-  -moz-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
+  text-wrap: balance;
+}
+
+.text-balance {
+  text-wrap: balance;
+}
+
+/* Premium Surface System */
+.glass-surface {
+  background: color-mix(in srgb, var(--color-background), transparent 80%);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border: 1px solid color-mix(in srgb, var(--color-foreground), transparent 90%);
+}
+
+.dark .glass-surface {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.premium-card {
+  position: relative;
+  background: var(--color-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-2xl);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.premium-card:hover {
+  transform: translateY(-4px);
+  border-color: color-mix(in srgb, var(--color-primary), transparent 70%);
+  box-shadow: var(--shadow-premium);
 }
 
 /* Button Refinement */

@@ -51,17 +51,17 @@ export default function ApplicantDashboard() {
       {/* Dashboard Header */}
       <header className="w-full mb-16 flex flex-col md:flex-row md:items-end justify-between gap-10">
         <div className="max-w-2xl space-y-6">
-           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-[10px] font-black uppercase tracking-widest text-primary">
+           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full glass-surface text-[10px] font-black uppercase tracking-widest text-primary">
               <LayoutDashboard className="w-3 h-3" />
               <span>Personal Command Center</span>
            </div>
-           <h1 className="h-lg text-sapphire">My <br /><span className="text-primary">Journey.</span></h1>
+           <h1 className="h-lg">My <br /><span className="text-primary">Journey.</span></h1>
            <p className="text-xl text-muted-foreground font-medium">Tracking your strategic progression across the RecruitFlow ecosystem.</p>
         </div>
         
         <div className="flex items-center gap-4">
            <Link href="/jobs">
-              <Button className="btn-sapphire h-14 px-8 shadow-xl shadow-primary/10">
+              <Button className="btn-sapphire h-14 px-8 shadow-xl shadow-primary/10 rounded-xl">
                 Browse Network
               </Button>
            </Link>
@@ -69,7 +69,7 @@ export default function ApplicantDashboard() {
       </header>
 
       {/* Stats Overview Grid */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-16">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-16 w-full">
          <StatBox label="Live Missions" value={applications.filter(a => !['WITHDRAWN', 'REJECTED', 'OFFER_DECLINED'].includes(a.status)).length} icon={<Activity />} />
          <StatBox label="Screening" value={applications.filter(a => a.status === 'INTERVIEW').length} icon={<Target />} />
          <StatBox label="Offers" value={applications.filter(a => a.status === 'OFFER').length} icon={<Sparkles />} />
@@ -79,23 +79,23 @@ export default function ApplicantDashboard() {
       {/* Main Pipeline Feed */}
       <div className="w-full space-y-10">
         <div className="flex items-center justify-between px-6 mb-4">
-           <h2 className="text-2xl font-black tracking-tighter uppercase text-muted-foreground/50">Active Pipeline</h2>
-           <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">{applications.length} Sequences Active</span>
+           <h2 className="text-2xl font-black tracking-tighter uppercase text-muted-foreground/40">Active Pipeline</h2>
+           <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60">{applications.length} Sequences Active</span>
         </div>
 
         {loading ? (
           <div className="space-y-6">
             {[1, 2, 3].map(i => (
-              <Skeleton key={i} className="h-44 w-full rounded-[2.5rem] glass-morphism" />
+              <Skeleton key={i} className="h-44 w-full rounded-2xl glass-morphism" />
             ))}
           </div>
         ) : applications.length === 0 ? (
-          <div className="text-center py-40 glass-morphism w-full border-dashed rounded-[3rem] flex flex-col items-center">
+          <div className="text-center py-40 premium-card w-full border-dashed rounded-[2rem] flex flex-col items-center">
             <Briefcase className="w-16 h-16 mb-8 text-muted-foreground/20" />
             <h3 className="text-3xl font-black mb-4 tracking-tight">The pipeline is offline</h3>
             <p className="text-xl text-muted-foreground mb-12 max-w-sm font-medium">Your professional trajectory is waiting for its next mission deployment.</p>
             <Link href="/jobs">
-              <Button variant="outline" className="rounded-xl px-12 h-14 font-black border-border hover:bg-foreground/5">Initialize Search</Button>
+              <Button variant="outline" className="rounded-xl px-12 h-14 font-black border-border hover:bg-secondary">Initialize Search</Button>
             </Link>
           </div>
         ) : (
@@ -127,10 +127,10 @@ function ApplicationListItem({ application, index, onRefresh }: { application: A
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.5, delay: index * 0.05 }}
     >
-      <Card className="glass-morphism creative-card p-2 border-none group">
+      <Card className="premium-card p-2 group bg-card/40">
         <CardContent className="p-8 flex flex-col md:flex-row md:items-center justify-between gap-10">
           <div className="flex items-center gap-8 flex-1">
-             <div className="w-16 h-16 rounded-3xl bg-primary/5 border border-primary/10 flex items-center justify-center group-hover:sapphire-gradient group-hover:text-white transition-all duration-700 shadow-xl shadow-primary/5">
+             <div className="w-16 h-16 rounded-2xl bg-primary/5 border border-primary/10 flex items-center justify-center group-hover:sapphire-gradient group-hover:text-white transition-all duration-500 shadow-lg shadow-primary/5">
                 <Briefcase className="w-8 h-8" />
              </div>
              <div className="space-y-3">
@@ -140,24 +140,24 @@ function ApplicationListItem({ application, index, onRefresh }: { application: A
                    {application.status}
                  </div>
                </div>
-               <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-[10px] font-black uppercase tracking-widest text-muted-foreground/60">
+               <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-[10px] font-black uppercase tracking-[0.1em] text-muted-foreground/60">
                  <span className="flex items-center gap-2"><MapPin className="w-4 h-4" /> {application.job.location}</span>
                  <span className="flex items-center gap-2"><Calendar className="w-4 h-4" /> {formatDate(application.appliedAt)}</span>
-                 <span className="flex items-center gap-2 text-primary/40"><FileText className="w-4 h-4" /> {application.resumeName}</span>
+                 <span className="flex items-center gap-2 text-primary/60"><FileText className="w-4 h-4" /> {application.resumeName}</span>
                </div>
              </div>
           </div>
 
           <div className="flex items-center gap-4">
              <Link href={`/jobs/${application.job.id}`} className="flex-1 md:flex-none">
-                <Button variant="ghost" className="h-14 px-8 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-foreground/5 transition-all">
+                <Button variant="ghost" className="h-14 px-8 rounded-xl font-black text-xs uppercase tracking-widest hover:bg-secondary transition-all">
                    Full Specs
                 </Button>
              </Link>
 
              {isOffer && (
                <Button 
-                 className="h-14 px-10 rounded-2xl font-black text-xs uppercase tracking-widest sapphire-gradient text-white shadow-xl shadow-primary/20"
+                 className="h-14 px-10 rounded-xl font-black text-xs uppercase tracking-widest sapphire-gradient text-white shadow-xl shadow-primary/20"
                >
                  Review Offer
                </Button>
@@ -166,7 +166,7 @@ function ApplicationListItem({ application, index, onRefresh }: { application: A
              {isActionable && (
                 <Button 
                   variant="ghost" 
-                  className="h-14 px-6 rounded-2xl text-muted-foreground hover:text-destructive hover:bg-destructive/5 transition-all font-black text-[10px] uppercase tracking-widest gap-3"
+                  className="h-14 px-6 rounded-xl text-muted-foreground hover:text-destructive hover:bg-destructive/5 transition-all font-black text-[10px] uppercase tracking-widest gap-3"
                   onClick={async () => {
                     if(confirm('Terminate this application sequence?')) {
                       const result = await withdrawApplicationAction(application.id)
@@ -192,8 +192,8 @@ function ApplicationListItem({ application, index, onRefresh }: { application: A
 
 function StatBox({ label, value, icon }: { label: string; value: number | string; icon: React.ReactNode }) {
   return (
-    <Card className="glass-morphism creative-card p-10 text-center border-none flex flex-col items-center group">
-       <div className="w-12 h-12 rounded-2xl bg-primary/5 flex items-center justify-center text-primary group-hover:sapphire-gradient group-hover:text-white transition-all duration-500 mb-6 shadow-xl shadow-primary/5">
+    <Card className="premium-card p-10 text-center flex flex-col items-center group bg-card/40">
+       <div className="w-12 h-12 rounded-xl bg-primary/5 flex items-center justify-center text-primary group-hover:sapphire-gradient group-hover:text-white transition-all duration-500 mb-6 shadow-md shadow-primary/5">
           {icon}
        </div>
        <div className="text-5xl font-black mb-3 tracking-tighter">{value}</div>

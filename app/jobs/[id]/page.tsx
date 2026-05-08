@@ -129,17 +129,17 @@ export default function JobDetailsPage() {
       {/* Navigation & Actions */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-8 mb-16">
          <Link href="/jobs">
-            <Button variant="ghost" className="rounded-2xl h-12 px-6 group font-bold text-muted-foreground hover:text-foreground">
+            <Button variant="ghost" className="rounded-xl h-12 px-6 group font-bold text-muted-foreground hover:text-foreground">
                <ArrowLeft className="w-4 h-4 mr-3 transition-transform group-hover:-translate-x-1" />
                Back to Pipeline
             </Button>
          </Link>
          
          <div className="flex items-center gap-4">
-            <Button variant="outline" className="h-12 w-12 rounded-xl border-border hover:bg-foreground/5 p-0">
-               <Share2 className="w-5 h-5" />
+            <Button variant="outline" className="h-10 w-10 rounded-lg border-border hover:bg-secondary p-0">
+               <Share2 className="w-4 h-4" />
             </Button>
-            <div className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">ID: {job.id.split('-')[0]}</div>
+            <div className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/50">Spec ID: {job.id.split('-')[0]}</div>
          </div>
       </div>
 
@@ -147,32 +147,32 @@ export default function JobDetailsPage() {
          {/* Main Technical Specs */}
          <div className="lg:col-span-2 space-y-10">
             {/* Header Identity */}
-            <Card className="glass-morphism creative-card p-10 border-none group overflow-hidden">
+            <Card className="premium-card p-10 group overflow-hidden bg-card/40">
                <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-[100px] -z-10 group-hover:bg-primary/10 transition-all duration-1000" />
                
                <div className="flex flex-col md:flex-row md:items-start justify-between gap-10 mb-12">
                   <div className="space-y-6">
-                     <div className="w-20 h-20 sapphire-gradient rounded-[2.5rem] flex items-center justify-center text-white shadow-2xl shadow-primary/20">
-                        <Briefcase className="w-10 h-10" />
+                     <div className="w-16 h-16 sapphire-gradient rounded-2xl flex items-center justify-center text-white shadow-xl shadow-primary/20">
+                        <Briefcase className="w-8 h-8" />
                      </div>
-                     <h1 className="text-4xl md:text-6xl font-black tracking-tighter leading-none">{job.title}</h1>
+                     <h1 className="text-4xl md:text-6xl font-black tracking-tighter leading-tight text-balance">{job.title}</h1>
                   </div>
-                  <div className="flex flex-col items-end gap-3">
-                     <div className="badge-premium bg-primary/5 text-primary border-primary/10">{job.status}</div>
-                     <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Updated {formatDate(job.createdAt)}</span>
+                  <div className="flex flex-col items-end gap-3 shrink-0">
+                     <div className="badge-premium bg-primary/5 text-primary border-primary/10 uppercase tracking-widest">{job.status}</div>
+                     <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/40">{formatDate(job.createdAt)}</span>
                   </div>
                </div>
 
-               <div className="grid grid-cols-2 md:grid-cols-3 gap-8">
-                  <SpecItem icon={<MapPin />} label="Location" value={job.location} />
-                  <SpecItem icon={<Clock />} label="Commitment" value={getJobTypeLabel(job.type)} />
-                  <SpecItem icon={<Target />} label="Experience" value={job.experienceLevel} />
+               <div className="grid grid-cols-2 md:grid-cols-3 gap-8 pt-8 border-t border-border">
+                  <SpecItem icon={<MapPin className="w-4 h-4" />} label="Location" value={job.location} />
+                  <SpecItem icon={<Clock className="w-4 h-4" />} label="Commitment" value={getJobTypeLabel(job.type)} />
+                  <SpecItem icon={<Target className="w-4 h-4" />} label="Level" value={job.experienceLevel} />
                </div>
             </Card>
 
             {/* Description Body */}
-            <Card className="glass-morphism p-12 border-none">
-               <h2 className="text-3xl font-black mb-8 tracking-tight">Mission Objective</h2>
+            <Card className="premium-card p-12 bg-card/20">
+               <h2 className="text-2xl font-black mb-8 tracking-tighter uppercase text-muted-foreground/40">Mission Objective</h2>
                <div className="prose prose-sapphire dark:prose-invert max-w-none">
                   <p className="text-lg text-muted-foreground font-medium leading-relaxed whitespace-pre-wrap">
                      {job.description}
@@ -181,14 +181,14 @@ export default function JobDetailsPage() {
             </Card>
 
             {/* Competencies */}
-            <Card className="glass-morphism p-12 border-none">
+            <Card className="premium-card p-12 bg-card/20">
                <div className="flex items-center gap-4 mb-10">
-                  <Sparkles className="w-8 h-8 text-primary" />
-                  <h2 className="text-3xl font-black tracking-tight">Required Competencies</h2>
+                  <Sparkles className="w-6 h-6 text-primary" />
+                  <h2 className="text-2xl font-black tracking-tighter uppercase text-muted-foreground/40">Competencies</h2>
                </div>
-               <div className="flex flex-wrap gap-4">
+               <div className="flex flex-wrap gap-3">
                   {job.skills.map((skill: string) => (
-                     <div key={skill} className="px-6 py-3 rounded-2xl bg-foreground/5 border border-foreground/10 text-sm font-black tracking-tight hover:border-primary/30 transition-all">
+                     <div key={skill} className="px-5 py-2.5 rounded-xl bg-secondary border border-border text-xs font-black tracking-tight hover:border-primary/30 transition-all cursor-default">
                         {skill}
                      </div>
                   ))}
@@ -198,10 +198,10 @@ export default function JobDetailsPage() {
 
          {/* Strategic Action Sidebar */}
          <aside className="space-y-8 sticky top-32">
-            <Card className="glass-morphism p-10 border-none space-y-10 shadow-2xl">
+            <Card className="premium-card p-10 space-y-10 shadow-2xl bg-card/40">
                <div className="space-y-3 text-center">
-                  <h3 className="text-2xl font-black tracking-tight">Deploy Profile</h3>
-                  <p className="text-sm text-muted-foreground font-medium">Initialize your application for this position.</p>
+                  <h3 className="text-2xl font-black tracking-tighter">Deploy Profile</h3>
+                  <p className="text-sm text-muted-foreground font-medium text-balance">Initialize your application for this position.</p>
                </div>
 
                {application && application.status !== "WITHDRAWN" ? (
@@ -209,10 +209,10 @@ export default function JobDetailsPage() {
                     onClick={handleWithdraw} 
                     disabled={withdrawing || application.status === "REJECTED"}
                     variant="outline"
-                    className="w-full h-20 rounded-[2rem] text-xl font-black border-destructive/20 text-destructive hover:bg-destructive/10 hover:border-destructive/30 shadow-xl shadow-destructive/5 group overflow-hidden"
+                    className="w-full h-16 rounded-xl text-base font-black border-destructive/20 text-destructive hover:bg-destructive/5 hover:border-destructive/30 transition-all"
                   >
-                    <span className="relative z-10 flex items-center gap-3">
-                      {withdrawing ? <Loader2 className="w-6 h-6 animate-spin" /> : <XCircle className="w-6 h-6" />}
+                    <span className="flex items-center gap-3">
+                      {withdrawing ? <Loader2 className="w-5 h-5 animate-spin" /> : <XCircle className="w-5 h-5" />}
                       {withdrawing ? "Processing..." : "Withdraw Application"}
                     </span>
                   </Button>
@@ -220,11 +220,11 @@ export default function JobDetailsPage() {
                   <Button 
                     onClick={handleApply} 
                     disabled={job.status !== "OPEN" || (application?.status === "WITHDRAWN")}
-                    className="w-full h-20 rounded-[2rem] text-xl font-black sapphire-gradient text-white shadow-2xl shadow-primary/20 group overflow-hidden"
+                    className="w-full h-16 rounded-xl text-base font-black sapphire-gradient text-white shadow-xl shadow-primary/20 group overflow-hidden"
                   >
                     <span className="relative z-10 flex items-center gap-3">
                       {application?.status === "WITHDRAWN" ? "Application Withdrawn" : job.status === "OPEN" ? "Initialize Application" : "Mission Closed"}
-                      {application?.status !== "WITHDRAWN" && job.status === "OPEN" && <ArrowRight className="w-6 h-6 transition-transform group-hover:translate-x-1" />}
+                      {application?.status !== "WITHDRAWN" && job.status === "OPEN" && <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />}
                     </span>
                   </Button>
                )}
@@ -233,7 +233,7 @@ export default function JobDetailsPage() {
                   <SidebarInsight 
                      icon={<Globe2 className="w-5 h-5" />} 
                      title="Distributed Ready" 
-                     desc="This role supports asynchronous workflows and global contribution." 
+                     desc="Supports asynchronous workflows and global contribution." 
                   />
                   <SidebarInsight 
                      icon={<Shield className="w-5 h-5" />} 
@@ -243,15 +243,15 @@ export default function JobDetailsPage() {
                   <SidebarInsight 
                      icon={<Users className="w-5 h-5" />} 
                      title="Active Pipeline" 
-                     desc={`${job._count.applications}+ talent profiles currently in screening.`} 
+                     desc={`${job._count.applications}+ profiles currently in screening.`} 
                   />
                </div>
 
-               <div className="p-6 rounded-3xl bg-primary/5 border border-primary/10">
+               <div className="p-6 rounded-2xl bg-primary/5 border border-primary/10">
                   <p className="text-[10px] font-black uppercase tracking-widest text-primary mb-3">Enterprise Insight</p>
-                  <p className="text-xs font-bold leading-relaxed text-muted-foreground">
-                    This position is managed by <span className="text-foreground">{job.recruiter.name}</span>. 
-                    They are prioritizing candidates with high technical autonomy.
+                  <p className="text-xs font-bold leading-relaxed text-muted-foreground/80">
+                    This position is managed by <span className="text-foreground font-black">{job.recruiter.name}</span>. 
+                    They prioritize candidates with high technical autonomy.
                   </p>
                </div>
             </Card>
@@ -267,12 +267,12 @@ export default function JobDetailsPage() {
 
 function SpecItem({ icon, label, value }: { icon: React.ReactNode; label: string; value: string }) {
   return (
-    <div className="space-y-3">
-       <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-muted-foreground">
+    <div className="space-y-2">
+       <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-muted-foreground/60">
           <span className="text-primary/60">{icon}</span>
           <span>{label}</span>
        </div>
-       <div className="text-xl font-black tracking-tight">{value}</div>
+       <div className="text-lg font-black tracking-tight">{value}</div>
     </div>
   )
 }
@@ -280,7 +280,7 @@ function SpecItem({ icon, label, value }: { icon: React.ReactNode; label: string
 function SidebarInsight({ icon, title, desc }: { icon: React.ReactNode; title: string; desc: string }) {
   return (
     <div className="flex gap-5 group">
-       <div className="w-10 h-10 rounded-xl bg-foreground/5 flex items-center justify-center text-muted-foreground group-hover:bg-primary/10 group-hover:text-primary transition-all">
+       <div className="w-10 h-10 rounded-xl bg-secondary flex items-center justify-center text-muted-foreground group-hover:bg-primary/10 group-hover:text-primary transition-all shrink-0">
           {icon}
        </div>
        <div className="space-y-1">

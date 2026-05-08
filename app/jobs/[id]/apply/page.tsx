@@ -114,7 +114,7 @@ export default function ApplyPage() {
       <div className="max-w-2xl mx-auto space-y-10">
          {/* Top Navigation */}
          <Link href={`/jobs/${params.id}`}>
-            <Button variant="ghost" className="rounded-2xl h-12 px-6 group font-bold text-muted-foreground hover:text-foreground">
+            <Button variant="ghost" className="rounded-xl h-12 px-6 group font-bold text-muted-foreground hover:text-foreground">
                <ArrowLeft className="w-4 h-4 mr-3 transition-transform group-hover:-translate-x-1" />
                Back to Specifications
             </Button>
@@ -122,52 +122,52 @@ export default function ApplyPage() {
 
          {/* Header Identity */}
          <header className="space-y-6">
-            <div className="inline-flex items-center gap-3 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-[10px] font-black uppercase tracking-[0.2em]">
+            <div className="inline-flex items-center gap-3 px-4 py-1.5 rounded-full glass-surface text-[10px] font-black uppercase tracking-widest text-primary mb-2">
                <Zap className="w-4 h-4" />
                <span>Telemetry Deployment</span>
             </div>
-            <h1 className="h-lg text-sapphire">
-               Apply for <br /><span className="text-primary">{job.title}</span>
+            <h1 className="h-lg">
+               Apply for <br /><span className="text-primary italic">{job.title}</span>
             </h1>
-            <p className="text-xl text-muted-foreground font-medium">
-               Connecting your talent profile with the <span className="text-foreground font-bold">{job.recruiter.name}</span> engineering infrastructure.
+            <p className="text-xl text-muted-foreground font-medium text-balance">
+               Connecting your talent profile with the <span className="text-foreground font-black">{job.recruiter.name}</span> engineering infrastructure.
             </p>
          </header>
 
          {/* Application Interface */}
-         <Card className="glass-morphism rounded-[3.5rem] p-4 md:p-14 border-none shadow-2xl relative overflow-hidden">
+         <Card className="premium-card p-4 md:p-14 bg-card/40 relative overflow-hidden">
             <div className="absolute bottom-0 right-0 w-80 h-80 bg-primary/5 rounded-full blur-[120px] -z-10" />
             
             <div className="space-y-12">
                {/* Document Section */}
                <div className="space-y-8">
                   <div className="flex items-center gap-5">
-                     <div className="w-16 h-16 sapphire-gradient rounded-2xl flex items-center justify-center text-white shadow-xl shadow-primary/20">
-                        <FileText className="w-8 h-8" />
+                     <div className="w-14 h-14 sapphire-gradient rounded-2xl flex items-center justify-center text-white shadow-xl shadow-primary/20">
+                        <FileText className="w-7 h-7" />
                      </div>
                      <div>
-                        <h3 className="text-2xl font-black tracking-tight">Identity Document</h3>
-                        <p className="text-muted-foreground font-medium">Your resume is the core of your talent profile.</p>
+                        <h3 className="text-2xl font-black tracking-tighter">Identity Document</h3>
+                        <p className="text-sm text-muted-foreground font-medium">Your resume is the core of your talent profile.</p>
                      </div>
                   </div>
 
                   {!resume ? (
                     <LocalUpload onUploadComplete={(url, name) => setResume({ url, name })} />
                   ) : (
-                    <div className="flex items-center justify-between p-8 bg-emerald-500/5 rounded-[2.5rem] border border-emerald-500/10 animate-in fade-in group">
+                    <div className="flex items-center justify-between p-8 bg-emerald-500/5 rounded-2xl border border-emerald-500/10 animate-in fade-in group">
                        <div className="flex items-center gap-6">
-                          <div className="w-16 h-16 bg-emerald-500/10 rounded-2xl flex items-center justify-center text-emerald-500">
-                             <CheckCircle2 className="w-8 h-8" />
+                          <div className="w-14 h-14 bg-emerald-500/10 rounded-xl flex items-center justify-center text-emerald-500">
+                             <CheckCircle2 className="w-7 h-7" />
                           </div>
                           <div className="space-y-1">
-                             <p className="font-black text-xl tracking-tight">{resume.name}</p>
+                             <p className="font-black text-xl tracking-tighter">{resume.name}</p>
                              <p className="text-[10px] text-emerald-500/70 font-black uppercase tracking-widest">Document Ingested</p>
                           </div>
                        </div>
                        <Button
                           variant="ghost"
                           onClick={() => setResume(null)}
-                          className="rounded-xl h-12 px-6 text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-all font-bold"
+                          className="rounded-xl h-12 px-6 text-muted-foreground hover:text-destructive hover:bg-destructive/5 transition-all font-bold"
                        >
                           Replace
                        </Button>
@@ -177,21 +177,21 @@ export default function ApplyPage() {
 
                {/* Integrity Features */}
                <div className="grid md:grid-cols-2 gap-6">
-                  <IntegrityFeature icon={<ShieldCheck />} label="Identity Protection" desc="Your data is encrypted at the application level." />
-                  <IntegrityFeature icon={<Zap />} label="Direct Channel" desc="Zero-latency delivery to the hiring infrastructure." />
+                  <IntegrityFeature icon={<ShieldCheck className="w-5 h-5" />} label="Identity Protection" desc="Your data is encrypted at the application level." />
+                  <IntegrityFeature icon={<Zap className="w-5 h-5" />} label="Direct Channel" desc="Zero-latency delivery to the hiring infrastructure." />
                </div>
 
                {/* Action Footer */}
-               <div className="pt-6 border-t border-foreground/5">
+               <div className="pt-8 border-t border-border">
                   <Button
-                    className="w-full h-20 rounded-[2rem] text-2xl font-black sapphire-gradient text-white shadow-2xl shadow-primary/30 group disabled:opacity-30"
+                    className="w-full h-16 rounded-xl text-xl font-black sapphire-gradient text-white shadow-xl shadow-primary/30 group disabled:opacity-30 transition-all active:scale-[0.98]"
                     disabled={!resume || submitting}
                     onClick={handleSubmit}
                   >
                     {submitting ? (
                        <span className="flex items-center gap-4">
-                          <Loader2 className="w-8 h-8 animate-spin" />
-                          <span>Ingesting Application...</span>
+                          <Loader2 className="w-6 h-6 animate-spin" />
+                          <span>Ingesting...</span>
                        </span>
                     ) : (
                        <span className="flex items-center gap-3">
@@ -205,7 +205,7 @@ export default function ApplyPage() {
          </Card>
 
          {/* Trust Bar */}
-         <div className="flex flex-wrap justify-center gap-x-12 gap-y-6 opacity-30 font-black text-[10px] uppercase tracking-[0.25em]">
+         <div className="flex flex-wrap justify-center gap-x-12 gap-y-6 opacity-30 font-black text-[10px] uppercase tracking-[0.2em] pt-8">
             <span className="flex items-center gap-2"><Globe className="w-3.5 h-3.5" /> Worldwide Access</span>
             <span className="flex items-center gap-2"><Target className="w-3.5 h-3.5" /> High Precision</span>
             <span className="flex items-center gap-2"><Briefcase className="w-3.5 h-3.5" /> Professional Tier</span>
@@ -217,7 +217,7 @@ export default function ApplyPage() {
 
 function IntegrityFeature({ icon, label, desc }: { icon: React.ReactNode; label: string; desc: string }) {
   return (
-    <div className="p-6 rounded-[2rem] bg-foreground/5 border border-foreground/5 flex items-start gap-4 hover:border-primary/20 transition-all">
+    <div className="p-6 rounded-2xl bg-secondary/50 border border-border flex items-start gap-4 hover:border-primary/20 transition-all">
        <div className="text-primary mt-1">{icon}</div>
        <div className="space-y-1">
           <p className="text-sm font-black tracking-tight">{label}</p>
