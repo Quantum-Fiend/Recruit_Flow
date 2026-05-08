@@ -43,44 +43,73 @@ export default function RootLayout({
                 {children}
               </main>
 
-              <footer className="w-full border-t border-border py-32 mt-auto glass-panel border-x-0 border-b-0">
-                 <div className="premium-container grid md:grid-cols-12 gap-16">
-                    <div className="md:col-span-6 space-y-8">
-                       <h2 className="text-2xl font-black tracking-tighter uppercase text-gradient">RecruitFlow</h2>
-                       <p className="text-sm text-muted-foreground max-w-xs font-medium leading-relaxed">
-                          The high-performance talent acquisition engine designed for teams who prioritize speed, clarity, and excellence.
-                       </p>
+              <footer className="w-full border-t border-border/40 py-32 mt-auto relative overflow-hidden bg-background">
+                 {/* Footer Atmosphere */}
+                 <div className="absolute inset-0 opacity-[0.02] pointer-events-none">
+                    <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-primary rounded-full blur-[120px]" />
+                 </div>
+
+                 <div className="premium-container relative z-10">
+                    <div className="grid md:grid-cols-12 gap-16 mb-24">
+                       <div className="md:col-span-6 space-y-10">
+                          <div className="flex items-center gap-3">
+                             <div className="w-8 h-8 sapphire-gradient rounded-lg flex items-center justify-center shadow-2xl">
+                                <Command className="w-4 h-4 text-white" />
+                             </div>
+                             <h2 className="text-xl font-black tracking-tighter uppercase text-gradient">RecruitFlow</h2>
+                          </div>
+                          <p className="text-sm text-muted-foreground max-w-sm font-medium leading-relaxed opacity-60">
+                             The high-performance talent acquisition engine designed for engineering teams who prioritize speed, technical depth, and excellence.
+                          </p>
+                          <div className="flex items-center gap-2 px-3 py-1.5 bg-emerald-500/5 text-emerald-500 border border-emerald-500/10 rounded-full w-fit">
+                            <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse" />
+                            <span className="text-[10px] font-black uppercase tracking-widest">Global Systems Operational</span>
+                          </div>
+                       </div>
+                       
+                       <div className="md:col-span-2">
+                          <h4 className="text-[10px] font-black uppercase tracking-[0.3em] mb-8 text-foreground/40">Infrastructure</h4>
+                          <ul className="space-y-4 text-xs font-bold text-muted-foreground">
+                             <li className="hover:text-primary cursor-pointer transition-colors">Neural Engine</li>
+                             <li className="hover:text-primary cursor-pointer transition-colors">Vector Pipelines</li>
+                             <li className="hover:text-primary cursor-pointer transition-colors">Edge Nodes</li>
+                             <li className="hover:text-primary cursor-pointer transition-colors">Telemetry</li>
+                          </ul>
+                       </div>
+
+                       <div className="md:col-span-2">
+                          <h4 className="text-[10px] font-black uppercase tracking-[0.3em] mb-8 text-foreground/40">Resources</h4>
+                          <ul className="space-y-4 text-xs font-bold text-muted-foreground">
+                             <li className="hover:text-primary cursor-pointer transition-colors">Changelog</li>
+                             <li className="hover:text-primary cursor-pointer transition-colors">Documentation</li>
+                             <li className="hover:text-primary cursor-pointer transition-colors">Security</li>
+                             <li className="hover:text-primary cursor-pointer transition-colors">API Status</li>
+                          </ul>
+                       </div>
+
+                       <div className="md:col-span-2">
+                          <h4 className="text-[10px] font-black uppercase tracking-[0.3em] mb-8 text-foreground/40">Company</h4>
+                          <ul className="space-y-4 text-xs font-bold text-muted-foreground">
+                             <li className="hover:text-primary cursor-pointer transition-colors">About Ops</li>
+                             <li className="hover:text-primary cursor-pointer transition-colors">Privacy</li>
+                             <li className="hover:text-primary cursor-pointer transition-colors">Terms</li>
+                             <li className="hover:text-primary cursor-pointer transition-colors">Legal</li>
+                          </ul>
+                       </div>
                     </div>
-                    <div>
-                       <h4 className="text-xs font-black uppercase tracking-[0.2em] mb-4">Platform</h4>
-                       <ul className="space-y-3 text-sm font-medium text-muted-foreground">
-                          <li className="hover:text-foreground cursor-pointer">Network</li>
-                          <li className="hover:text-foreground cursor-pointer">Pipelines</li>
-                          <li className="hover:text-foreground cursor-pointer">Integrations</li>
-                       </ul>
-                    </div>
-                    <div>
-                       <h4 className="text-xs font-black uppercase tracking-[0.2em] mb-4">Support</h4>
-                       <ul className="space-y-3 text-sm font-medium text-muted-foreground">
-                          <li className="hover:text-foreground cursor-pointer">Documentation</li>
-                          <li className="hover:text-foreground cursor-pointer">Help Center</li>
-                          <li className="hover:text-foreground cursor-pointer">API Status</li>
-                       </ul>
+
+                    <div className="pt-12 border-t border-border/40 flex flex-col md:flex-row justify-between items-center gap-8 text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground/40">
+                       <div className="flex items-center gap-8">
+                          <span>&copy; {new Date().getFullYear()} RecruitFlow Inc.</span>
+                          <span>Built for Excellence</span>
+                       </div>
+                       <div className="flex gap-8">
+                          <span className="hover:text-primary cursor-pointer transition-colors">Twitter</span>
+                          <span className="hover:text-primary cursor-pointer transition-colors">GitHub</span>
+                          <span className="hover:text-primary cursor-pointer transition-colors">LinkedIn</span>
+                       </div>
                     </div>
                  </div>
-                  <div className="premium-container border-t border-border mt-12 pt-8 flex flex-col md:flex-row justify-between items-center gap-6 text-[10px] font-black uppercase tracking-widest text-muted-foreground">
-                    <div className="flex items-center gap-6">
-                      <span>&copy; {new Date().getFullYear()} RecruitFlow Inc.</span>
-                      <div className="flex items-center gap-2 px-3 py-1 bg-emerald-500/5 text-emerald-500 border border-emerald-500/10 rounded-full">
-                        <div className="w-1 h-1 bg-emerald-500 rounded-full animate-pulse" />
-                        <span>Systems Operational</span>
-                      </div>
-                    </div>
-                    <span className="flex gap-6">
-                       <span className="hover:text-foreground cursor-pointer transition-colors">Privacy</span>
-                       <span className="hover:text-foreground cursor-pointer transition-colors">Terms</span>
-                    </span>
-                  </div>
               </footer>
             </div>
 
