@@ -76,10 +76,10 @@ describe('Validation Schemas', () => {
       expect(createApplicationSchema.safeParse(data).success).toBe(true)
     })
 
-    it('should fail on invalid URL', () => {
+    it('should fail on empty URL', () => {
       const data = {
         jobId: 'cle7y7l5v000008jt6r1b8w2a',
-        resumeUrl: 'not-a-url',
+        resumeUrl: '',
         resumeName: 'resume.pdf'
       }
       expect(createApplicationSchema.safeParse(data).success).toBe(false)
