@@ -47,7 +47,7 @@ export default function RecruiterSignupPage() {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-[85vh] w-full px-6 py-20">
+    <div className="flex flex-col items-center justify-center min-h-[85vh] w-full px-6 pt-40 pb-20">
       <motion.div
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
@@ -55,8 +55,8 @@ export default function RecruiterSignupPage() {
         className="w-full max-w-[500px]"
       >
         <div className="text-center mb-12 space-y-4">
-          <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center mx-auto mb-6 border border-primary/20 shadow-xl">
-            <Briefcase className="w-8 h-8 text-primary" />
+          <div className="w-16 h-16 sapphire-gradient rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-xl">
+            <Briefcase className="w-8 h-8 text-white" />
           </div>
           <h1 className="h-lg text-sapphire tracking-tighter">
             Recruiter <br />Console Setup.
@@ -66,7 +66,7 @@ export default function RecruiterSignupPage() {
           </p>
         </div>
 
-        <Card className="glass-morphism rounded-[2.5rem] p-1 border-none shadow-2xl relative overflow-hidden">
+        <div className="glass-panel rounded-[2.5rem] p-1 border-none shadow-2xl relative overflow-hidden">
           <CardContent className="p-10 space-y-8">
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="space-y-2">
@@ -82,7 +82,7 @@ export default function RecruiterSignupPage() {
                 <Input id="password" name="password" type="password" required minLength={8} className="h-14 rounded-xl bg-foreground/5 border-none font-bold" />
               </div>
 
-              <Button type="submit" className="w-full h-16 rounded-xl bg-primary text-white font-black text-lg shadow-xl shadow-primary/20 hover:opacity-95 transition-all" disabled={loading}>
+              <Button type="submit" className="w-full h-16 rounded-xl sapphire-gradient text-white font-black text-lg shadow-xl shadow-primary/20 hover:opacity-95 transition-all" disabled={loading}>
                 {loading ? <Loader2 className="w-6 h-6 animate-spin" /> : "Deploy Recruiter Console"}
               </Button>
             </form>
@@ -93,7 +93,7 @@ export default function RecruiterSignupPage() {
               </p>
             </div>
           </CardContent>
-        </Card>
+        </div>
       </motion.div>
     </div>
   );

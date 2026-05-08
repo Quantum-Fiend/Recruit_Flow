@@ -48,7 +48,7 @@ export default function CandidateLoginPage() {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-[90vh] w-full px-6 py-20">
+    <div className="flex flex-col items-center justify-center min-h-[90vh] w-full px-6 pt-40 pb-20">
       <motion.div
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
@@ -56,11 +56,6 @@ export default function CandidateLoginPage() {
         className="w-full max-w-[500px]"
       >
         <div className="text-center mb-16 space-y-4">
-           <Link href="/" className="inline-flex items-center gap-3 group mb-8">
-              <div className="w-12 h-12 bg-foreground rounded-2xl flex items-center justify-center shadow-2xl group-hover:scale-110 transition-transform">
-                 <Command className="w-6 h-6 text-background" />
-              </div>
-           </Link>
            <h1 className="h-lg text-gradient leading-tight">Candidate <br />Access.</h1>
            <p className="text-lg text-muted-foreground font-medium opacity-60">Enter the global talent operating system.</p>
         </div>

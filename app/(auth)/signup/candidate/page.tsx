@@ -47,7 +47,7 @@ export default function CandidateSignupPage() {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-[85vh] w-full px-6 py-20">
+    <div className="flex flex-col items-center justify-center min-h-[85vh] w-full px-6 pt-40 pb-20">
       <motion.div
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
@@ -66,7 +66,7 @@ export default function CandidateSignupPage() {
           </p>
         </div>
 
-        <Card className="glass-morphism rounded-[2.5rem] p-1 border-none shadow-2xl relative overflow-hidden">
+        <div className="glass-panel rounded-[2.5rem] p-1 border-none shadow-2xl relative overflow-hidden">
           <CardContent className="p-10 space-y-8">
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="space-y-2">
@@ -93,7 +93,7 @@ export default function CandidateSignupPage() {
               </p>
             </div>
           </CardContent>
-        </Card>
+        </div>
       </motion.div>
     </div>
   );

@@ -199,6 +199,27 @@ body {
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
 }
 
+.premium-card {
+  border-radius: 2rem;
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.sapphire-gradient {
+  background: linear-gradient(135deg, hsl(217 91% 60%) 0%, hsl(222 89% 50%) 100%);
+  color: white;
+}
+
+.dark .sapphire-gradient {
+  background: linear-gradient(135deg, hsl(217 91% 60%) 0%, hsl(230 80% 40%) 100%);
+}
+
+.text-sapphire {
+  background: linear-gradient(135deg, var(--foreground) 0%, hsl(217 91% 60%) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
 /* Premium Card Interaction (Linear Style) */
 .premium-card {
   position: relative;
@@ -254,24 +275,25 @@ body {
   .bento-item-8 { grid-column: span 8; }
 }
 
-/* Typography Refinement (Apple/Stripe Level) */
+/* Typography Refinement (Professional SaaS Level) */
 .h-xl {
-  font-size: clamp(3.5rem, 12vw, 8.5rem);
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
   font-weight: 900;
-  letter-spacing: -0.05em;
-  line-height: 0.85;
+  letter-spacing: -0.04em;
+  line-height: 1;
   color: var(--foreground);
   text-wrap: balance;
-  filter: drop-shadow(0 2px 2px rgba(0,0,0,0.1));
+  font-style: normal;
 }
 
 .h-lg {
-  font-size: clamp(2.5rem, 8vw, 5rem);
+  font-size: clamp(2rem, 5vw, 3.25rem);
   font-weight: 850;
-  letter-spacing: -0.04em;
-  line-height: 0.95;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
   color: var(--foreground);
   text-wrap: balance;
+  font-style: normal;
 }
 
 .text-gradient {
