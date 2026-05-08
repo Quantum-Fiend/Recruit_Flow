@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { ApplicationStatus } from '@prisma/client'
 
 // Auth validations
 export const signUpSchema = z.object({
@@ -29,13 +30,13 @@ export const updateJobSchema = createJobSchema.partial()
 // Application validations
 export const createApplicationSchema = z.object({
   jobId: z.string().min(1),
-  resumeUrl: z.string().min(1),
+  resumeUrl: z.string().url('Invalid resume URL'),
   resumeName: z.string().min(1, 'Resume name is required'),
 })
 
 export const updateApplicationStatusSchema = z.object({
   applicationId: z.string().cuid(),
-  status: z.enum(['APPLIED', 'SHORTLISTED', 'INTERVIEW', 'OFFER', 'HIRED', 'REJECTED', 'WITHDRAWN', 'OFFER_DECLINED']),
+  status: z.nativeEnum(ApplicationStatus),
 })
 
 // Note validations

@@ -21,7 +21,7 @@ async function main() {
 
   // Create Applicant
   const applicantPassword = await bcrypt.hash('password123', 10)
-  const applicant = await prisma.user.upsert({
+  await prisma.user.upsert({
     where: { email: 'applicant@example.com' },
     update: {},
     create: {
@@ -93,7 +93,7 @@ async function main() {
 
   for (const job of jobsData) {
     await prisma.job.create({
-      data: job as any,
+      data: job as any, // Keeping as any for simplicity in seed if it's dynamic
     })
   }
 

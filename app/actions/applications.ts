@@ -1,6 +1,7 @@
 'use server'
 
 import { prisma } from "@/lib/prisma"
+import { Prisma } from "@prisma/client"
 import { requireAuth, requireRecruiter } from "@/lib/auth-utils"
 import { 
   createApplicationSchema, 
@@ -117,7 +118,7 @@ export async function updateApplicationStatusAction(data: UpdateApplicationStatu
     }
 
     // Update status and history in a transaction
-    await prisma.$transaction(async (tx: any) => {
+    await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
       await tx.application.update({
         where: { id: validated.applicationId },
         data: { status: validated.status },

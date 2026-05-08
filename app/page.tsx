@@ -17,12 +17,12 @@ export default function LandingPage() {
     }
   }
 
-  const itemVariants: unknown = {
+  const itemVariants = {
     hidden: { y: 30, opacity: 0 },
     visible: {
       y: 0,
       opacity: 1,
-      transition: { duration: 0.8, ease: [0.23, 1, 0.32, 1] },
+      transition: { duration: 0.8, ease: [0.23, 1, 0.32, 1] as any },
     },
   };
 

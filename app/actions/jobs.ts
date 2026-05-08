@@ -144,7 +144,7 @@ export async function getJobsAction(filters?: {
       prisma.job.count({ where }),
     ])
 
-    const transformedJobs = jobs.map((job: any) => ({
+    const transformedJobs = jobs.map((job) => ({
       ...job,
       skills: job.skills.split(',').filter(Boolean),
     }))

@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Card, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { getJobsAction } from "@/app/actions/jobs"
+import { Job } from "@/types/app"
 import {
   Search,
   MapPin,
@@ -20,7 +21,7 @@ import { getJobTypeLabel, formatDate } from "@/lib/utils"
 import { motion, AnimatePresence } from "framer-motion"
 
 export default function JobsPage() {
-  const [jobs, setJobs] = useState<unknown[]>([]);
+  const [jobs, setJobs] = useState<Job[]>([]);
   const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState("")
 
@@ -139,7 +140,7 @@ export default function JobsPage() {
   );
 }
 
-function JobCardItem({ job, index }: { job: unknown; index: number }) {
+function JobCardItem({ job, index }: { job: Job; index: number }) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
