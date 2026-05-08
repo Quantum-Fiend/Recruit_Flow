@@ -7,41 +7,62 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Card, CardContent } from "@/components/ui/card"
 import { toast } from "sonner"
-import { Loader2, ArrowRight, User, Lock, Command } from "lucide-react"
-import { motion } from "framer-motion"
+import { Loader2, ArrowRight, User, Lock, AlertCircle, UserX } from "lucide-react"
+import { motion, AnimatePresence } from "framer-motion"
+import { checkUserExistsAction } from "@/app/actions/auth"
 
 export default function CandidateLoginPage() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<{ type: 'not_found' | 'wrong_password' | 'generic'; message: string } | null>(null)
   const callbackUrl = searchParams.get("callbackUrl") || "/dashboard"
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setLoading(true)
+    setError(null)
 
     const formData = new FormData(e.currentTarget)
     const email = formData.get("email") as string
     const password = formData.get("password") as string
 
     try {
+      // Step 1: Check if account exists before trying to sign in
+      const { exists } = await checkUserExistsAction(email)
+
+      if (!exists) {
+        setError({
+          type: 'not_found',
+          message: "No account found with this email address. Please sign up to create an account.",
+        })
+        setLoading(false)
+        return
+      }
+
+      // Step 2: Attempt sign in
       const result = await signIn("credentials", {
         email,
         password,
         redirect: false,
-      });
+      })
 
       if (result?.error) {
-        toast.error("Invalid credentials. Please verify your telemetry.");
+        setError({
+          type: 'wrong_password',
+          message: "Incorrect password. Please check your credentials and try again.",
+        })
       } else {
-        toast.success("Identity Verified. Initializing session.");
-        router.push(callbackUrl);
-        router.refresh();
+        toast.success("Welcome back! Redirecting to your dashboard.")
+        router.push(callbackUrl)
+        router.refresh()
       }
-    } catch (error) {
-      toast.error("System Error during authentication.")
+    } catch {
+      setError({
+        type: 'generic',
+        message: "Something went wrong. Please try again.",
+      })
     } finally {
       setLoading(false)
     }
@@ -53,69 +74,118 @@ export default function CandidateLoginPage() {
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-        className="w-full max-w-[500px]"
+        className="w-full max-w-[480px]"
       >
-        <div className="text-center mb-16 space-y-4">
-           <h1 className="h-lg text-gradient leading-tight">Candidate <br />Access.</h1>
-           <p className="text-lg text-muted-foreground font-medium opacity-60">Enter the global talent operating system.</p>
+        {/* Heading */}
+        <div className="text-center mb-10">
+          <h1 className="h-lg text-gradient leading-tight mb-3">Candidate Login.</h1>
+          <p className="text-base text-muted-foreground font-medium opacity-60">
+            Enter your credentials to access your dashboard.
+          </p>
         </div>
 
-        <div className="premium-card glass-panel p-10 md:p-12 space-y-10">
-          <form onSubmit={handleSubmit} className="space-y-8">
-            <div className="space-y-6">
-              <div className="space-y-2.5">
-                <Label htmlFor="email" className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60 ml-1">Network Identifier</Label>
-                <div className="relative group">
-                  <User className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground/40 group-focus-within:text-primary transition-colors" />
-                  <Input
-                    id="email"
-                    name="email"
-                    type="email"
-                    placeholder="name@nexus.com"
-                    required
-                    className="h-14 pl-12 bg-background/50 border-border/50 focus:border-primary/50 focus:ring-0 rounded-xl font-bold transition-all"
-                  />
-                </div>
+        {/* Error Banner */}
+        <AnimatePresence>
+          {error && (
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              className={`mb-6 p-4 rounded-2xl border flex gap-3 items-start ${
+                error.type === 'not_found'
+                  ? 'bg-amber-500/5 border-amber-500/20 text-amber-500'
+                  : 'bg-destructive/5 border-destructive/20 text-destructive'
+              }`}
+            >
+              {error.type === 'not_found' ? (
+                <UserX className="w-5 h-5 mt-0.5 shrink-0" />
+              ) : (
+                <AlertCircle className="w-5 h-5 mt-0.5 shrink-0" />
+              )}
+              <div className="space-y-1">
+                <p className="text-sm font-bold">
+                  {error.type === 'not_found' ? 'Account Not Found' : 'Authentication Failed'}
+                </p>
+                <p className="text-sm font-medium opacity-80">{error.message}</p>
+                {error.type === 'not_found' && (
+                  <Link href="/signup/candidate" className="text-sm font-black underline underline-offset-2 hover:opacity-80 transition-opacity">
+                    Create an account →
+                  </Link>
+                )}
               </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
-              <div className="space-y-2.5">
-                <div className="flex items-center justify-between ml-1">
-                  <Label htmlFor="password" className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60">Access Key</Label>
-                  <Link href="#" className="text-[10px] font-black uppercase tracking-widest text-primary/60 hover:text-primary transition-colors">Recover</Link>
-                </div>
-                <div className="relative group">
-                  <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground/40 group-focus-within:text-primary transition-colors" />
-                  <Input
-                    id="password"
-                    name="password"
-                    type="password"
-                    placeholder="••••••••"
-                    required
-                    className="h-14 pl-12 bg-background/50 border-border/50 focus:border-primary/50 focus:ring-0 rounded-xl font-bold transition-all"
-                  />
-                </div>
+        {/* Form Card */}
+        <div className="glass-panel rounded-3xl p-8 md:p-10 space-y-8">
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="space-y-2.5">
+              <Label htmlFor="email" className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60 ml-1">
+                Email Address
+              </Label>
+              <div className="relative group">
+                <User className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground/40 group-focus-within:text-primary transition-colors" />
+                <Input
+                  id="email"
+                  name="email"
+                  type="email"
+                  placeholder="you@example.com"
+                  required
+                  onChange={() => setError(null)}
+                  className="h-13 pl-12 bg-background/50 border-border/50 focus:border-primary/50 rounded-xl font-medium transition-all"
+                />
+              </div>
+            </div>
+
+            <div className="space-y-2.5">
+              <div className="flex items-center justify-between ml-1">
+                <Label htmlFor="password" className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60">
+                  Password
+                </Label>
+                <Link href="#" className="text-[10px] font-black uppercase tracking-widest text-primary/60 hover:text-primary transition-colors">
+                  Forgot Password?
+                </Link>
+              </div>
+              <div className="relative group">
+                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground/40 group-focus-within:text-primary transition-colors" />
+                <Input
+                  id="password"
+                  name="password"
+                  type="password"
+                  placeholder="••••••••"
+                  required
+                  onChange={() => setError(null)}
+                  className="h-13 pl-12 bg-background/50 border-border/50 focus:border-primary/50 rounded-xl font-medium transition-all"
+                />
               </div>
             </div>
 
             <Button
               type="submit"
               disabled={loading}
-              className="w-full btn-quantum h-16 rounded-xl"
+              className="w-full btn-quantum h-13 rounded-xl mt-2"
             >
               {loading ? (
-                <Loader2 className="w-6 h-6 animate-spin" />
+                <span className="flex items-center gap-2">
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                  Verifying...
+                </span>
               ) : (
-                <>
-                  Verify Identity <ArrowRight className="w-4 h-4 ml-2" />
-                </>
+                <span className="flex items-center gap-2">
+                  Login <ArrowRight className="w-4 h-4" />
+                </span>
               )}
             </Button>
           </form>
 
-          <div className="pt-8 border-t border-border/50 text-center">
-             <p className="text-sm font-medium text-muted-foreground">
-                New candidate? <Link href="/signup/candidate" className="text-primary font-black hover:underline underline-offset-4">Initialize Account</Link>
-             </p>
+          <div className="pt-6 border-t border-border/40 text-center">
+            <p className="text-sm text-muted-foreground font-medium">
+              Don&apos;t have an account?{" "}
+              <Link href="/signup/candidate" className="text-primary font-black hover:underline underline-offset-4">
+                Sign Up
+              </Link>
+            </p>
           </div>
         </div>
       </motion.div>

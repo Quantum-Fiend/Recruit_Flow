@@ -1,13 +1,29 @@
 'use server'
 
 import { signIn } from "@/lib/auth"
-import { prisma } from "@/lib/prisma"
+import { prisma, basePrisma } from "@/lib/prisma"
 import { signUpSchema, type SignUpInput } from "@/lib/validations"
 import bcrypt from "bcryptjs"
 import { AuthError } from "next-auth"
-
 import { logger, analytics } from "@/lib/monitoring"
 import { checkRateLimit } from "@/lib/rate-limit"
+
+/**
+ * Check if a user account exists for a given email.
+ * Used by login forms to give precise error feedback:
+ * - "Account not found" vs "Incorrect password"
+ */
+export async function checkUserExistsAction(email: string): Promise<{ exists: boolean }> {
+  try {
+    const user = await basePrisma.user.findUnique({
+      where: { email: email.toLowerCase().trim() },
+      select: { id: true },
+    })
+    return { exists: !!user }
+  } catch {
+    return { exists: false }
+  }
+}
 
 export async function signUpAction(data: SignUpInput) {
   try {
@@ -22,7 +38,7 @@ export async function signUpAction(data: SignUpInput) {
     })
 
     if (existingUser) {
-      return { error: "User with this email already exists" }
+      return { error: "An account with this email already exists. Please log in instead." }
     }
 
     // Hash password
@@ -42,7 +58,7 @@ export async function signUpAction(data: SignUpInput) {
     analytics.track('user_signup', { userId: user.id, role: validated.role })
     logger.logAuthEvent("SIGNUP_SUCCESS", user.id, { role: validated.role })
 
-    // Auto sign in after signup
+    // Auto sign in after signup — NextAuth throws a redirect on success
     try {
       await signIn("credentials", {
         email: validated.email,
@@ -50,23 +66,21 @@ export async function signUpAction(data: SignUpInput) {
         redirectTo: validated.role === 'RECRUITER' ? '/recruiter/dashboard' : '/dashboard',
       })
     } catch (err) {
-      if ((err as any).digest?.startsWith('NEXT_REDIRECT')) throw err;
-      // If it's not a redirect, we already have the user created, so we can return success
+      if ((err as any).digest?.startsWith('NEXT_REDIRECT')) throw err
     }
 
     return { success: true }
   } catch (error: unknown) {
-    if ((error as any).digest?.startsWith('NEXT_REDIRECT')) throw error;
-    
+    if ((error as any).digest?.startsWith('NEXT_REDIRECT')) throw error
+
     logger.error("Signup error", error as Error, { metadata: { email: data.email } })
-    
-    // Provide more specific error message in development
+
     if (process.env.NODE_ENV === 'development') {
       const errorMessage = error instanceof Error ? error.message : "Unknown error"
       return { error: `Signup failed: ${errorMessage}` }
     }
-    
-    return { error: "Failed to create account. Please try again later." }
+
+    return { error: "Failed to create account. Please try again." }
   }
 }
 
@@ -80,19 +94,18 @@ export async function signInAction(email: string, password: string) {
       password,
       redirectTo: "/",
     })
-    
-    // Auth success logging is usually handled in NextAuth callbacks
+
     return { success: true }
   } catch (error) {
-    if ((error as any).digest?.startsWith('NEXT_REDIRECT')) throw error;
+    if ((error as any).digest?.startsWith('NEXT_REDIRECT')) throw error
 
     if (error instanceof AuthError) {
       logger.logAuthEvent("SIGNIN_FAILURE", undefined, { email, type: error.type })
       switch (error.type) {
         case "CredentialsSignin":
-          return { error: "Invalid email or password" }
+          return { error: "Incorrect password. Please try again." }
         default:
-          return { error: "Something went wrong" }
+          return { error: "Authentication failed. Please try again." }
       }
     }
     throw error
