@@ -1,93 +1,201 @@
 'use client'
 
-import { useState } from "react"
-import { signIn } from "next-auth/react"
+import { useState, useEffect, Suspense } from "react"
+import { signIn, useSession } from "next-auth/react"
 import { useRouter, useSearchParams } from "next/navigation"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Card, CardContent } from "@/components/ui/card";
 import { toast } from "sonner"
-import {
-  Loader2,
-  ArrowRight,
-  Lock,
-  Mail,
-  Command,
-  ShieldCheck,
-} from "lucide-react";
-import { motion } from "framer-motion"
+import { Loader2, ArrowRight, User, Lock, AlertCircle, UserX } from "lucide-react"
+import { motion, AnimatePresence } from "framer-motion"
+import { checkUserExistsAction } from "@/app/actions/auth"
 
-import { Briefcase, User } from "lucide-react";
+function LoginForm() {
+  const router = useRouter()
+  const searchParams = useSearchParams()
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<{ type: 'not_found' | 'wrong_password' | 'generic'; message: string } | null>(null)
+  
+  const callbackUrl = searchParams.get("callbackUrl")
+  const { status } = useSession()
 
-export default function LoginChoicePage() {
+  useEffect(() => {
+    if (status === 'authenticated') {
+      router.push(callbackUrl || "/dashboard")
+    }
+  }, [status, router, callbackUrl])
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    setLoading(true)
+    setError(null)
+
+    const formData = new FormData(e.currentTarget)
+    const email = formData.get("email") as string
+    const password = formData.get("password") as string
+
+    try {
+      const { exists, role } = await checkUserExistsAction(email)
+
+      if (!exists) {
+        setError({
+          type: 'not_found',
+          message: "No account found with this email address. Please sign up.",
+        })
+        setLoading(false)
+        return
+      }
+
+      const result = await signIn("credentials", {
+        email,
+        password,
+        redirect: false,
+      })
+
+      if (result?.error) {
+        setError({
+          type: 'wrong_password',
+          message: "Incorrect password. Please check your credentials.",
+        })
+      } else {
+        toast.success("Welcome back!")
+        const defaultPath = role === "RECRUITER" ? "/recruiter/dashboard" : "/dashboard"
+        router.push(callbackUrl || defaultPath)
+        router.refresh()
+      }
+    } catch {
+      setError({
+        type: 'generic',
+        message: "Something went wrong. Please try again.",
+      })
+    } finally {
+      setLoading(false)
+    }
+  }
+
   return (
-    <div className="flex flex-col items-center justify-center min-h-[90vh] w-full px-6 py-20 relative overflow-hidden">
-      {/* Decorative background element */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-primary/5 rounded-full blur-[120px] -z-10" />
-
+    <div className="flex flex-col items-center justify-center min-h-[90vh] w-full px-6 pt-40 pb-20">
       <motion.div
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, ease: "easeOut" }}
-        className="w-full max-w-[800px] text-center space-y-16"
+        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+        className="w-full max-w-[480px]"
       >
-        <div className="space-y-6">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full glass-surface text-[10px] font-black uppercase tracking-widest text-primary mb-4 mx-auto">
-            <Lock className="w-3 h-3" />
-            <span>Secure Access Gateway</span>
-          </div>
-          <h1 className="h-xl">
-            Access Hub.
-          </h1>
-          <p className="text-xl text-muted-foreground font-medium max-w-xl mx-auto leading-relaxed text-balance">
-            Choose your gateway to authorize access to the RecruitFlow engine.
+        <div className="text-center mb-10">
+          <h1 className="h-lg text-gradient leading-tight mb-3">Access Hub.</h1>
+          <p className="text-base text-muted-foreground font-medium opacity-60">
+            Enter your credentials to access your dashboard.
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-8 items-stretch">
-          {/* Candidate Path */}
-          <Link href="/login/candidate" className="group h-full">
-            <div className="premium-card p-16 flex flex-col items-center text-center h-full glass-panel group-hover:border-primary/50 transition-all duration-700">
-              <div className="w-20 h-20 sapphire-gradient rounded-2xl flex items-center justify-center mb-10 shadow-2xl group-hover:scale-110 transition-all duration-700">
-                <User className="w-10 h-10 text-white" />
-              </div>
-              <div className="space-y-4 mb-10">
-                <h3 className="text-3xl font-black tracking-tighter">Candidate</h3>
-                <p className="text-muted-foreground font-medium text-sm leading-relaxed max-w-[240px] opacity-60">
-                  Access global pipelines and manage your technical identity.
+        <AnimatePresence>
+          {error && (
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              className={`mb-6 p-4 rounded-2xl border flex gap-3 items-start ${
+                error.type === 'not_found'
+                  ? 'bg-amber-500/5 border-amber-500/20 text-amber-500'
+                  : 'bg-destructive/5 border-destructive/20 text-destructive'
+              }`}
+            >
+              {error.type === 'not_found' ? (
+                <UserX className="w-5 h-5 mt-0.5 shrink-0" />
+              ) : (
+                <AlertCircle className="w-5 h-5 mt-0.5 shrink-0" />
+              )}
+              <div className="space-y-1">
+                <p className="text-sm font-bold">
+                  {error.type === 'not_found' ? 'Account Not Found' : 'Authentication Failed'}
                 </p>
+                <p className="text-sm font-medium opacity-80">{error.message}</p>
               </div>
-              <div className="mt-auto flex items-center gap-2 text-primary font-black uppercase tracking-[0.2em] text-[10px] opacity-0 group-hover:opacity-100 group-hover:translate-x-2 transition-all duration-500">
-                Authorize Profile <ArrowRight className="w-4 h-4" />
-              </div>
-            </div>
-          </Link>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
-          {/* Recruiter Path */}
-          <Link href="/login/recruiter" className="group h-full">
-            <div className="premium-card p-16 flex flex-col items-center text-center h-full glass-panel group-hover:border-emerald-500/50 transition-all duration-700">
-              <div className="w-20 h-20 bg-emerald-500/20 rounded-2xl flex items-center justify-center mb-10 shadow-2xl group-hover:scale-110 transition-all duration-700">
-                <Briefcase className="w-10 h-10 text-emerald-500" />
-              </div>
-              <div className="space-y-4 mb-10">
-                <h3 className="text-3xl font-black tracking-tighter">Recruiter</h3>
-                <p className="text-muted-foreground font-medium text-sm leading-relaxed max-w-[240px] opacity-60">
-                  Deploy hiring infrastructure and manage elite talent sequences.
-                </p>
-              </div>
-              <div className="mt-auto flex items-center gap-2 text-emerald-500 font-black uppercase tracking-[0.2em] text-[10px] opacity-0 group-hover:opacity-100 group-hover:translate-x-2 transition-all duration-500">
-                Authorize Console <ArrowRight className="w-4 h-4" />
+        <div className="glass-panel rounded-3xl p-8 md:p-10 space-y-8">
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="space-y-2.5">
+              <Label htmlFor="email" className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60 ml-1">
+                Email Address
+              </Label>
+              <div className="relative group">
+                <User className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground/40 group-focus-within:text-primary transition-colors" />
+                <Input
+                  id="email"
+                  name="email"
+                  type="email"
+                  placeholder="you@example.com"
+                  required
+                  onChange={() => setError(null)}
+                  className="h-13 pl-12 bg-background/50 border-border/50 focus:border-primary/50 rounded-xl font-medium transition-all"
+                />
               </div>
             </div>
-          </Link>
+
+            <div className="space-y-2.5">
+              <div className="flex items-center justify-between ml-1">
+                <Label htmlFor="password" className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60">
+                  Password
+                </Label>
+                <Link href="#" className="text-[10px] font-black uppercase tracking-widest text-primary/60 hover:text-primary transition-colors">
+                  Forgot Password?
+                </Link>
+              </div>
+              <div className="relative group">
+                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground/40 group-focus-within:text-primary transition-colors" />
+                <Input
+                  id="password"
+                  name="password"
+                  type="password"
+                  placeholder="••••••••"
+                  required
+                  onChange={() => setError(null)}
+                  className="h-13 pl-12 bg-background/50 border-border/50 focus:border-primary/50 rounded-xl font-medium transition-all"
+                />
+              </div>
+            </div>
+
+            <Button
+              type="submit"
+              disabled={loading}
+              className="w-full btn-quantum h-13 rounded-xl mt-2"
+            >
+              {loading ? (
+                <span className="flex items-center gap-2">
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                  Verifying...
+                </span>
+              ) : (
+                <span className="flex items-center gap-2">
+                  Login <ArrowRight className="w-4 h-4" />
+                </span>
+              )}
+            </Button>
+          </form>
+
+          <div className="pt-6 border-t border-border/40 text-center">
+            <p className="text-sm text-muted-foreground font-medium">
+              Don&apos;t have an account?{" "}
+              <Link href="/signup" className="text-primary font-black hover:underline underline-offset-4">
+                Sign Up
+              </Link>
+            </p>
+          </div>
         </div>
-
-        <p className="text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground/40 pt-16">
-          New to the network? <Link href="/signup" className="text-primary hover:text-foreground transition-colors">Initialize Account</Link>
-        </p>
       </motion.div>
     </div>
-  );
+  )
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><Loader2 className="w-8 h-8 animate-spin text-primary" /></div>}>
+      <LoginForm />
+    </Suspense>
+  )
 }

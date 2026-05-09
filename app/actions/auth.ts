@@ -13,13 +13,13 @@ import { checkRateLimit } from "@/lib/rate-limit"
  * Used by login forms to give precise error feedback:
  * - "Account not found" vs "Incorrect password"
  */
-export async function checkUserExistsAction(email: string): Promise<{ exists: boolean }> {
+export async function checkUserExistsAction(email: string): Promise<{ exists: boolean, role?: string }> {
   try {
     const user = await basePrisma.user.findUnique({
       where: { email: email.toLowerCase().trim() },
-      select: { id: true },
+      select: { id: true, role: true },
     })
-    return { exists: !!user }
+    return { exists: !!user, role: user?.role }
   } catch {
     return { exists: false }
   }

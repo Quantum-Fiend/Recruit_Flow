@@ -27,7 +27,7 @@ export default function ApplyPage() {
   useEffect(() => {
     if (status === "unauthenticated") {
       toast.error("Please login to apply for this position")
-      router.push("/login/candidate")
+      router.push("/login")
     }
   }, [status, router])
 
