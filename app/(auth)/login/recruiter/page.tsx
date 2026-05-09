@@ -1,7 +1,7 @@
 'use client'
 
-import { useState } from "react"
-import { signIn } from "next-auth/react"
+import { useState, useEffect } from "react"
+import { signIn, useSession } from "next-auth/react"
 import { useRouter, useSearchParams } from "next/navigation"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
@@ -18,6 +18,13 @@ export default function RecruiterLoginPage() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<{ type: 'not_found' | 'wrong_password' | 'generic'; message: string } | null>(null)
   const callbackUrl = searchParams.get("callbackUrl") || "/recruiter/dashboard"
+  const { status } = useSession()
+
+  useEffect(() => {
+    if (status === 'authenticated') {
+      router.push(callbackUrl)
+    }
+  }, [status, router, callbackUrl])
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
