@@ -18,10 +18,10 @@ model User {
   email     String   @unique
   password  String   // Hashed with bcrypt
   role      UserRole @default(APPLICANT)
-  
+
   // Soft delete flag
   deletedAt DateTime?
-  
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -54,10 +54,10 @@ model Job {
   skills          String         // Comma-separated list for SQLite compatibility
   status          JobStatus      @default(OPEN)
   recruiterId     String
-  
+
   // Soft delete flag
   deletedAt       DateTime?
-  
+
   createdAt       DateTime       @default(now())
   updatedAt       DateTime       @updatedAt
 
@@ -97,10 +97,10 @@ model Application {
   resumeUrl   String            // URL to uploaded resume
   resumeName  String            // Original filename
   status      ApplicationStatus @default(APPLIED)
-  
+
   // Soft delete flag
   deletedAt   DateTime?
-  
+
   appliedAt   DateTime          @default(now())
   updatedAt   DateTime          @updatedAt
 

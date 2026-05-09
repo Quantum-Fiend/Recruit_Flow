@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react"
 import { useParams, useRouter } from "next/navigation"
+import { useSession } from "next-auth/react"
 import Link from "next/link"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -16,6 +17,7 @@ import { motion, AnimatePresence } from "framer-motion"
 export default function ApplyPage() {
   const params = useParams()
   const router = useRouter()
+  const { data: session, status } = useSession()
   const [job, setJob] = useState<any>(null)
   const [loading, setLoading] = useState(true)
   const [submitting, setSubmitting] = useState(false)
@@ -23,6 +25,15 @@ export default function ApplyPage() {
   const [success, setSuccess] = useState(false)
 
   useEffect(() => {
+    if (status === "unauthenticated") {
+      toast.error("Please login to apply for this position")
+      router.push("/login/candidate")
+    }
+  }, [status, router])
+
+  useEffect(() => {
+    if (status === "loading" || status === "unauthenticated") return;
+
     async function init() {
       const result = await getJobByIdAction(params.id as string)
       if (result.success) {
@@ -43,21 +54,27 @@ export default function ApplyPage() {
     }
 
     setSubmitting(true)
-    const result = await createApplicationAction({
-      jobId: params.id as string,
-      resumeUrl: resume.url,
-      resumeName: resume.name,
-    })
+    try {
+      const result = await createApplicationAction({
+        jobId: params.id as string,
+        resumeUrl: resume.url,
+        resumeName: resume.name,
+      })
 
-    if (result.error) {
-      toast.error(result.error)
+      if (result.error) {
+        toast.error(result.error)
+      } else {
+        setSuccess(true)
+        toast.success("Application Ingested Successfully")
+        setTimeout(() => {
+          router.push("/dashboard")
+        }, 3000)
+      }
+    } catch (error) {
+      console.error(error)
+      toast.error("An unexpected error occurred")
+    } finally {
       setSubmitting(false)
-    } else {
-      setSuccess(true)
-      toast.success("Application Ingested Successfully")
-      setTimeout(() => {
-        router.push("/dashboard")
-      }, 3000)
     }
   }
 

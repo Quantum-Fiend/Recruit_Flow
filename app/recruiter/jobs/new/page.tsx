@@ -31,19 +31,24 @@ export default function NewJobPage() {
     e.preventDefault()
     setLoading(true)
 
-    const skillsArray = formData.skills.split(",").map(s => s.trim()).filter(Boolean)
+    try {
+      const skillsArray = formData.skills.split(",").map(s => s.trim()).filter(Boolean)
 
-    const result = await createJobAction({
-      ...formData,
-      skills: skillsArray,
-    })
+      const result = await createJobAction({
+        ...formData,
+        skills: skillsArray,
+      })
 
-    if (result.error) {
-      toast.error(result.error)
+      if (result.error) {
+        toast.error(result.error)
+      } else {
+        toast.success("Position Deployed Successfully")
+        router.push("/recruiter/dashboard")
+      }
+    } catch (error) {
+      toast.error("An unexpected error occurred")
+    } finally {
       setLoading(false)
-    } else {
-      toast.success("Position Deployed Successfully")
-      router.push("/recruiter/dashboard")
     }
   }
 

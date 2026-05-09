@@ -73,8 +73,7 @@ export async function createApplicationAction(data: CreateApplicationInput) {
     return { success: true, applicationId: application.id }
   } catch (error) {
     if (error instanceof Error && error.name === 'ZodError') {
-      // @ts-ignore
-      return { error: error.errors[0].message }
+      return { error: (error as any).issues[0].message }
     }
     console.error("FULL SUBMIT ERROR:", error)
     logger.error("Create application error", error as Error, {
@@ -161,8 +160,7 @@ export async function updateApplicationStatusAction(data: UpdateApplicationStatu
     return { success: true }
   } catch (error) {
     if (error instanceof Error && error.name === 'ZodError') {
-      // @ts-ignore
-      return { error: error.errors[0].message }
+      return { error: (error as any).issues[0].message }
     }
     logger.error("Update application status error", error as Error, { 
       action: "updateApplicationStatusAction",
@@ -200,8 +198,7 @@ export async function addApplicationNoteAction(data: CreateNoteInput) {
     return { success: true }
   } catch (error) {
     if (error instanceof Error && error.name === 'ZodError') {
-      // @ts-ignore
-      return { error: error.errors[0].message }
+      return { error: (error as any).issues[0].message }
     }
     console.error("Add note error:", error)
     return { error: "Failed to add note" }

@@ -31,8 +31,7 @@ export async function createJobAction(data: CreateJobInput) {
     return { success: true, jobId: job.id }
   } catch (error) {
     if (error instanceof Error && error.name === 'ZodError') {
-      // @ts-ignore
-      return { error: error.errors[0].message }
+      return { error: (error as any).issues[0].message }
     }
     console.error("Create job error:", error)
     return { error: "Failed to create job specification." }
@@ -73,8 +72,7 @@ export async function updateJobAction(jobId: string, data: UpdateJobInput) {
     return { success: true }
   } catch (error) {
     if (error instanceof Error && error.name === 'ZodError') {
-      // @ts-ignore
-      return { error: error.errors[0].message }
+      return { error: (error as any).issues[0].message }
     }
     console.error("Update job error:", error)
     return { error: "Failed to update job specification." }
