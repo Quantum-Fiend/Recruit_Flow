@@ -216,6 +216,7 @@ body {
 .text-sapphire {
   background: linear-gradient(135deg, var(--foreground) 0%, hsl(217 91% 60%) 100%);
   -webkit-background-clip: text;
+  -moz-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
 }
@@ -238,6 +239,7 @@ body {
   background: radial-gradient(circle at var(--x, 50%) var(--y, 50%), rgba(0,0,0,0.02), transparent 100%);
   opacity: 0;
   transition: opacity 0.5s ease;
+  pointer-events: none;
 }
 
 .dark .premium-card::after {
