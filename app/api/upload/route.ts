@@ -47,7 +47,7 @@ export async function POST(req: Request) {
 
     const uniqueName = `${uuidv4()}-${file.name.replace(/\s+/g, "_")}`;
     const path = join(uploadDir, uniqueName);
-    
+
     await writeFile(path, buffer);
 
     const url = `/uploads/${uniqueName}`;

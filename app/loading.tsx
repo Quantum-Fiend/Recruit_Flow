@@ -25,7 +25,7 @@ export default function Loading() {
                </div>
                <Skeleton className="h-8 w-24 rounded-full opacity-40" />
             </div>
-            
+
             <div className="space-y-4">
                <Skeleton className="h-4 w-full rounded-md opacity-30" />
                <Skeleton className="h-4 w-5/6 rounded-md opacity-30" />

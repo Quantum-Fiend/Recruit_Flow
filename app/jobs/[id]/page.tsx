@@ -45,7 +45,7 @@ export default function JobDetailsPage() {
 
   useEffect(() => {
     let ignore = false;
-    
+
     async function init() {
       const [jobResult, appsResult] = await Promise.all([
         getJobByIdAction(params.id as string),
@@ -77,10 +77,10 @@ export default function JobDetailsPage() {
 
   const handleWithdraw = async () => {
     if (!application) return
-    
+
     setWithdrawing(true)
     const result = await withdrawApplicationAction(application.id)
-    
+
     if (result.success) {
       toast.success("Application Withdrawn")
       setApplication(prev => prev ? { ...prev, status: "WITHDRAWN" } : null)
@@ -124,144 +124,201 @@ export default function JobDetailsPage() {
     <div className="page-wrapper animate-reveal px-6">
       {/* Navigation & Technical Identity */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-10 mb-20">
-         <Link href="/jobs">
-            <Button variant="ghost" className="rounded-xl h-12 px-6 group font-black text-[10px] uppercase tracking-widest text-muted-foreground/60 hover:text-foreground">
-               <ArrowLeft className="w-4 h-4 mr-3 transition-transform group-hover:-translate-x-1" />
-               Return to Pipeline
-            </Button>
-         </Link>
-         
-         <div className="flex items-center gap-6">
-            <div className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/20">Payload-ID: {job.id.split('-')[0]}</div>
-            <Button variant="outline" className="h-12 w-12 rounded-2xl border-border/50 hover:bg-secondary p-0 shadow-sm transition-all">
-               <Share2 className="w-5 h-5" />
-            </Button>
-         </div>
+        <Link href="/jobs">
+          <Button
+            variant="ghost"
+            className="rounded-xl h-12 px-6 group font-black text-[10px] uppercase tracking-widest text-muted-foreground/60 hover:text-foreground"
+          >
+            <ArrowLeft className="w-4 h-4 mr-3 transition-transform group-hover:-translate-x-1" />
+            Return to Pipeline
+          </Button>
+        </Link>
+
+        <div className="flex items-center gap-6">
+          <div className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/20">
+            Payload-ID: {job.id.split("-")[0]}
+          </div>
+          <Button
+            variant="outline"
+            className="h-12 w-12 rounded-2xl border-border/50 hover:bg-secondary p-0 shadow-sm transition-all"
+          >
+            <Share2 className="w-5 h-5" />
+          </Button>
+        </div>
       </div>
 
       <div className="grid lg:grid-cols-3 gap-12 items-start w-full mb-40">
-         {/* Main Technical Specs */}
-         <div className="lg:col-span-2 space-y-12">
-            {/* Header Identity */}
-            <div className="premium-card p-12 md:p-16 glass-panel border-border/40 group overflow-hidden relative">
-               <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-primary/5 rounded-full blur-[120px] -z-10 group-hover:bg-primary/10 transition-all duration-1000" />
-               
-               <div className="flex flex-col md:flex-row md:items-start justify-between gap-12 mb-16">
-                  <div className="space-y-8">
-                     <div className="w-20 h-20 rounded-3xl bg-foreground/5 flex items-center justify-center text-foreground shadow-2xl group-hover:bg-foreground group-hover:text-background transition-all duration-700">
-                        <Briefcase className="w-10 h-10" />
-                     </div>
-                     <h1 className="text-5xl md:text-7xl font-black tracking-tighter leading-[0.9] text-balance">{job.title}</h1>
-                  </div>
-                  <div className="flex flex-col items-end gap-4 shrink-0">
-                     <div className="px-8 py-3 rounded-xl text-[10px] font-black uppercase tracking-[0.2em] bg-primary/10 text-primary border border-primary/20 shadow-xl">{job.status}</div>
-                     <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/40">{formatDate(job.createdAt)}</span>
-                  </div>
-               </div>
+        {/* Main Technical Specs */}
+        <div className="lg:col-span-2 space-y-12">
+          {/* Header Identity */}
+          <div className="premium-card p-12 md:p-16 glass-panel border-border/40 group overflow-hidden relative">
+            <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-primary/5 rounded-full blur-[120px] -z-10 group-hover:bg-primary/10 transition-all duration-1000" />
 
-               <div className="grid grid-cols-2 md:grid-cols-3 gap-12 pt-12 border-t border-border/40">
-                  <SpecItem icon={<MapPin className="w-5 h-5" />} label="Target Location" value={job.location} />
-                  <SpecItem icon={<Clock className="w-5 h-5" />} label="Commitment" value={getJobTypeLabel(job.type)} />
-                  <SpecItem icon={<Target className="w-5 h-5" />} label="Seniority Level" value={job.experienceLevel} />
-               </div>
+            <div className="flex flex-col md:flex-row md:items-start justify-between gap-12 mb-16">
+              <div className="space-y-8">
+                <div className="w-20 h-20 rounded-3xl bg-foreground/5 flex items-center justify-center text-foreground shadow-2xl group-hover:bg-foreground group-hover:text-background transition-all duration-700">
+                  <Briefcase className="w-10 h-10" />
+                </div>
+                <h1 className="text-5xl md:text-7xl font-black tracking-tighter leading-[0.9] text-balance">
+                  {job.title}
+                </h1>
+              </div>
+              <div className="flex flex-col items-end gap-4 shrink-0">
+                <div className="px-8 py-3 rounded-xl text-[10px] font-black uppercase tracking-[0.2em] bg-primary/10 text-primary border border-primary/20 shadow-xl">
+                  {job.status}
+                </div>
+                <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/40">
+                  {formatDate(job.createdAt)}
+                </span>
+              </div>
             </div>
 
-            {/* Description Body */}
-            <div className="premium-card p-12 md:p-16 glass-panel border-border/40">
-               <h2 className="text-[10px] font-black mb-12 tracking-[0.4em] uppercase text-muted-foreground/40">Mission Briefing</h2>
-               <div className="prose prose-invert max-w-none">
-                  <p className="text-xl text-muted-foreground font-medium leading-relaxed whitespace-pre-wrap opacity-80">
-                     {job.description}
-                  </p>
-               </div>
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-12 pt-12 border-t border-border/40">
+              <SpecItem
+                icon={<MapPin className="w-5 h-5" />}
+                label="Target Location"
+                value={job.location}
+              />
+              <SpecItem
+                icon={<Clock className="w-5 h-5" />}
+                label="Commitment"
+                value={getJobTypeLabel(job.type)}
+              />
+              <SpecItem
+                icon={<Target className="w-5 h-5" />}
+                label="Seniority Level"
+                value={job.experienceLevel}
+              />
+            </div>
+          </div>
+
+          {/* Description Body */}
+          <div className="premium-card p-12 md:p-16 glass-panel border-border/40">
+            <h2 className="text-[10px] font-black mb-12 tracking-[0.4em] uppercase text-muted-foreground/40">
+              Mission Briefing
+            </h2>
+            <div className="prose prose-invert max-w-none">
+              <p className="text-xl text-muted-foreground font-medium leading-relaxed whitespace-pre-wrap opacity-80">
+                {job.description}
+              </p>
+            </div>
+          </div>
+
+          {/* Competencies */}
+          <div className="premium-card p-12 md:p-16 glass-panel border-border/40">
+            <div className="flex items-center gap-4 mb-12">
+              <Sparkles className="w-6 h-6 text-primary" />
+              <h2 className="text-[10px] font-black tracking-[0.4em] uppercase text-muted-foreground/40">
+                Required Competencies
+              </h2>
+            </div>
+            <div className="flex flex-wrap gap-4">
+              {job.skills.map((skill: string) => (
+                <div
+                  key={skill}
+                  className="px-8 py-3.5 rounded-2xl bg-foreground/[0.03] border border-border/50 text-[11px] font-black tracking-widest uppercase hover:border-primary/40 hover:bg-primary/5 transition-all cursor-default shadow-sm"
+                >
+                  {skill}
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Strategic Action Sidebar */}
+        <aside className="space-y-10 sticky top-32">
+          <div className="premium-card p-10 md:p-12 glass-panel border-border/40 space-y-12 shadow-2xl relative overflow-hidden">
+            <div className="absolute top-0 left-0 w-full h-1 sapphire-gradient opacity-50" />
+
+            <div className="space-y-4 text-center">
+              <h3 className="text-3xl font-black tracking-tighter">
+                Initialize Deployment
+              </h3>
+              <p className="text-base text-muted-foreground font-medium opacity-60 text-balance">
+                Begin your recruitment sequence for this position.
+              </p>
             </div>
 
-            {/* Competencies */}
-            <div className="premium-card p-12 md:p-16 glass-panel border-border/40">
-               <div className="flex items-center gap-4 mb-12">
-                  <Sparkles className="w-6 h-6 text-primary" />
-                  <h2 className="text-[10px] font-black tracking-[0.4em] uppercase text-muted-foreground/40">Required Competencies</h2>
-               </div>
-               <div className="flex flex-wrap gap-4">
-                  {job.skills.map((skill: string) => (
-                     <div key={skill} className="px-8 py-3.5 rounded-2xl bg-foreground/[0.03] border border-border/50 text-[11px] font-black tracking-widest uppercase hover:border-primary/40 hover:bg-primary/5 transition-all cursor-default shadow-sm">
-                        {skill}
-                     </div>
-                  ))}
-               </div>
-            </div>
-         </div>
+            {application && application.status !== "WITHDRAWN" ? (
+              <Button
+                onClick={handleWithdraw}
+                disabled={withdrawing || application.status === "REJECTED"}
+                variant="outline"
+                className="w-full h-16 rounded-2xl text-xs font-black uppercase tracking-[0.2em] border-destructive/20 text-destructive hover:bg-destructive/5 hover:border-destructive/40 transition-all shadow-sm"
+              >
+                <span className="flex items-center gap-4">
+                  {withdrawing ? (
+                    <Loader2 className="w-5 h-5 animate-spin" />
+                  ) : (
+                    <XCircle className="w-5 h-5" />
+                  )}
+                  {withdrawing ? "Processing..." : "Withdraw Payload"}
+                </span>
+              </Button>
+            ) : (
+              <Button
+                onClick={handleApply}
+                disabled={
+                  job.status !== "OPEN" || application?.status === "WITHDRAWN"
+                }
+                className="w-full h-20 rounded-2xl btn-quantum shadow-2xl group overflow-hidden"
+              >
+                <span className="relative z-10 flex items-center gap-4 text-xs uppercase tracking-[0.2em] font-black">
+                  {application?.status === "WITHDRAWN"
+                    ? "Sequence Terminated"
+                    : job.status === "OPEN"
+                      ? "Initialize Application"
+                      : "Position Inactive"}
+                  {application?.status !== "WITHDRAWN" &&
+                    job.status === "OPEN" && (
+                      <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-2" />
+                    )}
+                </span>
+              </Button>
+            )}
 
-         {/* Strategic Action Sidebar */}
-         <aside className="space-y-10 sticky top-32">
-            <div className="premium-card p-10 md:p-12 glass-panel border-border/40 space-y-12 shadow-2xl relative overflow-hidden">
-               <div className="absolute top-0 left-0 w-full h-1 sapphire-gradient opacity-50" />
-               
-               <div className="space-y-4 text-center">
-                  <h3 className="text-3xl font-black tracking-tighter">Initialize Deployment</h3>
-                  <p className="text-base text-muted-foreground font-medium opacity-60 text-balance">Begin your recruitment sequence for this position.</p>
-               </div>
-
-               {application && application.status !== "WITHDRAWN" ? (
-                  <Button 
-                    onClick={handleWithdraw} 
-                    disabled={withdrawing || application.status === "REJECTED"}
-                    variant="outline"
-                    className="w-full h-16 rounded-2xl text-xs font-black uppercase tracking-[0.2em] border-destructive/20 text-destructive hover:bg-destructive/5 hover:border-destructive/40 transition-all shadow-sm"
-                  >
-                    <span className="flex items-center gap-4">
-                      {withdrawing ? <Loader2 className="w-5 h-5 animate-spin" /> : <XCircle className="w-5 h-5" />}
-                      {withdrawing ? "Processing..." : "Withdraw Payload"}
-                    </span>
-                  </Button>
-               ) : (
-                  <Button 
-                    onClick={handleApply} 
-                    disabled={job.status !== "OPEN" || (application?.status === "WITHDRAWN")}
-                    className="w-full h-20 rounded-2xl btn-quantum shadow-2xl group overflow-hidden"
-                  >
-                    <span className="relative z-10 flex items-center gap-4 text-xs uppercase tracking-[0.2em] font-black">
-                      {application?.status === "WITHDRAWN" ? "Sequence Terminated" : job.status === "OPEN" ? "Initialize Application" : "Position Inactive"}
-                      {application?.status !== "WITHDRAWN" && job.status === "OPEN" && <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-2" />}
-                    </span>
-                  </Button>
-               )}
-
-               <div className="space-y-10 pt-4">
-                  <SidebarInsight 
-                     icon={<Globe2 className="w-6 h-6" />} 
-                     title="Global Operations" 
-                     desc="Fully supports asynchronous, distributed technical contribution." 
-                  />
-                  <SidebarInsight 
-                     icon={<Shield className="w-6 h-6" />} 
-                     title="Verified Specs" 
-                     desc="Endorsed by RecruitFlow corporate engineering integrity protocols." 
-                  />
-                  <SidebarInsight 
-                     icon={<Users className="w-6 h-6" />} 
-                     title="High Activity" 
-                     desc={`${job._count.applications}+ active telemetry streams currently in screening.`} 
-                  />
-               </div>
-
-               <div className="p-8 rounded-[2rem] bg-primary/5 border border-primary/10 relative overflow-hidden">
-                  <div className="absolute top-0 right-0 w-20 h-20 bg-primary/10 rounded-full blur-2xl -z-10" />
-                  <p className="text-[10px] font-black uppercase tracking-[0.3em] text-primary mb-4">Lead Intelligence</p>
-                  <p className="text-sm font-bold leading-relaxed text-foreground/80 opacity-90">
-                    Orchestrated by <span className="text-primary font-black underline underline-offset-4 decoration-primary/30">{job.recruiter.name}</span>. 
-                    Expect high-density technical feedback sequences.
-                  </p>
-               </div>
+            <div className="space-y-10 pt-4">
+              <SidebarInsight
+                icon={<Globe2 className="w-6 h-6" />}
+                title="Global Operations"
+                desc="Fully supports asynchronous, distributed technical contribution."
+              />
+              <SidebarInsight
+                icon={<Shield className="w-6 h-6" />}
+                title="Verified Specs"
+                desc="Endorsed by RecruitFlow corporate engineering integrity protocols."
+              />
+              <SidebarInsight
+                icon={<Users className="w-6 h-6" />}
+                title="High Activity"
+                desc={`${job._count.applications}+ active telemetry streams currently in screening.`}
+              />
             </div>
 
-            <div className="px-10 text-center opacity-20">
-               <p className="text-[10px] font-black uppercase tracking-[0.5em] leading-relaxed">Secured via Quantum-Slate Protocols</p>
+            <div className="p-8 rounded-[2rem] bg-primary/5 border border-primary/10 relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-20 h-20 bg-primary/10 rounded-full blur-2xl -z-10" />
+              <p className="text-[10px] font-black uppercase tracking-[0.3em] text-primary mb-4">
+                Lead Intelligence
+              </p>
+              <p className="text-sm font-bold leading-relaxed text-foreground/80 opacity-90">
+                Orchestrated by{" "}
+                <span className="text-primary font-black underline underline-offset-4 decoration-primary/30">
+                  {job.recruiter.name}
+                </span>
+                . Expect high-density technical feedback sequences.
+              </p>
             </div>
-         </aside>
+          </div>
+
+          <div className="px-10 text-center opacity-20">
+            <p className="text-[10px] font-black uppercase tracking-[0.5em] leading-relaxed">
+              Secured via Quantum-Slate Protocols
+            </p>
+          </div>
+        </aside>
       </div>
     </div>
-  )
+  );
 }
 
 function SpecItem({ icon, label, value }: { icon: React.ReactNode; label: string; value: string }) {

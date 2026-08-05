@@ -65,7 +65,7 @@ export async function GET(req: Request) {
     if (recruiterId) {
       where.recruiterId = recruiterId
       // Recruiters might want to see CLOSED jobs too, so we might relax the status check if recruiterId is present
-      delete where.status 
+      delete where.status;
     }
 
     if (query) {

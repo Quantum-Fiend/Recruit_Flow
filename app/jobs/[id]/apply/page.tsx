@@ -91,7 +91,7 @@ export default function ApplyPage() {
   if (success) {
     return (
       <div className="min-h-[80vh] flex items-center justify-center px-6">
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
@@ -104,9 +104,16 @@ export default function ApplyPage() {
                 <CheckCircle2 className="w-12 h-12" />
               </div>
               <div className="space-y-6">
-                <h2 className="text-5xl md:text-6xl font-black tracking-tighter leading-tight">Payload <br />Ingested.</h2>
+                <h2 className="text-5xl md:text-6xl font-black tracking-tighter leading-tight">
+                  Payload <br />
+                  Ingested.
+                </h2>
                 <p className="text-xl text-muted-foreground font-medium leading-relaxed opacity-60">
-                  Your professional profile is now being processed by <span className="text-foreground font-bold underline underline-offset-8 decoration-primary/30">{job.recruiter.name}</span>.
+                  Your professional profile is now being processed by{" "}
+                  <span className="text-foreground font-bold underline underline-offset-8 decoration-primary/30">
+                    {job.recruiter.name}
+                  </span>
+                  .
                 </p>
               </div>
               <Link href="/dashboard" className="block">
@@ -118,7 +125,7 @@ export default function ApplyPage() {
           </div>
         </motion.div>
       </div>
-    )
+    );
   }
 
   return (
@@ -149,7 +156,7 @@ export default function ApplyPage() {
          {/* Application Interface */}
          <div className="premium-card p-12 md:p-16 glass-panel border-border/40 relative overflow-hidden group">
             <div className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-primary/5 rounded-full blur-[120px] -z-10 group-hover:bg-primary/10 transition-all duration-1000" />
-            
+
             <div className="space-y-16">
                {/* Document Section */}
                <div className="space-y-10">

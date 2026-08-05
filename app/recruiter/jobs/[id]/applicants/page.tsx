@@ -146,7 +146,7 @@ export default function ApplicantsPage() {
              Reviewing and orchestrating the high-performance talent ingestion stream for this sequence.
            </p>
         </div>
-        
+
         <div className="flex items-center gap-6">
            <div className="px-8 py-4 rounded-2xl glass-panel border-border/50 flex items-center gap-4 shadow-xl">
               <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
@@ -223,10 +223,10 @@ export default function ApplicantsPage() {
                               <div className="space-y-2">
                                  <div className="text-[10px] font-black uppercase tracking-widest text-primary/60">Intelligence Summary</div>
                                  <p className="text-lg font-bold text-foreground/80 leading-relaxed text-balance">
-                                    {app.applicant.name.length % 3 === 0 
-                                      ? "Exceptional architectural alignment detected. Candidate exhibits deep mastery of high-velocity systems." 
-                                      : app.applicant.name.length % 2 === 0 
-                                      ? "Strategic technical foundational profile. Recommended for elite-track screening sequences." 
+                                    {app.applicant.name.length % 3 === 0
+                                      ? "Exceptional architectural alignment detected. Candidate exhibits deep mastery of high-velocity systems."
+                                      : app.applicant.name.length % 2 === 0
+                                      ? "Strategic technical foundational profile. Recommended for elite-track screening sequences."
                                       : "Sophisticated engineering trajectory identified. Exhibits strong potential for operational leadership roles."}
                                  </p>
                               </div>
@@ -240,9 +240,9 @@ export default function ApplicantsPage() {
                                  <FileText className="w-4 h-4" />
                                  <span>Technical Payload</span>
                               </div>
-                              <a 
-                                 href={app.resumeUrl} 
-                                 target="_blank" 
+                              <a
+                                 href={app.resumeUrl}
+                                 target="_blank"
                                  rel="noopener noreferrer"
                                  className="flex items-center justify-between p-8 bg-foreground/[0.02] rounded-3xl border border-border/40 hover:border-primary/40 transition-all group/res shadow-sm"
                               >
@@ -288,8 +288,8 @@ export default function ApplicantsPage() {
                                  <MessageSquare className="w-4 h-4" />
                                  <span>Internal Intelligence Logs</span>
                               </div>
-                              <Button 
-                                 variant="ghost" 
+                              <Button
+                                 variant="ghost"
                                  className="h-10 px-6 rounded-xl font-black text-[10px] uppercase tracking-[0.2em] hover:bg-foreground hover:text-background transition-all"
                                  onClick={() => setSelectedApp(isExpanded ? null : app)}
                               >
@@ -315,7 +315,7 @@ export default function ApplicantsPage() {
                            )}
 
                            {isExpanded && (
-                             <motion.div 
+                             <motion.div
                                 initial={{ opacity: 0, y: -10 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 className="space-y-6 pt-4"

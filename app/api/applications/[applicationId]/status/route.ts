@@ -18,7 +18,7 @@ export async function PATCH(
   try {
     const headersList = await headers()
     const ip = headersList.get("x-forwarded-for") || "127.0.0.1"
-    
+
     // Rate Limiting
     const limitResult = await rateLimit(ip)
     if (!limitResult.success) {
@@ -78,7 +78,7 @@ export async function PATCH(
     if (error instanceof z.ZodError) {
       return new NextResponse(JSON.stringify(error.issues), { status: 400 })
     }
-    
+
     console.error("[APPLICATION_STATUS_UPDATE]", error)
     return new NextResponse("Internal Error", { status: 500 })
   }

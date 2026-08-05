@@ -3,13 +3,13 @@
 import { prisma } from "@/lib/prisma"
 import { Prisma } from "@prisma/client"
 import { requireAuth, requireRecruiter } from "@/lib/auth-utils"
-import { 
-  createApplicationSchema, 
+import {
+  createApplicationSchema,
   updateApplicationStatusSchema,
   createNoteSchema,
   type CreateApplicationInput,
   type UpdateApplicationStatusInput,
-  type CreateNoteInput 
+  type CreateNoteInput
 } from "@/lib/validations"
 import { revalidatePath } from "next/cache"
 import { sendApplicationReceivedEmail, sendStatusUpdateEmail } from "@/lib/email"
@@ -18,7 +18,7 @@ import { isValidTransition } from "@/lib/workflow"
 
 export async function createApplicationAction(data: CreateApplicationInput) {
   const user = await requireAuth()
-  
+
   try {
     const validated = createApplicationSchema.parse(data)
 
@@ -69,7 +69,7 @@ export async function createApplicationAction(data: CreateApplicationInput) {
 
     revalidatePath("/dashboard")
     revalidatePath(`/jobs/${validated.jobId}`)
-    
+
     return { success: true, applicationId: application.id }
   } catch (error) {
     if (error instanceof Error && error.name === 'ZodError') {
@@ -87,14 +87,14 @@ export async function createApplicationAction(data: CreateApplicationInput) {
 
 export async function updateApplicationStatusAction(data: UpdateApplicationStatusInput) {
   const user = await requireRecruiter()
-  
+
   try {
     const validated = updateApplicationStatusSchema.parse(data)
 
     // Get application with job and applicant to verify ownership and send email
     const application = await prisma.application.findUnique({
       where: { id: validated.applicationId },
-      include: { 
+      include: {
         job: true,
         applicant: {
           select: {
@@ -110,9 +110,9 @@ export async function updateApplicationStatusAction(data: UpdateApplicationStatu
     }
 
     if (application.job.recruiterId !== user.id) {
-      logger.logSecurityEvent("Unauthorized status update attempt", "high", { 
-        userId: user.id, 
-        applicationId: validated.applicationId 
+      logger.logSecurityEvent("Unauthorized status update attempt", "high", {
+        userId: user.id,
+        applicationId: validated.applicationId
       })
       return { error: "Unauthorized" }
     }
@@ -156,13 +156,13 @@ export async function updateApplicationStatusAction(data: UpdateApplicationStatu
 
     revalidatePath("/recruiter/jobs")
     revalidatePath(`/recruiter/jobs/${application.jobId}/applicants`)
-    
+
     return { success: true }
   } catch (error) {
     if (error instanceof Error && error.name === 'ZodError') {
       return { error: (error as any).issues[0].message }
     }
-    logger.error("Update application status error", error as Error, { 
+    logger.error("Update application status error", error as Error, {
       action: "updateApplicationStatusAction",
       metadata: { applicationId: data.applicationId }
     })
@@ -172,7 +172,7 @@ export async function updateApplicationStatusAction(data: UpdateApplicationStatu
 
 export async function addApplicationNoteAction(data: CreateNoteInput) {
   const user = await requireRecruiter()
-  
+
   try {
     const validated = createNoteSchema.parse(data)
 
@@ -366,7 +366,7 @@ export async function acceptOfferAction(applicationId: string) {
           changedById: user.id,
         },
       }),
-      // Automatically close the job if needed? 
+      // Automatically close the job if needed?
       // For now, just mark the application as hired
     ])
 

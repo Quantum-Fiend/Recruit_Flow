@@ -17,7 +17,7 @@ function LoginForm() {
   const searchParams = useSearchParams()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<{ type: 'not_found' | 'wrong_password' | 'generic'; message: string } | null>(null)
-  
+
   const callbackUrl = searchParams.get("callbackUrl")
   const { status } = useSession()
 

@@ -53,10 +53,11 @@ export default function JobsPage() {
               <span>Global Engineering Pipeline</span>
             </div>
             <h1 className="h-lg text-gradient leading-tight">
-              The <br />Network.
+              The <br />
+              Network.
             </h1>
             <p className="text-xl text-muted-foreground font-medium opacity-60 max-w-xl leading-relaxed">
-              Access high-performance engineering roles within the world's most 
+              Access high-performance engineering roles within the world's most
               ambitious technical ecosystems.
             </p>
           </div>
@@ -133,7 +134,7 @@ export default function JobsPage() {
         )}
       </div>
     </div>
-  )
+  );
 }
 
 function JobCardItem({ job, index }: { job: Job; index: number }) {

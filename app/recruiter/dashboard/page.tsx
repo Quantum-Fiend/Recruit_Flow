@@ -41,7 +41,7 @@ export default function RecruiterDashboard() {
              Strategic oversight and pipeline orchestration for the world's most ambitious engineering organizations.
            </p>
         </div>
-        
+
         <div className="flex items-center gap-6">
            <Link href="/recruiter/jobs/new">
               <Button className="btn-quantum h-16 px-10 rounded-2xl shadow-2xl flex items-center gap-3">
@@ -75,7 +75,7 @@ export default function RecruiterDashboard() {
                 Access Archives
               </Link>
            </div>
-           
+
            {loading ? (
              <div className="space-y-8">
                {[1, 2, 3].map(i => <Skeleton key={i} className="h-48 rounded-[2.5rem] glass-panel opacity-40" />)}
@@ -102,7 +102,7 @@ export default function RecruiterDashboard() {
            <div className="flex items-center justify-between px-4 mb-4">
               <h2 className="text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground/40">Global Telemetry</h2>
            </div>
-           
+
            <div className="premium-card p-10 glass-panel border-border/40 space-y-12 group/telemetry">
               <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full blur-3xl -z-10 group-hover/telemetry:bg-primary/10 transition-all duration-1000" />
               {loading ? (
@@ -131,7 +131,7 @@ export default function RecruiterDashboard() {
                 </div>
               )}
            </div>
-           
+
            {/* Insight Block */}
            <div className="premium-card p-10 sapphire-gradient border-none flex flex-col gap-10 group overflow-hidden relative shadow-2xl shadow-primary/20 rounded-[2.5rem]">
               <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10" />
@@ -172,7 +172,7 @@ function JobConsoleCard({ job, index }: { job: any; index: number }) {
                     </div>
                  </div>
               </div>
-              
+
               <div className="flex items-center gap-6">
                  <div className="px-6 py-2 rounded-xl text-[10px] font-black uppercase tracking-[0.2em] bg-primary/10 text-primary border border-primary/20 shadow-xl">{job.status}</div>
                  <div className="w-14 h-14 rounded-2xl bg-foreground/[0.03] flex items-center justify-center text-muted-foreground/40 group-hover/card:bg-primary group-hover/card:text-white transition-all duration-700 shadow-sm">

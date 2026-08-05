@@ -8,7 +8,7 @@ import type { Prisma, JobStatus, JobType } from "@prisma/client"
 
 export async function createJobAction(data: CreateJobInput) {
   const user = await requireRecruiter()
-  
+
   try {
     const validated = createJobSchema.parse(data)
 
@@ -40,7 +40,7 @@ export async function createJobAction(data: CreateJobInput) {
 
 export async function updateJobAction(jobId: string, data: UpdateJobInput) {
   const user = await requireRecruiter()
-  
+
   try {
     // Verify ownership
     const job = await prisma.job.findUnique({
@@ -81,7 +81,7 @@ export async function updateJobAction(jobId: string, data: UpdateJobInput) {
 
 export async function closeJobAction(jobId: string) {
   const user = await requireRecruiter()
-  
+
   try {
     // Verify ownership
     const job = await prisma.job.findUnique({
@@ -224,7 +224,7 @@ export async function getJobByIdAction(jobId: string) {
 
 export async function deleteJobAction(jobId: string) {
   const user = await requireRecruiter()
-  
+
   try {
     // Verify ownership
     const job = await prisma.job.findUnique({

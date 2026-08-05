@@ -16,19 +16,19 @@ export async function getRecruiterDashboardAction() {
       totalApplicationsCount,
       pendingApplicationsCount,
       recentJobs,
-      recentApplications
+      recentApplications,
     ] = await Promise.all([
       prisma.job.count({
-        where: { recruiterId: session.user.id, status: "OPEN" }
+        where: { recruiterId: session.user.id, status: "OPEN" },
       }),
       prisma.application.count({
-        where: { job: { recruiterId: session.user.id } }
+        where: { job: { recruiterId: session.user.id } },
       }),
       prisma.application.count({
-        where: { 
+        where: {
           job: { recruiterId: session.user.id },
-          status: "APPLIED"
-        }
+          status: "APPLIED",
+        },
       }),
       prisma.job.findMany({
         where: { recruiterId: session.user.id },
@@ -36,9 +36,9 @@ export async function getRecruiterDashboardAction() {
         take: 5,
         include: {
           _count: {
-            select: { applications: true }
-          }
-        }
+            select: { applications: true },
+          },
+        },
       }),
       prisma.application.findMany({
         where: { job: { recruiterId: session.user.id } },
@@ -46,14 +46,14 @@ export async function getRecruiterDashboardAction() {
         take: 5,
         include: {
           applicant: {
-            select: { name: true }
+            select: { name: true },
           },
           job: {
-            select: { title: true }
-          }
-        }
-      })
-    ])
+            select: { title: true },
+          },
+        },
+      }),
+    ]);
 
     return {
       success: true,
