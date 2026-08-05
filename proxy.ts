@@ -17,12 +17,14 @@ export default auth(async (req) => {
       )
     }
   }
-  
-  const isAuthRoute = nextUrl.pathname.startsWith("/login") || 
-                      nextUrl.pathname.startsWith("/signup")
-  const isProtectedRoute = nextUrl.pathname.startsWith("/dashboard") || 
-                          nextUrl.pathname.startsWith("/recruiter")
-  
+
+  const isAuthRoute =
+    nextUrl.pathname.startsWith("/login") ||
+    nextUrl.pathname.startsWith("/signup");
+  const isProtectedRoute =
+    nextUrl.pathname.startsWith("/dashboard") ||
+    nextUrl.pathname.startsWith("/recruiter");
+
   const isRecruiterRoute = nextUrl.pathname.startsWith("/recruiter")
 
   if (isAuthRoute) {
