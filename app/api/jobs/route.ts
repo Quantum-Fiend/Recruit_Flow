@@ -2,78 +2,78 @@ import { auth } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
 import { createJobSchema } from "@/lib/validations"
 import { NextResponse } from "next/server"
-import { z } from "zod"
-import { Prisma } from "@prisma/client"
-import { rateLimit } from "@/lib/rate-limit"
+import { z } from "zod";
+import { rateLimit } from "@/lib/rate-limit";
+import type { Prisma } from "@prisma/client";
 
 export async function POST(req: Request) {
   try {
-    const ip = req.headers.get("x-forwarded-for") || "127.0.0.1"
-    const { success } = await rateLimit(ip)
+    const ip = req.headers.get("x-forwarded-for") || "127.0.0.1";
+    const { success } = await rateLimit(ip);
 
     if (!success) {
-      return new NextResponse("Too Many Requests", { status: 429 })
+      return new NextResponse("Too Many Requests", { status: 429 });
     }
 
     // CSRF Check
-    const origin = req.headers.get("origin")
-    const host = req.headers.get("host")
+    const origin = req.headers.get("origin");
+    const host = req.headers.get("host");
     if (origin && host && !origin.includes(host)) {
-      return new NextResponse("Forbidden", { status: 403 })
+      return new NextResponse("Forbidden", { status: 403 });
     }
 
-    const session = await auth()
+    const session = await auth();
 
     if (!session || !session.user || session.user.role !== "RECRUITER") {
-      return new NextResponse("Unauthorized", { status: 401 })
+      return new NextResponse("Unauthorized", { status: 401 });
     }
 
-    const body = await req.json()
-    const validatedData = createJobSchema.parse(body)
+    const body = await req.json();
+    const validatedData = createJobSchema.parse(body);
 
     const job = await prisma.job.create({
       data: {
         ...validatedData,
-        skills: validatedData.skills.join(','),
+        skills: validatedData.skills.join(","),
         recruiterId: session.user.id,
       },
-    })
+    });
 
-    return NextResponse.json(job)
+    return NextResponse.json(job);
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return new NextResponse(JSON.stringify(error.issues), { status: 400 })
+      return new NextResponse(JSON.stringify(error.issues), { status: 400 });
     }
 
-    console.error("[JOBS_POST]", error)
-    return new NextResponse("Internal Error", { status: 500 })
+    console.error("[JOBS_POST]", error);
+    return new NextResponse("Internal Error", { status: 500 });
   }
 }
 
 export async function GET(req: Request) {
   try {
-    const { searchParams } = new URL(req.url)
-    const recruiterId = searchParams.get("recruiterId")
-    const query = searchParams.get("query")
+    const { searchParams } = new URL(req.url);
+    const recruiterId = searchParams.get("recruiterId");
+    const query = searchParams.get("query");
 
     // Build filter conditions
     const where: Prisma.JobWhereInput = {
       status: "OPEN",
       deletedAt: null,
-    }
+    };
 
     if (recruiterId) {
-      where.recruiterId = recruiterId
+      where.recruiterId = recruiterId;
       // Recruiters might want to see CLOSED jobs too, so we might relax the status check if recruiterId is present
       delete where.status;
     }
 
     if (query) {
-       where.OR = [
+      where.OR = [
         { title: { contains: query } },
         { description: { contains: query } },
         { location: { contains: query } },
-       ]
+      ];
     }
 
     const jobs = await prisma.job.findMany({
@@ -84,11 +84,11 @@ export async function GET(req: Request) {
           select: { name: true, email: true },
         },
       },
-    })
+    });
 
-    return NextResponse.json(jobs)
+    return NextResponse.json(jobs);
   } catch (error) {
-    console.error("[JOBS_GET]", error)
-    return new NextResponse("Internal Error", { status: 500 })
+    console.error("[JOBS_GET]", error);
+    return new NextResponse("Internal Error", { status: 500 });
   }
 }

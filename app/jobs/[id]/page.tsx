@@ -9,7 +9,7 @@ import {
   getMyApplicationsAction,
   withdrawApplicationAction,
 } from "@/app/actions/applications";
-import { formatDate } from "@/lib/utils";
+import { formatDate, getJobTypeLabel } from "@/lib/utils";
 import {
   MapPin,
   Briefcase,

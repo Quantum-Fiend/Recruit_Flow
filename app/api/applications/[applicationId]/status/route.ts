@@ -3,12 +3,12 @@ import { prisma } from "@/lib/prisma"
 import { isValidTransition } from "@/lib/workflow"
 import { rateLimit } from "@/lib/rate-limit"
 import { headers } from "next/headers"
-import { ApplicationStatus } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 
 const statusSchema = z.object({
-  status: z.nativeEnum(ApplicationStatus),
+  status: z.nativeEnum(Prisma.ApplicationStatus),
 });
 
 export async function PATCH(
