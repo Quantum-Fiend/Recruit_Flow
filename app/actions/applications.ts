@@ -3,32 +3,36 @@
 import { prisma } from "@/lib/prisma"
 import { Prisma } from "@prisma/client"
 import { requireAuth, requireRecruiter } from "@/lib/auth-utils"
+import { ZodError } from "zod";
 import {
   createApplicationSchema,
   updateApplicationStatusSchema,
   createNoteSchema,
   type CreateApplicationInput,
   type UpdateApplicationStatusInput,
-  type CreateNoteInput
-} from "@/lib/validations"
-import { revalidatePath } from "next/cache"
-import { sendApplicationReceivedEmail, sendStatusUpdateEmail } from "@/lib/email"
-import { logger, analytics } from "@/lib/monitoring"
-import { isValidTransition } from "@/lib/workflow"
+  type CreateNoteInput,
+} from "@/lib/validations";
+import { revalidatePath } from "next/cache";
+import {
+  sendApplicationReceivedEmail,
+  sendStatusUpdateEmail,
+} from "@/lib/email";
+import { logger, analytics } from "@/lib/monitoring";
+import { isValidTransition } from "@/lib/workflow";
 
 export async function createApplicationAction(data: CreateApplicationInput) {
-  const user = await requireAuth()
+  const user = await requireAuth();
 
   try {
-    const validated = createApplicationSchema.parse(data)
+    const validated = createApplicationSchema.parse(data);
 
     // Check if job is still open
     const job = await prisma.job.findUnique({
       where: { id: validated.jobId },
-    })
+    });
 
     if (!job || job.status !== "OPEN") {
-      return { error: "This job is no longer accepting applications" }
+      return { error: "This job is no longer accepting applications" };
     }
 
     // Check for duplicate application
@@ -39,10 +43,10 @@ export async function createApplicationAction(data: CreateApplicationInput) {
           applicantId: user.id,
         },
       },
-    })
+    });
 
     if (existingApplication) {
-      return { error: "You have already applied to this job" }
+      return { error: "You have already applied to this job" };
     }
 
     // Create application
@@ -54,42 +58,54 @@ export async function createApplicationAction(data: CreateApplicationInput) {
         resumeName: validated.resumeName,
         status: "APPLIED",
       },
-    })
+    });
 
     // Send confirmation email
     if (user.email) {
-      await sendApplicationReceivedEmail(user.email, user.name || 'Applicant', job.title)
+      await sendApplicationReceivedEmail(
+        user.email,
+        user.name || "Applicant",
+        job.title,
+      );
     }
 
     // Log and track
-    analytics.trackApplicationSubmitted(validated.jobId, user.id)
-    logger.logApplicationEvent("APPLICATION_SUBMITTED", application.id, user.id, {
-      jobId: validated.jobId,
-    })
+    analytics.trackApplicationSubmitted(validated.jobId, user.id);
+    logger.logApplicationEvent(
+      "APPLICATION_SUBMITTED",
+      application.id,
+      user.id,
+      {
+        jobId: validated.jobId,
+      },
+    );
 
-    revalidatePath("/dashboard")
-    revalidatePath(`/jobs/${validated.jobId}`)
+    revalidatePath("/dashboard");
+    revalidatePath(`/jobs/${validated.jobId}`);
 
-    return { success: true, applicationId: application.id }
+    return { success: true, applicationId: application.id };
   } catch (error) {
-    if (error instanceof Error && error.name === 'ZodError') {
-      return { error: (error as any).issues[0].message }
+    if (error instanceof ZodError) {
+      return { error: error.issues[0].message };
     }
-    console.error("FULL SUBMIT ERROR:", error)
+    console.error("FULL SUBMIT ERROR:", error);
     logger.error("Create application error", error as Error, {
       action: "createApplicationAction",
-      metadata: { jobId: data.jobId }
-    })
-    return { error: `Failed to submit application: ${(error as Error).message}` }
+      metadata: { jobId: data.jobId },
+    });
+    return {
+      error: `Failed to submit application: ${(error as Error).message}`,
+    };
   }
 }
 
-
-export async function updateApplicationStatusAction(data: UpdateApplicationStatusInput) {
-  const user = await requireRecruiter()
+export async function updateApplicationStatusAction(
+  data: UpdateApplicationStatusInput,
+) {
+  const user = await requireRecruiter();
 
   try {
-    const validated = updateApplicationStatusSchema.parse(data)
+    const validated = updateApplicationStatusSchema.parse(data);
 
     // Get application with job and applicant to verify ownership and send email
     const application = await prisma.application.findUnique({
@@ -103,23 +119,25 @@ export async function updateApplicationStatusAction(data: UpdateApplicationStatu
           },
         },
       },
-    })
+    });
 
     if (!application) {
-      return { error: "Application not found" }
+      return { error: "Application not found" };
     }
 
     if (application.job.recruiterId !== user.id) {
       logger.logSecurityEvent("Unauthorized status update attempt", "high", {
         userId: user.id,
-        applicationId: validated.applicationId
-      })
-      return { error: "Unauthorized" }
+        applicationId: validated.applicationId,
+      });
+      return { error: "Unauthorized" };
     }
 
     // Validate transition
     if (!isValidTransition(application.status, validated.status)) {
-      return { error: `Invalid status transition from ${application.status} to ${validated.status}` }
+      return {
+        error: `Invalid status transition from ${application.status} to ${validated.status}`,
+      };
     }
 
     // Update status and history in a transaction
@@ -127,7 +145,7 @@ export async function updateApplicationStatusAction(data: UpdateApplicationStatu
       await tx.application.update({
         where: { id: validated.applicationId },
         data: { status: validated.status },
-      })
+      });
 
       await tx.applicationHistory.create({
         data: {
@@ -136,54 +154,64 @@ export async function updateApplicationStatusAction(data: UpdateApplicationStatu
           newStatus: validated.status,
           changedById: user.id,
         },
-      })
-    })
+      });
+    });
 
     // Send status update email to applicant
     await sendStatusUpdateEmail(
       application.applicant.email,
       application.applicant.name,
       application.job.title,
-      validated.status
-    )
+      validated.status,
+    );
 
     // Log and track
-    analytics.trackStatusUpdate(validated.applicationId, application.status, validated.status, user.id)
-    logger.logApplicationEvent("STATUS_UPDATED", validated.applicationId, user.id, {
-      from: application.status,
-      to: validated.status,
-    })
+    analytics.trackStatusUpdate(
+      validated.applicationId,
+      application.status,
+      validated.status,
+      user.id,
+    );
+    logger.logApplicationEvent(
+      "STATUS_UPDATED",
+      validated.applicationId,
+      user.id,
+      {
+        from: application.status,
+        to: validated.status,
+      },
+    );
 
-    revalidatePath("/recruiter/jobs")
-    revalidatePath(`/recruiter/jobs/${application.jobId}/applicants`)
+    revalidatePath("/recruiter/jobs");
+    revalidatePath(`/recruiter/jobs/${application.jobId}/applicants`);
 
-    return { success: true }
+    return { success: true };
   } catch (error) {
-    if (error instanceof Error && error.name === 'ZodError') {
-      return { error: (error as any).issues[0].message }
+    if (error instanceof ZodError) {
+      return { error: error.issues[0].message };
     }
     logger.error("Update application status error", error as Error, {
       action: "updateApplicationStatusAction",
-      metadata: { applicationId: data.applicationId }
-    })
-    return { error: "Failed to update application status" }
+      metadata: { applicationId: data.applicationId },
+    });
+    return { error: "Failed to update application status" };
   }
 }
 
 export async function addApplicationNoteAction(data: CreateNoteInput) {
-  const user = await requireRecruiter()
+  const user = await requireRecruiter();
 
   try {
-    const validated = createNoteSchema.parse(data)
+    const validated = createNoteSchema.parse(data);
 
     // Verify ownership
     const application = await prisma.application.findUnique({
       where: { id: validated.applicationId },
       include: { job: true },
-    })
+    });
 
     if (!application || application.job.recruiterId !== user.id) {
-      return { error: "Unauthorized" }
+      return { error: "Unauthorized" };
     }
 
     await prisma.applicationNote.create({
@@ -192,16 +220,16 @@ export async function addApplicationNoteAction(data: CreateNoteInput) {
         recruiterId: user.id,
         note: validated.note,
       },
-    })
+    });
 
-    revalidatePath(`/recruiter/jobs/${application.jobId}/applicants`)
-    return { success: true }
+    revalidatePath(`/recruiter/jobs/${application.jobId}/applicants`);
+    return { success: true };
   } catch (error) {
-    if (error instanceof Error && error.name === 'ZodError') {
-      return { error: (error as any).issues[0].message }
+    if (error instanceof ZodError) {
+      return { error: error.issues[0].message };
     }
-    console.error("Add note error:", error)
-    return { error: "Failed to add note" }
+    console.error("Add note error:", error);
+    return { error: "Failed to add note" };
   }
 }
 

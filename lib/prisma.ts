@@ -12,49 +12,71 @@ if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = basePrisma
 
 export { basePrisma }
 
+type PrismaExtensionQueryArgs = {
+  model: string;
+  args?: unknown;
+  query: (args?: unknown) => Promise<unknown>;
+};
+
 export const prisma = basePrisma.$extends({
   query: {
     $allModels: {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      async findMany({ model, args, query }: any) {
-        const prismaArgs = args || {}
-        if (model === 'Job' || model === 'Application' || model === 'User') {
-          prismaArgs.where = { ...prismaArgs.where, deletedAt: null }
+      async findMany({ model, args, query }: PrismaExtensionQueryArgs) {
+        const prismaArgs = (args ?? {}) as Record<string, unknown>;
+        if (model === "Job" || model === "Application" || model === "User") {
+          prismaArgs.where = {
+            ...((prismaArgs as Record<string, unknown>).where ?? {}),
+            deletedAt: null,
+          };
         }
-        return query(prismaArgs)
+        return query(prismaArgs);
       },
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      async findFirst({ model, args, query }: any) {
-        const prismaArgs = args || {}
-        if (model === 'Job' || model === 'Application' || model === 'User') {
-          prismaArgs.where = { ...prismaArgs.where, deletedAt: null }
+      async findFirst({ model, args, query }: PrismaExtensionQueryArgs) {
+        const prismaArgs = (args ?? {}) as Record<string, unknown>;
+        if (model === "Job" || model === "Application" || model === "User") {
+          prismaArgs.where = {
+            ...((prismaArgs as Record<string, unknown>).where ?? {}),
+            deletedAt: null,
+          };
         }
-        return query(prismaArgs)
+        return query(prismaArgs);
       },
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      async findUnique({ model, args, query }: any) {
-        const result = await query(args)
-        if (result && (model === 'Job' || model === 'Application' || model === 'User')) {
-          if (result.deletedAt !== null) return null
+      async findUnique({ model, args, query }: PrismaExtensionQueryArgs) {
+        const result = await query(args);
+        if (
+          result &&
+          (model === "Job" || model === "Application" || model === "User")
+        ) {
+          if ((result as { deletedAt?: unknown }).deletedAt !== null)
+            return null;
         }
-        return result
+        return result;
       },
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      async findUniqueOrThrow({ model, args, query }: any) {
-        const result = await query(args)
-        if (result && (model === 'Job' || model === 'Application' || model === 'User')) {
-          if (result.deletedAt !== null) throw new Error(`${model} not found`)
+      async findUniqueOrThrow({
+        model,
+        args,
+        query,
+      }: PrismaExtensionQueryArgs) {
+        const result = await query(args);
+        if (
+          result &&
+          (model === "Job" || model === "Application" || model === "User")
+        ) {
+          if ((result as { deletedAt?: unknown }).deletedAt !== null)
+            throw new Error(`${model} not found`);
         }
-        return result
+        return result;
       },
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      async count({ model, args, query }: any) {
-        const prismaArgs = args || {}
-        if (model === 'Job' || model === 'Application' || model === 'User') {
-          prismaArgs.where = { ...prismaArgs.where, deletedAt: null }
+      async count({ model, args, query }: PrismaExtensionQueryArgs) {
+        const prismaArgs = (args ?? {}) as Record<string, unknown>;
+        if (model === "Job" || model === "Application" || model === "User") {
+          prismaArgs.where = {
+            ...((prismaArgs as Record<string, unknown>).where ?? {}),
+            deletedAt: null,
+          };
         }
-        return query(prismaArgs)
+        return query(prismaArgs);
       },
-    }
-  }
-})
+    },
+  },
+});

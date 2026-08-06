@@ -2,15 +2,21 @@
 
 import { prisma } from "@/lib/prisma"
 import { requireRecruiter } from "@/lib/auth-utils"
-import { createJobSchema, updateJobSchema, type CreateJobInput, type UpdateJobInput } from "@/lib/validations"
-import { revalidatePath } from "next/cache"
-import type { Prisma, JobStatus, JobType } from "@prisma/client"
+import { ZodError } from "zod";
+import {
+  createJobSchema,
+  updateJobSchema,
+  type CreateJobInput,
+  type UpdateJobInput,
+} from "@/lib/validations";
+import { revalidatePath } from "next/cache";
+import type { Prisma, JobStatus, JobType } from "@prisma/client";
 
 export async function createJobAction(data: CreateJobInput) {
-  const user = await requireRecruiter()
+  const user = await requireRecruiter();
 
   try {
-    const validated = createJobSchema.parse(data)
+    const validated = createJobSchema.parse(data);
 
     const job = await prisma.job.create({
       data: {
@@ -20,38 +26,38 @@ export async function createJobAction(data: CreateJobInput) {
         type: validated.type,
         employmentType: validated.employmentType,
         experienceLevel: validated.experienceLevel,
-        skills: validated.skills.join(','),
+        skills: validated.skills.join(","),
         recruiterId: user.id,
       },
-    })
+    });
 
-    revalidatePath("/recruiter/jobs")
-    revalidatePath("/recruiter/dashboard")
-    revalidatePath("/jobs")
-    return { success: true, jobId: job.id }
+    revalidatePath("/recruiter/jobs");
+    revalidatePath("/recruiter/dashboard");
+    revalidatePath("/jobs");
+    return { success: true, jobId: job.id };
   } catch (error) {
-    if (error instanceof Error && error.name === 'ZodError') {
-      return { error: (error as any).issues[0].message }
+    if (error instanceof ZodError) {
+      return { error: error.issues[0].message };
     }
-    console.error("Create job error:", error)
-    return { error: "Failed to create job specification." }
+    console.error("Create job error:", error);
+    return { error: "Failed to create job specification." };
   }
 }
 
 export async function updateJobAction(jobId: string, data: UpdateJobInput) {
-  const user = await requireRecruiter()
+  const user = await requireRecruiter();
 
   try {
     // Verify ownership
     const job = await prisma.job.findUnique({
       where: { id: jobId },
-    })
+    });
 
     if (!job || job.recruiterId !== user.id) {
-      return { error: "Unauthorized" }
+      return { error: "Unauthorized" };
     }
 
-    const validated = updateJobSchema.parse(data)
+    const validated = updateJobSchema.parse(data);
 
     await prisma.job.update({
       where: { id: jobId },
@@ -62,20 +68,20 @@ export async function updateJobAction(jobId: string, data: UpdateJobInput) {
         type: validated.type,
         employmentType: validated.employmentType,
         experienceLevel: validated.experienceLevel,
-        skills: validated.skills ? validated.skills.join(',') : undefined,
+        skills: validated.skills ? validated.skills.join(",") : undefined,
       },
-    })
+    });
 
-    revalidatePath("/recruiter/jobs")
-    revalidatePath(`/recruiter/jobs/${jobId}`)
-    revalidatePath("/jobs")
-    return { success: true }
+    revalidatePath("/recruiter/jobs");
+    revalidatePath(`/recruiter/jobs/${jobId}`);
+    revalidatePath("/jobs");
+    return { success: true };
   } catch (error) {
-    if (error instanceof Error && error.name === 'ZodError') {
-      return { error: (error as any).issues[0].message }
+    if (error instanceof ZodError) {
+      return { error: error.issues[0].message };
     }
-    console.error("Update job error:", error)
-    return { error: "Failed to update job specification." }
+    console.error("Update job error:", error);
+    return { error: "Failed to update job specification." };
   }
 }
 

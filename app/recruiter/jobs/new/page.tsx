@@ -14,6 +14,9 @@ import { toast } from "sonner"
 import { motion } from "framer-motion"
 import { cn } from "@/lib/utils"
 
+const jobTypes = ["FULL_TIME", "PART_TIME", "CONTRACT", "INTERNSHIP"] as const;
+const employmentTypes = ["OFFICE", "REMOTE", "HYBRID"] as const;
+
 export default function NewJobPage() {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
