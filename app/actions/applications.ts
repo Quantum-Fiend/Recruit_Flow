@@ -1,7 +1,6 @@
 'use server'
 
-import { prisma } from "@/lib/prisma"
-import { Prisma } from "@prisma/client"
+import { prisma } from "@/lib/prisma";
 import { requireAuth, requireRecruiter } from "@/lib/auth-utils"
 import { ZodError } from "zod";
 import {

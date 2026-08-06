@@ -1,4 +1,4 @@
-import { Job as PrismaJob, JobType, JobStatus, EmploymentType } from "@prisma/client"
+import { Job as PrismaJob } from "@prisma/client"
 
 export interface Job extends Omit<PrismaJob, 'skills'> {
   skills: string[]

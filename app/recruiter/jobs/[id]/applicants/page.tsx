@@ -2,11 +2,9 @@
 
 import { useEffect, useState, useCallback } from "react"
 import { useParams } from "next/navigation"
-import Link from "next/link"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Textarea } from "@/components/ui/textarea"
-import { Label } from "@/components/ui/label"
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
 import { getJobApplicationsAction, addApplicationNoteAction } from "@/app/actions/applications"
 import { getJobByIdAction } from "@/app/actions/jobs"
 import { getStatusColor, formatDate } from "@/lib/utils"

@@ -61,7 +61,7 @@ export default function NewJobPage() {
         toast.success("Position Deployed Successfully");
         router.push("/recruiter/dashboard");
       }
-    } catch (error) {
+    } catch {
       toast.error("An unexpected error occurred");
     } finally {
       setLoading(false);

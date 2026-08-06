@@ -3,8 +3,7 @@
 import { useEffect, useState } from "react"
 import { useParams, useRouter } from "next/navigation"
 import { useSession } from "next-auth/react"
-import Link from "next/link"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card"
+import Link from "next/link";
 
 interface ApplyJob {
   id: string;
@@ -21,7 +20,6 @@ import {
   ArrowLeft,
   FileText,
   CheckCircle2,
-  Sparkles,
   ShieldCheck,
   Zap,
   Briefcase,
@@ -32,12 +30,12 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { Skeleton } from "@/components/ui/skeleton";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 
 export default function ApplyPage() {
   const params = useParams();
   const router = useRouter();
-  const { data: session, status } = useSession();
+  const { status } = useSession();
   const [job, setJob] = useState<ApplyJob | null>(null);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);

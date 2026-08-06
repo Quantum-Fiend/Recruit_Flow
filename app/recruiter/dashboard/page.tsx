@@ -1,14 +1,24 @@
 'use client'
 
 import { useEffect, useState, useCallback } from "react"
-import Link from "next/link"
-import { Card, CardContent } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { getRecruiterDashboardAction } from "@/app/actions/recruiter"
-import { Briefcase, Users, Plus, ChevronRight, TrendingUp, UserPlus, Zap, Sparkles, Globe, MapPin } from "lucide-react"
-import { Skeleton } from "@/components/ui/skeleton"
-import { formatDate } from "@/lib/utils"
-import { motion, AnimatePresence } from "framer-motion"
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { getRecruiterDashboardAction } from "@/app/actions/recruiter";
+import {
+  Briefcase,
+  Users,
+  Plus,
+  ChevronRight,
+  TrendingUp,
+  UserPlus,
+  Zap,
+  Sparkles,
+  Globe,
+  MapPin,
+} from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
+import { formatDate } from "@/lib/utils";
+import { motion } from "framer-motion";
 
 interface RecruiterDashboardStats {
   activeJobsCount: number;

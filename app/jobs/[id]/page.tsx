@@ -2,16 +2,30 @@
 
 import { useEffect, useState } from "react"
 import { useParams, useRouter } from "next/navigation"
-import Link from "next/link"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { getJobByIdAction } from "@/app/actions/jobs"
-import { getMyApplicationsAction, withdrawApplicationAction } from "@/app/actions/applications"
-import { getJobTypeLabel, getEmploymentTypeLabel, formatDate } from "@/lib/utils"
-import { MapPin, Briefcase, Clock, ArrowLeft, ArrowRight, Share2, Shield, Globe, Users, ChevronRight, Sparkles, Target, Zap, Globe2, XCircle, Loader2 } from "lucide-react"
-import { Skeleton } from "@/components/ui/skeleton"
-import { motion, AnimatePresence } from "framer-motion"
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { getJobByIdAction } from "@/app/actions/jobs";
+import {
+  getMyApplicationsAction,
+  withdrawApplicationAction,
+} from "@/app/actions/applications";
+import { formatDate } from "@/lib/utils";
+import {
+  MapPin,
+  Briefcase,
+  Clock,
+  ArrowLeft,
+  ArrowRight,
+  Share2,
+  Shield,
+  Users,
+  Target,
+  Globe2,
+  Sparkles,
+  XCircle,
+  Loader2,
+} from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner"
 import { useSession } from "next-auth/react"
 

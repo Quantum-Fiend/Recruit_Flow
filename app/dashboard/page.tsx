@@ -1,16 +1,30 @@
 'use client'
 
 import { useEffect, useState, useCallback } from "react"
-import Link from "next/link"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { getMyApplicationsAction, withdrawApplicationAction, acceptOfferAction, declineOfferAction } from "@/app/actions/applications"
-import { toast } from "sonner"
-import { getStatusColor, formatDate, getJobTypeLabel } from "@/lib/utils"
-import { Briefcase, MapPin, Calendar, FileText, ArrowRight, XCircle, LayoutDashboard, Sparkles, ChevronRight, Zap, Target, Activity } from "lucide-react"
-import { Skeleton } from "@/components/ui/skeleton"
-import { motion, AnimatePresence } from "framer-motion"
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import {
+  getMyApplicationsAction,
+  withdrawApplicationAction,
+  acceptOfferAction,
+  declineOfferAction,
+} from "@/app/actions/applications";
+import { toast } from "sonner";
+import { getStatusColor, formatDate } from "@/lib/utils";
+import {
+  Briefcase,
+  MapPin,
+  Calendar,
+  FileText,
+  ArrowRight,
+  XCircle,
+  LayoutDashboard,
+  Sparkles,
+  Target,
+  Activity,
+} from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
+import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils"
 
 interface Application {
