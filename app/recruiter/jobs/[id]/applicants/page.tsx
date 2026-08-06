@@ -73,7 +73,7 @@ export default function ApplicantsPage() {
   }, [params.id])
 
   useEffect(() => {
-    loadData()
+    queueMicrotask(loadData);
   }, [loadData])
 
   const handleStatusUpdate = async (applicationId: string, status: string) => {

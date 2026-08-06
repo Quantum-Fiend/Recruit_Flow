@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { ApplicationStatus } from '@prisma/client'
+import { ApplicationStatus } from "@prisma/client";
 
 // Auth validations
 export const signUpSchema = z.object({

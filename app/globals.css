@@ -167,7 +167,7 @@ body {
   left: -10%;
   width: 120%;
   height: 120%;
-  background: 
+  background:
     radial-gradient(circle at 20% 30%, color-mix(in srgb, var(--color-primary), transparent 98%), transparent 40%),
     radial-gradient(circle at 80% 70%, color-mix(in srgb, #6d28d9, transparent 98%), transparent 40%);
   filter: blur(140px);
@@ -175,7 +175,7 @@ body {
 }
 
 .dark .quantum-atmosphere::before {
-  background: 
+  background:
     radial-gradient(circle at 20% 30%, color-mix(in srgb, var(--color-primary), transparent 90%), transparent 40%),
     radial-gradient(circle at 80% 70%, color-mix(in srgb, #6d28d9, transparent 92%), transparent 40%);
 }
@@ -355,12 +355,12 @@ body {
 /* Custom Scrollbar - Minimal Apple style */
 ::-webkit-scrollbar { width: 5px; height: 5px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { 
-  background: color-mix(in srgb, var(--foreground), transparent 85%); 
+::-webkit-scrollbar-thumb {
+  background: color-mix(in srgb, var(--foreground), transparent 85%);
   border-radius: 10px;
 }
-::-webkit-scrollbar-thumb:hover { 
-  background: color-mix(in srgb, var(--foreground), transparent 70%); 
+::-webkit-scrollbar-thumb:hover {
+  background: color-mix(in srgb, var(--foreground), transparent 70%);
 }
 
 /* ========== Quantum Utilities ========== */

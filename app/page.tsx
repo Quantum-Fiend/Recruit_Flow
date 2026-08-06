@@ -2,27 +2,27 @@
 
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { Zap, Shield, Sparkles, ArrowRight, Cpu, Globe2 } from "lucide-react";
+import { Zap, Shield, ArrowRight, Cpu, Globe2 } from "lucide-react";
 import { motion } from "framer-motion";
-import { useRef } from "react"
+import { useRef } from "react";
 
 export default function LandingPage() {
-  const containerRef = useRef(null)
+  const containerRef = useRef(null);
 
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
-      transition: { staggerChildren: 0.15, delayChildren: 0.3 }
-    }
-  }
+      transition: { staggerChildren: 0.15, delayChildren: 0.3 },
+    },
+  };
 
   const itemVariants = {
     hidden: { y: 30, opacity: 0 },
     visible: {
       y: 0,
       opacity: 1,
-      transition: { duration: 0.8, ease: [0.23, 1, 0.32, 1] as any },
+      transition: { duration: 0.8, ease: [0.23, 1, 0.32, 1] as const },
     },
   };
 
@@ -59,9 +59,9 @@ export default function LandingPage() {
           variants={itemVariants}
           className="text-xl md:text-2xl text-muted-foreground max-w-2xl font-medium leading-relaxed mb-20 px-6 text-balance opacity-80"
         >
-          RecruitFlow is the definitive talent infrastructure for the world's
-          most ambitious engineering organizations. Build your legacy on
-          precision.
+          RecruitFlow is the definitive talent infrastructure for the
+          world&apos;s most ambitious engineering organizations. Build your
+          legacy on precision.
         </motion.p>
 
         <motion.div

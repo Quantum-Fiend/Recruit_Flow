@@ -9,51 +9,64 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { createJobAction } from "@/app/actions/jobs"
-import { ArrowLeft, Plus, Zap, Target, Shield, ArrowRight, Loader2 } from "lucide-react"
-import { toast } from "sonner"
-import { motion } from "framer-motion"
-import { cn } from "@/lib/utils"
+import { ArrowLeft, Plus, Shield, ArrowRight, Loader2 } from "lucide-react";
+import { toast } from "sonner";
+import { motion } from "framer-motion";
+import { cn } from "@/lib/utils";
 
 const jobTypes = ["FULL_TIME", "PART_TIME", "CONTRACT", "INTERNSHIP"] as const;
 const employmentTypes = ["OFFICE", "REMOTE", "HYBRID"] as const;
 
+type NewJobFormData = {
+  title: string;
+  description: string;
+  location: string;
+  type: (typeof jobTypes)[number];
+  employmentType: (typeof employmentTypes)[number];
+  experienceLevel: string;
+  skills: string;
+};
+
 export default function NewJobPage() {
-  const router = useRouter()
-  const [loading, setLoading] = useState(false)
-  const [formData, setFormData] = useState({
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
+  const [formData, setFormData] = useState<NewJobFormData>({
     title: "",
     description: "",
     location: "",
-    type: "FULL_TIME" as "FULL_TIME" | "PART_TIME" | "CONTRACT" | "INTERNSHIP",
-    employmentType: "OFFICE" as "OFFICE" | "REMOTE" | "HYBRID",
+    type: "FULL_TIME",
+    employmentType: "OFFICE",
     experienceLevel: "",
     skills: "",
-  })
+  });
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setLoading(true)
+    e.preventDefault();
+    setLoading(true);
 
     try {
-      const skillsArray = formData.skills.split(",").map(s => s.trim()).filter(Boolean)
+      const skillsArray = formData.skills
+        .split(",")
+        .map((s) => s.trim())
+        .filter(Boolean);
 
       const result = await createJobAction({
         ...formData,
         skills: skillsArray,
-      })
+      });
 
       if (result.error) {
-        toast.error(result.error)
+        toast.error(result.error);
       } else {
-        toast.success("Position Deployed Successfully")
-        router.push("/recruiter/dashboard")
+        toast.success("Position Deployed Successfully");
+        router.push("/recruiter/dashboard");
       }
     } catch (error) {
-      toast.error("An unexpected error occurred")
+      toast.error("An unexpected error occurred");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   return (
     <motion.div
@@ -194,26 +207,22 @@ export default function NewJobPage() {
                   Job Type
                 </Label>
                 <div className="grid grid-cols-2 gap-2">
-                  {["FULL_TIME", "PART_TIME", "CONTRACT", "INTERNSHIP"].map(
-                    (type) => (
-                      <Button
-                        key={type}
-                        type="button"
-                        variant="ghost"
-                        onClick={() =>
-                          setFormData({ ...formData, type: type as any })
-                        }
-                        className={cn(
-                          "h-11 rounded-xl font-black text-[10px] uppercase tracking-widest border border-transparent transition-all",
-                          formData.type === type
-                            ? "bg-primary/10 text-primary border-primary/20"
-                            : "bg-secondary hover:bg-secondary/80 text-muted-foreground",
-                        )}
-                      >
-                        {type.replace("_", " ")}
-                      </Button>
-                    ),
-                  )}
+                  {jobTypes.map((type) => (
+                    <Button
+                      key={type}
+                      type="button"
+                      variant="ghost"
+                      onClick={() => setFormData({ ...formData, type })}
+                      className={cn(
+                        "h-11 rounded-xl font-black text-[10px] uppercase tracking-widest border border-transparent transition-all",
+                        formData.type === type
+                          ? "bg-primary/10 text-primary border-primary/20"
+                          : "bg-secondary hover:bg-secondary/80 text-muted-foreground",
+                      )}
+                    >
+                      {type.replace("_", " ")}
+                    </Button>
+                  ))}
                 </div>
               </div>
               <div className="space-y-4">
@@ -221,7 +230,7 @@ export default function NewJobPage() {
                   Work Mode
                 </Label>
                 <div className="grid grid-cols-3 gap-2">
-                  {["OFFICE", "REMOTE", "HYBRID"].map((type) => (
+                  {employmentTypes.map((type) => (
                     <Button
                       key={type}
                       type="button"
@@ -229,7 +238,7 @@ export default function NewJobPage() {
                       onClick={() =>
                         setFormData({
                           ...formData,
-                          employmentType: type as any,
+                          employmentType: type,
                         })
                       }
                       className={cn(

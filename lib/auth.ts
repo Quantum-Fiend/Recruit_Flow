@@ -19,7 +19,7 @@ declare module "next-auth" {
 }
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
-  adapter: PrismaAdapter(basePrisma) as any,
+  adapter: PrismaAdapter(basePrisma),
   session: {
     strategy: "jwt",
   },
@@ -35,20 +35,20 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       },
       async authorize(credentials) {
         try {
-          const { email, password } = signInSchema.parse(credentials)
+          const { email, password } = signInSchema.parse(credentials);
 
           const user = await basePrisma.user.findUnique({
             where: { email },
-          })
+          });
 
           if (!user || !user.password) {
-            return null
+            return null;
           }
 
-          const isPasswordValid = await bcrypt.compare(password, user.password)
+          const isPasswordValid = await bcrypt.compare(password, user.password);
 
           if (!isPasswordValid) {
-            return null
+            return null;
           }
 
           return {
@@ -56,9 +56,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             name: user.name,
             email: user.email,
             role: user.role,
-          }
+          };
         } catch {
-          return null
+          return null;
         }
       },
     }),
@@ -66,17 +66,17 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
-        token.id = user.id
-        token.role = user.role
+        token.id = user.id;
+        token.role = user.role;
       }
-      return token
+      return token;
     },
     async session({ session, token }) {
       if (session.user) {
-        session.user.id = token.id as string
-        session.user.role = token.role as string
+        session.user.id = token.id as string;
+        session.user.role = token.role as string;
       }
-      return session
+      return session;
     },
   },
-})
+});

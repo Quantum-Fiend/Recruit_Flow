@@ -39,7 +39,7 @@ export default function ApplicantDashboard() {
   }, []);
 
   useEffect(() => {
-    loadApplications();
+    queueMicrotask(loadApplications);
   }, [loadApplications]);
 
   return (
@@ -56,7 +56,7 @@ export default function ApplicantDashboard() {
             Journey.
           </h1>
           <p className="text-xl text-muted-foreground font-medium opacity-60 leading-relaxed max-w-xl">
-            Tracking your professional trajectory across the world's most
+            Tracking your professional trajectory across the world&apos;s most
             ambitious technical ecosystems.
           </p>
         </div>

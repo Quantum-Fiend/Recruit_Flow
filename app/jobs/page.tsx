@@ -34,13 +34,13 @@ export default function JobsPage() {
   }, [])
 
   useEffect(() => {
-    loadJobs();
-  }, [loadJobs])
+    queueMicrotask(loadJobs);
+  }, [loadJobs]);
 
   const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault()
-    loadJobs(search)
-  }
+    e.preventDefault();
+    loadJobs(search);
+  };
 
   return (
     <div className="page-wrapper animate-reveal px-6">
@@ -57,8 +57,8 @@ export default function JobsPage() {
               Network.
             </h1>
             <p className="text-xl text-muted-foreground font-medium opacity-60 max-w-xl leading-relaxed">
-              Access high-performance engineering roles within the world's most
-              ambitious technical ecosystems.
+              Access high-performance engineering roles within the world&apos;s
+              most ambitious technical ecosystems.
             </p>
           </div>
 

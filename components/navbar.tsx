@@ -1,21 +1,10 @@
 'use client'
 
 import { useState, useEffect } from "react"
-import Link from "next/link"
-import { usePathname } from "next/navigation"
-import { useSession, signOut } from "next-auth/react"
-import { Button } from "@/components/ui/button"
-import {
-  Command,
-  Menu,
-  X,
-  LogOut,
-  User,
-  ChevronDown,
-  Bell,
-  Search,
-  Activity,
-} from "lucide-react";
+import Link from "next/link";
+import { useSession, signOut } from "next-auth/react";
+import { Button } from "@/components/ui/button";
+import { Command, Menu, X, LogOut, User } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   DropdownMenu,
@@ -28,7 +17,6 @@ import {
 
 export function Navbar() {
   const { data: session } = useSession();
-  const pathname = usePathname();
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 

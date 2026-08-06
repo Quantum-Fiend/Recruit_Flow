@@ -39,7 +39,7 @@ export default function SignupPage() {
         router.push(role === "APPLICANT" ? "/dashboard" : "/recruiter/dashboard");
         router.refresh();
       }
-    } catch (error) {
+    } catch {
       toast.error("System Error: Unable to process registration.")
     } finally {
       setLoading(false)

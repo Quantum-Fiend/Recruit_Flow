@@ -58,7 +58,13 @@ export default function JobDetailsPage() {
         }
 
         if (appsResult.success && appsResult.applications) {
-          const existingApp = (appsResult.applications as any[]).find(a => a.jobId === params.id)
+          const existingApp = (
+            appsResult.applications as Array<{
+              jobId: string;
+              id: string;
+              status: string;
+            }>
+          ).find((a) => a.jobId === params.id);
           if (existingApp) {
             setApplication({ id: existingApp.id, status: existingApp.status })
           }
