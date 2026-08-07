@@ -4,6 +4,7 @@ import { createJobSchema } from "@/lib/validations"
 import { NextResponse } from "next/server"
 import { z } from "zod";
 import { rateLimit } from "@/lib/rate-limit";
+import type { Prisma } from "@prisma/client";
 
 export async function POST(req: Request) {
   try {

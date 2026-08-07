@@ -53,3 +53,4 @@ export type UpdateJobInput = z.infer<typeof updateJobSchema>
 export type CreateApplicationInput = z.infer<typeof createApplicationSchema>
 export type UpdateApplicationStatusInput = z.infer<typeof updateApplicationStatusSchema>
 export type CreateNoteInput = z.infer<typeof createNoteSchema>
+
