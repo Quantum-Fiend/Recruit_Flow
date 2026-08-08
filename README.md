@@ -210,7 +210,7 @@ All status changes are:
 - **Password Security**: bcrypt hashing with salt rounds
 - **CSRF Protection**: Built-in with Next.js Server Actions
 - **Rate Limiting**: Prevent abuse of API endpoints
-- **File Upload Security**: 
+- **File Upload Security**:
   - File type validation
   - Size limits (5MB for resumes)
   - Malicious filename detection
@@ -348,4 +348,4 @@ For issues or questions:
 
 ---
 
-**Built with ❤️ By Tushar using Next.js and modern web technologies**
+**Built with ❤️ By Tushar Using modern web technologies**
