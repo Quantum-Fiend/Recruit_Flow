@@ -339,13 +339,5 @@ Contributions are welcome! Please follow these guidelines:
 3. Make your changes with clear commit messages
 4. Submit a pull request
 
-## 📞 Support
-
-For issues or questions:
-- Open an issue on GitHub
-- Check existing documentation
-- Review the code comments
-
----
 
 **Built with ❤️ By Tushar Using modern web technologies**
