@@ -7,7 +7,7 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -51,7 +51,7 @@ model Job {
   type            JobType        @default(FULL_TIME)
   employmentType  EmploymentType @default(OFFICE)
   experienceLevel String         // e.g., "Entry Level", "Mid Level", "Senior"
-  skills          String         // Comma-separated list for SQLite compatibility
+  skills          String         // Comma-separated list of skills
   status          JobStatus      @default(OPEN)
   recruiterId     String
 

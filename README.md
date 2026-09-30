@@ -51,7 +51,7 @@ A modern, full-stack Applicant Tracking System (ATS) built with Next.js 14+, fea
 
 ## 🛠️ Tech Stack
 
-- **Framework**: Next.js 14+ (App Router, Server Actions, TypeScript)
+- **Framework**: Next.js 16 (App Router, Server Actions, TypeScript)
 - **Database**: PostgreSQL with Prisma ORM
 - **Authentication**: NextAuth.js v5
 - **UI Components**: Radix UI + Tailwind CSS
@@ -62,7 +62,7 @@ A modern, full-stack Applicant Tracking System (ATS) built with Next.js 14+, fea
 
 ## 📋 Prerequisites
 
-- Node.js 18+ and npm
+- Node.js 20.9+ and npm
 - PostgreSQL database
 - (Optional) Resend API key for email notifications
 - (Optional) UploadThing account for file uploads
@@ -78,6 +78,8 @@ npm install
 ```
 
 ### 2. Environment Setup
+
+For a local Docker setup, copy `.env.example` to `.env` (PowerShell: `Copy-Item .env.example .env`). These example values are for local development only; replace them with managed credentials and a strong, unique `NEXTAUTH_SECRET` before deploying. Compose applies committed database migrations before starting the web service and persists uploaded files in a named volume.
 
 Create a `.env` file in the root directory:
 
@@ -105,18 +107,26 @@ openssl rand -base64 32
 
 ### 3. Database Setup
 
+Start the app and PostgreSQL with Docker Compose:
+
+```bash
+docker compose up --build -d
+```
+
+For a local non-Docker setup, create the PostgreSQL database first, then run migrations:
+
 ```bash
 # Generate Prisma Client
 npx prisma generate
 
-# Push schema to database (development)
-npx prisma db push
+# Create/apply development migrations
+npm run db:migrate:dev
 
-# Or run migrations (production)
-npx prisma migrate deploy
+# Apply committed migrations in production before starting the app
+npm run db:migrate:deploy
 ```
 
-### 4. Run Development Server
+### 4. Run Development Server (without Docker)
 
 ```bash
 npm run dev
