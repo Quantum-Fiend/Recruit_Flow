@@ -1,8 +1,9 @@
 import { NextResponse } from "next/server";
+import { randomUUID } from "node:crypto";
 import { writeFile, mkdir } from "fs/promises";
 import { join } from "path";
-import { v4 as uuidv4 } from "uuid";
 import { getCurrentUser } from "@/lib/auth-utils";
+import { sanitizeFileName, validateFile } from "@/lib/file-security";
 
 export async function POST(req: Request) {
   try {
@@ -12,26 +13,15 @@ export async function POST(req: Request) {
     }
 
     const formData = await req.formData();
-    const file = formData.get("file") as File;
+    const file = formData.get("file");
 
-    if (!file) {
+    if (!(file instanceof File)) {
       return new NextResponse("No file uploaded", { status: 400 });
     }
 
-    // 10MB limit
-    if (file.size > 10 * 1024 * 1024) {
-      return new NextResponse("File too large (Max 10MB)", { status: 400 });
-    }
-
-    // Allowed types
-    const allowedTypes = [
-      "application/pdf",
-      "application/msword",
-      "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-    ];
-
-    if (!allowedTypes.includes(file.type)) {
-      return new NextResponse("Invalid file type (PDF/DOCX only)", { status: 400 });
+    const validation = validateFile(file);
+    if (!validation.valid) {
+      return new NextResponse(validation.error ?? "Invalid file", { status: 400 });
     }
 
     const bytes = await file.arrayBuffer();
@@ -39,13 +29,9 @@ export async function POST(req: Request) {
 
     // Create uploads directory in public
     const uploadDir = join(process.cwd(), "public", "uploads");
-    try {
-      await mkdir(uploadDir, { recursive: true });
-    } catch {
-      // Ignore if directory exists
-    }
+    await mkdir(uploadDir, { recursive: true });
 
-    const uniqueName = `${uuidv4()}-${file.name.replace(/\s+/g, "_")}`;
+    const uniqueName = `${randomUUID()}-${sanitizeFileName(file.name)}`;
     const path = join(uploadDir, uniqueName);
 
     await writeFile(path, buffer);

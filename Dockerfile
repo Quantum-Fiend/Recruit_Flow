@@ -25,6 +25,16 @@ ENV NEXT_TELEMETRY_DISABLED=1
 # Build the Next.js application
 RUN npm run build
 
+# Production migration job with the Prisma CLI and migration files.
+FROM base AS migrator
+WORKDIR /app
+RUN addgroup --system --gid 1001 nodejs && adduser --system --uid 1001 migrator
+COPY --from=deps --chown=migrator:nodejs /app/node_modules ./node_modules
+COPY --chown=migrator:nodejs package.json ./
+COPY --chown=migrator:nodejs prisma ./prisma
+USER migrator
+CMD ["./node_modules/.bin/prisma", "migrate", "deploy"]
+
 # Production image, copy all the files and run next
 FROM base AS runner
 WORKDIR /app
@@ -43,6 +53,7 @@ RUN chown nextjs:nodejs .next
 # Automatically leverage output traces to reduce image size
 # https://nextjs.org/docs/advanced-features/output-file-tracing
 COPY --from=builder /app/public ./public
+RUN mkdir -p public/uploads && chown nextjs:nodejs public/uploads
 
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static

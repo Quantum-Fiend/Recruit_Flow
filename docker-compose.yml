@@ -1,33 +1,59 @@
-version: '3.8'
-
 services:
   db:
     image: postgres:15-alpine
-    container_name: recruitflow-db
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: recruitflow
+      POSTGRES_USER: ${POSTGRES_USER:-recruitflow}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in your .env file}
+      POSTGRES_DB: ${POSTGRES_DB:-recruitflow}
     volumes:
       - recruitflow-db-data:/var/lib/postgresql/data
     ports:
-      - "5432:5432"
-    restart: always
+      - "127.0.0.1:${POSTGRES_PORT:-5432}:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U \"$${POSTGRES_USER}\" -d \"$${POSTGRES_DB}\""]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    restart: unless-stopped
+
+  migrate:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: migrator
+    environment:
+      DATABASE_URL: ${DATABASE_URL:?Set DATABASE_URL in your .env file}
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: "no"
 
   web:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: recruitflow-web
-    ports:
-      - "3000:3000"
     environment:
-      - DATABASE_URL=postgresql://postgres:password@db:5432/recruitflow?schema=public
-      - NEXTAUTH_URL=http://localhost:3000
-      - NEXTAUTH_SECRET=development_fallback_secret_replace_in_production
+      DATABASE_URL: ${DATABASE_URL:?Set DATABASE_URL in your .env file}
+      NEXTAUTH_URL: ${NEXTAUTH_URL:?Set NEXTAUTH_URL in your .env file}
+      NEXTAUTH_SECRET: ${NEXTAUTH_SECRET:?Set NEXTAUTH_SECRET in your .env file}
+    ports:
+      - "127.0.0.1:${APP_PORT:-3000}:3000"
+    volumes:
+      - recruitflow-uploads:/app/public/uploads
     depends_on:
-      - db
-    restart: always
+      db:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+    healthcheck:
+      test: ["CMD-SHELL", "wget --quiet --tries=1 --spider http://127.0.0.1:3000/api/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    restart: unless-stopped
 
 volumes:
   recruitflow-db-data:
+  recruitflow-uploads:
