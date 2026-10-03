@@ -95,13 +95,3 @@ export function validateFile(file: {
 
   return { valid: true };
 }
-
-// Generate safe file key for storage
-export function generateFileKey(userId: string, originalName: string): string {
-  const timestamp = Date.now();
-  const sanitized = sanitizeFileName(originalName);
-  const extension = sanitized.split(".").pop();
-  const randomString = Math.random().toString(36).substring(2, 10);
-
-  return `resumes/${userId}/${timestamp}-${randomString}.${extension}`;
-}

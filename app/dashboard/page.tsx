@@ -40,22 +40,38 @@ interface Application {
   }
 }
 
+interface ApplicationPagination {
+  page: number
+  limit: number
+  total: number
+  pages: number
+}
+
 export default function ApplicantDashboard() {
   const [applications, setApplications] = useState<Application[]>([]);
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState(false);
+  const [statusCounts, setStatusCounts] = useState<Record<string, number>>({});
+  const [pagination, setPagination] = useState<ApplicationPagination>({
+    page: 1,
+    limit: 25,
+    total: 0,
+    pages: 0,
+  });
 
-  const loadApplications = useCallback(async () => {
+  const loadApplications = useCallback(async (page = 1) => {
     setLoading(true);
     setLoadError(false);
     try {
-      const result = await getMyApplicationsAction();
+      const result = await getMyApplicationsAction(page);
       if (!result.success || !result.applications) {
         setLoadError(true);
         toast.error(result.error ?? "We couldn’t load your applications.");
         return;
       }
       setApplications(result.applications as Application[]);
+      setStatusCounts(result.statusCounts ?? {});
+      setPagination(result.pagination ?? { page, limit: 25, total: 0, pages: 0 });
     } catch {
       setLoadError(true);
       toast.error("We couldn’t load your applications. Please try again.");
@@ -65,7 +81,7 @@ export default function ApplicantDashboard() {
   }, []);
 
   useEffect(() => {
-    queueMicrotask(loadApplications);
+    queueMicrotask(() => loadApplications(1));
   }, [loadApplications]);
 
   return (
@@ -105,27 +121,24 @@ export default function ApplicantDashboard() {
           <>
             <StatBox
               label="In progress"
-              value={
-                applications.filter(
-                  (a) =>
-                    !["WITHDRAWN", "REJECTED", "OFFER_DECLINED"].includes(a.status),
-                ).length
-              }
+              value={Object.entries(statusCounts)
+                .filter(([status]) => !["WITHDRAWN", "REJECTED", "OFFER_DECLINED"].includes(status))
+                .reduce((total, [, count]) => total + count, 0)}
               icon={<Activity className="w-6 h-6" />}
             />
             <StatBox
               label="Interviews"
-              value={applications.filter((a) => a.status === "INTERVIEW").length}
+              value={statusCounts.INTERVIEW ?? 0}
               icon={<Target className="w-6 h-6" />}
             />
             <StatBox
               label="Offers"
-              value={applications.filter((a) => a.status === "OFFER").length}
+              value={statusCounts.OFFER ?? 0}
               icon={<Sparkles className="w-6 h-6" />}
             />
             <StatBox
               label="Applications"
-              value={applications.length}
+              value={pagination.total}
               icon={<Briefcase className="w-6 h-6" />}
             />
           </>
@@ -155,7 +168,7 @@ export default function ApplicantDashboard() {
               <h2>Applications unavailable</h2>
               <p>We couldn’t retrieve your applications. Please try again.</p>
             </div>
-            <Button variant="outline" onClick={() => void loadApplications()}>
+            <Button variant="outline" onClick={() => void loadApplications(pagination.page)}>
               Try again
             </Button>
           </div>
@@ -189,6 +202,27 @@ export default function ApplicantDashboard() {
                 />
               ))}
             </AnimatePresence>
+            {pagination.pages > 1 && (
+              <nav className="flex items-center justify-center gap-3 pt-4" aria-label="Application pages">
+                <Button
+                  variant="outline"
+                  disabled={loading || pagination.page <= 1}
+                  onClick={() => void loadApplications(pagination.page - 1)}
+                >
+                  Previous
+                </Button>
+                <span className="text-sm text-muted-foreground" aria-live="polite">
+                  Page {pagination.page} of {pagination.pages}
+                </span>
+                <Button
+                  variant="outline"
+                  disabled={loading || pagination.page >= pagination.pages}
+                  onClick={() => void loadApplications(pagination.page + 1)}
+                >
+                  Next
+                </Button>
+              </nav>
+            )}
           </div>
         )}
       </div>

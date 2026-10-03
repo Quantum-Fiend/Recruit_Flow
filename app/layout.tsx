@@ -25,9 +25,8 @@ export default function RootLayout({
         <SessionProvider>
           <ThemeProvider
             attribute="class"
-            defaultTheme="light"
-            enableSystem={false}
-            disableTransitionOnChange
+            defaultTheme="system"
+            enableSystem
           >
             <Navbar />
             <main className="app-main">{children}</main>

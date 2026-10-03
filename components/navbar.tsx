@@ -23,12 +23,14 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 export function Navbar() {
   const { data: session } = useSession();
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const isRecruiter = session?.user?.role === "RECRUITER";
+  const isRecruiter =
+    session?.user?.role === "RECRUITER" || session?.user?.role === "ADMIN";
   const dashboardHref = isRecruiter ? "/recruiter/dashboard" : "/dashboard";
   const navLinks = session
     ? [
@@ -77,6 +79,7 @@ export function Navbar() {
         </div>
 
         <div className="app-nav-actions">
+          <ThemeToggle className="desktop-theme-toggle" />
           {session ? (
             <>
               {isRecruiter && (
@@ -151,6 +154,7 @@ export function Navbar() {
 
       {mobileMenuOpen && (
         <div className="mobile-nav-panel" id="mobile-navigation">
+          <ThemeToggle className="mobile-nav-link" labeled />
           {navLinks.map(({ label, href, icon: Icon }) => (
             <Link
               key={href}

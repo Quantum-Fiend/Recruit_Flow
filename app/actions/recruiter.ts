@@ -6,11 +6,14 @@ import { auth } from "@/lib/auth"
 export async function getRecruiterDashboardAction() {
   const session = await auth()
 
-  if (!session || session.user.role !== "RECRUITER") {
+  if (!session || !["RECRUITER", "ADMIN"].includes(session.user.role)) {
     return { error: "Unauthorized" }
   }
 
   try {
+    const jobScope = session.user.role === "ADMIN"
+      ? {}
+      : { recruiterId: session.user.id }
     const [
       activeJobsCount,
       totalApplicationsCount,
@@ -20,24 +23,24 @@ export async function getRecruiterDashboardAction() {
       recentApplications,
     ] = await Promise.all([
       prisma.job.count({
-        where: { recruiterId: session.user.id, status: "OPEN" },
+        where: { ...jobScope, status: "OPEN" },
       }),
       prisma.application.count({
-        where: { job: { recruiterId: session.user.id } },
+        where: { job: jobScope },
       }),
       prisma.application.count({
         where: {
-          job: { recruiterId: session.user.id },
+          job: jobScope,
           status: "APPLIED",
         },
       }),
       prisma.application.groupBy({
         by: ["status"],
-        where: { job: { recruiterId: session.user.id } },
+        where: { job: jobScope },
         _count: { _all: true },
       }),
       prisma.job.findMany({
-        where: { recruiterId: session.user.id },
+        where: jobScope,
         orderBy: { createdAt: "desc" },
         take: 5,
         include: {
@@ -47,7 +50,7 @@ export async function getRecruiterDashboardAction() {
         },
       }),
       prisma.application.findMany({
-        where: { job: { recruiterId: session.user.id } },
+        where: { job: jobScope },
         orderBy: { appliedAt: "desc" },
         take: 5,
         include: {

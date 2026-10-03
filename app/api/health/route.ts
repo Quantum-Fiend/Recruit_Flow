@@ -1,4 +1,7 @@
 import { NextResponse } from 'next/server';
+import { constants } from 'node:fs';
+import { access, mkdir } from 'node:fs/promises';
+import { join } from 'node:path';
 import { prisma } from '@/lib/prisma';
 import { logger } from '@/lib/monitoring';
 
@@ -7,7 +10,7 @@ interface HealthStatus {
   timestamp: string
   services: {
     database: string
-    uploadthing: string
+    resumeStorage: string
   }
 }
 
@@ -17,7 +20,7 @@ export async function GET() {
     timestamp: new Date().toISOString(),
     services: {
       database: 'unknown',
-      uploadthing: 'ok', // Assumed since it's a SaaS
+      resumeStorage: 'unknown',
     },
   };
 
@@ -31,7 +34,19 @@ export async function GET() {
     logger.error('Health check database error', error as Error);
   }
 
+  try {
+    const uploadDirectory = join(process.cwd(), "data", "uploads");
+    await mkdir(uploadDirectory, { recursive: true });
+    await access(uploadDirectory, constants.R_OK | constants.W_OK);
+    status.services.resumeStorage = 'ok';
+  } catch (error) {
+    status.status = 'error';
+    status.services.resumeStorage = 'error';
+    logger.error('Health check resume storage error', error);
+  }
+
   return NextResponse.json(status, {
     status: status.status === 'ok' ? 200 : 500,
+    headers: { "Cache-Control": "no-store" },
   });
 }

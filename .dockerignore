@@ -5,6 +5,7 @@ README.md
 .next
 .git
 /public/uploads/
+/data/uploads/
 .env*
 !.env.example
 prisma/*.db

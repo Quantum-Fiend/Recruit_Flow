@@ -11,6 +11,7 @@ import {
 } from "@/lib/validations";
 import { revalidatePath } from "next/cache";
 import type { Prisma, JobStatus, JobType } from "@prisma/client";
+import { auth } from "@/lib/auth";
 
 export async function createJobAction(data: CreateJobInput) {
   const user = await requireRecruiter();
@@ -53,7 +54,7 @@ export async function updateJobAction(jobId: string, data: UpdateJobInput) {
       where: { id: jobId },
     });
 
-    if (!job || job.recruiterId !== user.id) {
+    if (!job || (user.role !== "ADMIN" && job.recruiterId !== user.id)) {
       return { error: "Unauthorized" };
     }
 
@@ -94,7 +95,7 @@ export async function closeJobAction(jobId: string) {
       where: { id: jobId },
     })
 
-    if (!job || job.recruiterId !== user.id) {
+    if (!job || (user.role !== "ADMIN" && job.recruiterId !== user.id)) {
       return { error: "Unauthorized" }
     }
 
@@ -121,16 +122,41 @@ export async function getJobsAction(filters?: {
   limit?: number
 }) {
   try {
-    const page = filters?.page || 1
-    const limit = filters?.limit || 10
+    const session = await auth();
+    if (filters?.status && !["OPEN", "CLOSED"].includes(filters.status)) {
+      return { error: "Invalid job status filter." };
+    }
+    if (filters?.type && !["FULL_TIME", "PART_TIME", "CONTRACT", "INTERNSHIP"].includes(filters.type)) {
+      return { error: "Invalid job type filter." };
+    }
+    if (filters?.page !== undefined && (!Number.isInteger(filters.page) || filters.page < 1 || filters.page > 1_000_000)) {
+      return { error: "Invalid page number." };
+    }
+    if (filters?.limit !== undefined && (!Number.isInteger(filters.limit) || filters.limit < 1)) {
+      return { error: "Invalid page size." };
+    }
+    const page = Number.isInteger(filters?.page) && (filters?.page ?? 0) > 0
+      ? filters!.page!
+      : 1;
+    const limit = Number.isInteger(filters?.limit) && (filters?.limit ?? 0) > 0
+      ? Math.min(filters!.limit!, 50)
+      : 10;
     const skip = (page - 1) * limit
 
     const where: Prisma.JobWhereInput = {
       deletedAt: null,
     }
 
+    if (session?.user?.role === "RECRUITER") {
+      where.recruiterId = session.user.id;
+    } else if (session?.user?.role !== "ADMIN") {
+      where.status = "OPEN";
+    }
+
     if (filters?.status) {
-      where.status = filters.status as JobStatus
+      if (session?.user?.role === "RECRUITER" || session?.user?.role === "ADMIN") {
+        where.status = filters.status as JobStatus;
+      }
     }
 
     if (filters?.type) {
@@ -155,7 +181,6 @@ export async function getJobsAction(filters?: {
           recruiter: {
             select: {
               name: true,
-              email: true,
             },
           },
           _count: {
@@ -195,13 +220,13 @@ export async function getJobsAction(filters?: {
 
 export async function getJobByIdAction(jobId: string) {
   try {
+    const session = await auth();
     const job = await prisma.job.findUnique({
       where: { id: jobId },
       include: {
         recruiter: {
           select: {
             name: true,
-            email: true,
           },
         },
         _count: {
@@ -213,6 +238,13 @@ export async function getJobByIdAction(jobId: string) {
     })
 
     if (!job) {
+      return { error: "Job not found" }
+    }
+    if (
+      job.status !== "OPEN" &&
+      session?.user?.role !== "ADMIN" &&
+      !(session?.user?.role === "RECRUITER" && job.recruiterId === session.user.id)
+    ) {
       return { error: "Job not found" }
     }
 
@@ -237,7 +269,7 @@ export async function deleteJobAction(jobId: string) {
       where: { id: jobId },
     })
 
-    if (!job || job.recruiterId !== user.id) {
+    if (!job || (user.role !== "ADMIN" && job.recruiterId !== user.id)) {
       return { error: "Unauthorized" }
     }
 
