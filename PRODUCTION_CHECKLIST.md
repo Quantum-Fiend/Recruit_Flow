@@ -14,7 +14,7 @@ Use this checklist to ensure a smooth and secure deployment of RecruitFlow to pr
 
 ## 2. Database Setup
 
-- [ ] **Migrations**: Ran `npx prisma migrate deploy` to sync production schema.
+- [ ] **Migrations**: Ran `corepack yarn prisma migrate deploy` to sync production schema.
 - [ ] **Seed Data**: (Optional) Ran seeding for initial roles/categories.
 - [ ] **Indexes**: Verified database indexes for performance on high-traffic tables.
 
@@ -28,7 +28,7 @@ Use this checklist to ensure a smooth and secure deployment of RecruitFlow to pr
 
 ## 4. Performance Optimization
 
-- [ ] **Build**: Successfull `npm run build`.
+- [ ] **Build**: Successful `corepack yarn build`.
 - [ ] **Images**: Configured allowed domains for `next/image`.
 - [ ] **Caching**: Implemented `revalidatePath` or `revalidateTag` where appropriate.
 - [ ] **Bundles**: Verified bundle sizes are optimized.
