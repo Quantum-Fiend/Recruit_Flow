@@ -1,353 +1,143 @@
-<p align="center">
-  <img src="public/assets/hero-banner.svg" alt="RecruitFlow Banner" width="100%">
-</p>
+# RecruitFlow
 
-# RecruitFlow - Production-Ready Applicant Tracking System
+RecruitFlow is a full-stack applicant tracking system for applicants and recruiting teams. It is built with Next.js, TypeScript, PostgreSQL, and Prisma. The project is actively evolving; this document describes the functionality that is implemented and calls out deployment checks that still need to be completed in the target environment.
 
-> [!IMPORTANT]
-> **Project Status**: 🚧 **In Progress** 🚧
-> This project is currently undergoing active development and production hardening. Core features are being refined for stability and security.
+## Implemented functionality
 
-A modern, full-stack Applicant Tracking System (ATS) built with Next.js 16, featuring role-based access control, workflow automation, and comprehensive audit trails.
+- Applicant and recruiter accounts with password-based authentication and role-specific views.
+- Job publishing and management, public open-job listings, applications, resume uploads, and applicant status tracking.
+- Recruiter review of applications, internal notes, guarded status transitions, and paginated candidate/application lists.
+- Status-change history, soft deletion for supported records, and database-backed dashboard summaries.
+- Recruiter-triggered AI resume analysis and job-scoped recruiter copilot when an OpenAI API key is configured.
+- Candidate comparison and CSV export for the current application list.
+- Persistent light/dark theme preference and responsive layouts.
+- PostgreSQL schema and versioned Prisma migrations.
 
----
+This is not yet a multi-tenant enterprise ATS. It does not currently implement custom workspaces, configurable roles/permissions, a general audit log, interview/calendar management, offers/onboarding, workflow automation, real-time notifications, scheduled reports, or billing. Application history currently records status changes only. Email delivery is optional and is not an outbox-backed workflow.
 
-## ✨ Features
+## Technology
 
-<table border="0">
-  <tr>
-    <td width="50%" valign="top">
-      <img src="public/assets/feature-applicant.svg" align="left" width="60" style="margin-right: 15px;">
-      <h3>For Applicants</h3>
-      <ul>
-        <li>🔍 <b>Job Discovery</b> - Browse and search positions with advanced filtering</li>
-        <li>📄 <b>Resume Upload</b> - Secure file upload with validation</li>
-        <li>📊 <b>Application Tracking</b> - Real-time status updates</li>
-        <li>🔔 <b>Email Notifications</b> - Automated status change updates</li>
-      </ul>
-    </td>
-    <td width="50%" valign="top">
-      <img src="public/assets/feature-recruiter.svg" align="left" width="60" style="margin-right: 15px;">
-      <h3>For Recruiters</h3>
-      <ul>
-        <li>📝 <b>Job Posting</b> - Manage listings with rich details</li>
-        <li>👥 <b>Candidate Review</b> - Comprehensive profiles and history</li>
-        <li>🔄 <b>Workflow Engine</b> - Enforced status transition rules</li>
-        <li>📋 <b>Internal Notes</b> - Private recruiter-only feedback</li>
-        <li>📈 <b>Audit Trail</b> - Compliance-ready change logging</li>
-      </ul>
-    </td>
-  </tr>
-</table>
+- Next.js App Router, React, and TypeScript
+- PostgreSQL and Prisma
+- Auth.js credentials authentication with bcrypt password hashing
+- Tailwind CSS, Radix UI, and reusable React components
+- Optional OpenAI resume analysis/copilot and Resend transactional email
+- Private local filesystem storage for uploaded resumes
+- Yarn Classic managed through Corepack
 
-### 🛡️ Production Hardening
-- 🔐 **Secure Authentication** - NextAuth.js with bcrypt password hashing
-- 🛡️ **Role-Based Access Control** - Separate dashboards for applicants and recruiters
-- 🗑️ **Soft Deletes** - Data integrity with recoverable deletions
-- 📧 **Email Integration** - Resend API for transactional emails
-- 📁 **File Upload** - UploadThing integration with security validation
-- 📊 **Monitoring & Logging** - Centralized logging and analytics
-- ⚡ **Performance Monitoring** - Track slow operations and optimize
+## Requirements
 
-## 🛠️ Tech Stack
+- Node.js 20.9 or later
+- Corepack and Yarn 1.22.22
+- PostgreSQL 14 or later for a non-Docker development environment
+- Docker Engine with Compose v2 to use the containerized setup
 
-- **Framework**: Next.js 16 (App Router, Server Actions, TypeScript)
-- **Database**: PostgreSQL with Prisma ORM
-- **Authentication**: NextAuth.js v5
-- **UI Components**: Radix UI + Tailwind CSS
-- **File Upload**: UploadThing
-- **Email**: Resend
-- **Validation**: Zod
-- **Styling**: Tailwind CSS with custom design system
+Use Yarn for dependency management and project commands. Do not use npm.
 
-## 📋 Prerequisites
+## Local development
 
-- Node.js 20.9+ with Corepack (Yarn 1.22.22)
-- PostgreSQL database
-- (Optional) Resend API key for email notifications
-- (Optional) UploadThing account for file uploads
+1. Install dependencies:
 
-## 🚀 Getting Started
+   ```powershell
+   corepack yarn install --frozen-lockfile
+   ```
 
-### 1. Clone and Install
+2. Create a `.env` file using `.env.example` as a starting point. For a local PostgreSQL instance, set `DATABASE_URL` to a PostgreSQL connection string pointing to that database, and set `NEXTAUTH_URL` to `http://localhost:3000`. Generate a development-only secret with `openssl rand -base64 32` (or another secure random generator) for `NEXTAUTH_SECRET`. Never use the example secret or credentials in production.
 
-```bash
-git clone <your-repo-url>
-cd recruitflow
-corepack yarn install --frozen-lockfile
-```
+3. Generate the Prisma client and apply migrations:
 
-### 2. Environment Setup
+   ```powershell
+   corepack yarn prisma generate
+   corepack yarn db:migrate:dev
+   ```
 
-For a local Docker setup, copy `.env.example` to `.env` (PowerShell: `Copy-Item .env.example .env`). These example values are for local development only; replace them with managed credentials and a strong, unique `NEXTAUTH_SECRET` before deploying. Compose applies committed database migrations before starting the web service and persists uploaded files in a named volume.
+4. Start the development server:
 
-Create a `.env` file in the root directory:
+   ```powershell
+   corepack yarn dev
+   ```
 
-```bash
-# Database
-DATABASE_URL="postgresql://user:password@localhost:5432/recruitflow"
+   Open [http://localhost:3000](http://localhost:3000).
 
-# NextAuth
-NEXTAUTH_URL="http://localhost:3000"
-NEXTAUTH_SECRET="your-secret-key-here-generate-with-openssl-rand-base64-32"
+Optional demo seed data can be loaded into a non-production database with `corepack yarn prisma db seed`. The seed script refuses to run when `NODE_ENV=production`; seeded accounts use the development-only password `password123` and must never be used in a deployed environment.
 
-# Uploadthing (Resume uploads)
-UPLOADTHING_SECRET="your-uploadthing-secret"
-UPLOADTHING_APP_ID="your-uploadthing-app-id"
+## Docker Compose
 
-# Resend (Email notifications)
-RESEND_API_KEY="your-resend-api-key"
-EMAIL_FROM="noreply@yourdomain.com"
-```
+Copy `.env.example` to `.env` (PowerShell: `Copy-Item .env.example .env`) and replace the local-only secrets before exposing the service. Compose starts PostgreSQL, applies committed migrations, migrates legacy resume files when present, and then starts the standalone Next.js server:
 
-**Generate NEXTAUTH_SECRET:**
-```bash
-openssl rand -base64 32
-```
-
-### 3. Database Setup
-
-Start the app and PostgreSQL with Docker Compose:
-
-```bash
+```powershell
 docker compose up --build -d
+docker compose ps
+docker compose logs -f web
 ```
 
-For a local non-Docker setup, create the PostgreSQL database first, then run migrations:
+Open [http://localhost:3000](http://localhost:3000). `docker compose down` preserves the named database and private-upload volumes. Do not use `docker compose down -v` unless intentionally discarding all persistent data.
 
-```bash
-# Generate Prisma Client
-corepack yarn prisma generate
+Compose uses a local PostgreSQL URL from `.env`. For hosted PostgreSQL, configure `DATABASE_URL` with the provider's required SSL and connection-pooling options; verify the provider-specific Prisma connection string and migration strategy before deployment. Production secrets must be unique and managed outside source control.
 
-# Create/apply development migrations
+## Configuration
+
+| Variable | Required | Purpose |
+| --- | --- | --- |
+| `DATABASE_URL` | Yes | PostgreSQL connection used by Prisma. Use SSL and a provider-appropriate pooler in production. |
+| `NEXTAUTH_URL` | Yes for deployment | Canonical application URL. |
+| `NEXTAUTH_SECRET` | Yes | Secret used to sign authentication tokens; generate a unique high-entropy value. |
+| `AUTH_TRUST_HOST` | Deployment-dependent | Set to `true` only when the application is behind a trusted proxy or in the provided local Compose setup. |
+| `OPENAI_API_KEY` | No | Enables recruiter-triggered resume analysis and copilot. Requests send resume/job context to OpenAI; configure according to your privacy and retention obligations. |
+| `OPENAI_RESUME_MODEL` | No | Optional model override for resume analysis. |
+| `RESEND_API_KEY` | No | Enables transactional email. |
+| `EMAIL_FROM` | No | Verified sender address; email is skipped when this or the API key is absent. |
+| `APP_PORT` | No | Host port exposed by Compose (defaults to `3000`). |
+| `POSTGRES_USER`, `POSTGRES_PASSWORD`, `POSTGRES_DB`, `POSTGRES_PORT` | Compose only | Local PostgreSQL container configuration. |
+
+The former UploadThing integration has been removed: resumes are uploaded to private local storage instead. The application requires persistent writable storage at `data/uploads` (provided by a named volume in Compose). Do not deploy multiple app replicas with node-local disks unless you provide shared durable storage and verify its access controls and lifecycle.
+
+## Resume storage and migration
+
+Resume uploads are limited to 5 MB and validated for supported extension, MIME type, and file signature. Files are stored outside `public/`. The authenticated `/api/resumes/[filename]` route only serves files referenced by an application to its applicant, the recruiter who owns the associated job, or an admin. Upload delivery is private and non-cacheable.
+
+The Compose migration service safely copies files from the existing `recruitflow-uploads` volume to the private volume, updates matching database URLs, verifies that references resolve, then removes legacy public files. Back up both the database and upload volume before upgrading. For non-Compose deployments, preserve the old `public/uploads` files and run `corepack yarn db:secure-uploads` with the production database and old/new storage mounted at the expected paths before routing traffic to the updated application. Test this process against a production-like copy first; it has not been verified against a live deployment in this repository.
+
+Uploads that are not attached to an application can remain as orphaned files; there is not yet a scheduled orphan cleanup or resume-retention policy.
+
+## Database changes and migrations
+
+The supported database is PostgreSQL. `prisma/schema.prisma` is the data model and `prisma/migrations` contains the migration history. For development, create and apply migrations with:
+
+```powershell
 corepack yarn db:migrate:dev
+```
 
-# Apply committed migrations in production before starting the app
+For a deployment, apply reviewed, committed migrations before serving traffic:
+
+```powershell
 corepack yarn db:migrate:deploy
 ```
 
-### 4. Run Development Server (without Docker)
+Never use `prisma db push` as a substitute for production migrations. Back up production data, review generated SQL, and test upgrades and rollback/recovery procedures against a database copy. Migrations and CRUD operations have not been exercised against a live PostgreSQL instance as part of the current repository audit.
 
-```bash
-corepack yarn dev
-```
+## Checks
 
-Open [http://localhost:3000](http://localhost:3000) in your browser.
-
-## 📁 Project Structure
-
-```
-recruitflow/
-├── app/
-│   ├── (auth)/              # Authentication pages (login, signup)
-│   ├── actions/             # Server Actions
-│   │   ├── applications.ts  # Application management
-│   │   ├── auth.ts          # Authentication actions
-│   │   └── jobs.ts          # Job management
-│   ├── api/                 # API routes
-│   │   ├── applications/    # Application endpoints
-│   │   ├── auth/            # NextAuth configuration
-│   │   ├── health/          # Health check endpoint
-│   │   ├── jobs/            # Job endpoints
-│   │   └── uploadthing/     # File upload handlers
-│   ├── dashboard/           # Applicant dashboard
-│   ├── jobs/                # Job listing and details
-│   ├── recruiter/           # Recruiter dashboard
-│   ├── globals.css          # Global styles and design system
-│   ├── layout.tsx           # Root layout
-│   └── page.tsx             # Landing page
-├── components/
-│   └── ui/                  # Reusable UI components
-├── lib/
-│   ├── auth.ts              # NextAuth configuration
-│   ├── auth-utils.ts        # Authentication utilities
-│   ├── email.ts             # Email service
-│   ├── file-security.ts     # File upload security
-│   ├── monitoring.ts        # Logging and analytics
-│   ├── prisma.ts            # Prisma client with soft delete extension
-│   ├── rate-limit.ts        # Rate limiting
-│   ├── utils.ts             # Utility functions
-│   ├── validations.ts       # Zod schemas
-│   └── workflow.ts          # Status transition rules
-├── prisma/
-│   └── schema.prisma        # Database schema
-└── proxy.ts                 # Route protection and API rate limiting
-```
-
-## 🔄 Application Workflow
-
-The system enforces a strict workflow for application status transitions:
-
-```
-APPLIED
-  ├─→ SHORTLISTED
-  ├─→ REJECTED
-  └─→ WITHDRAWN
-
-SHORTLISTED
-  ├─→ INTERVIEW
-  ├─→ REJECTED
-  └─→ WITHDRAWN
-
-INTERVIEW
-  ├─→ OFFER
-  ├─→ REJECTED
-  ├─→ SHORTLISTED (back)
-  └─→ WITHDRAWN
-
-OFFER
-  ├─→ HIRED
-  ├─→ OFFER_DECLINED
-  ├─→ REJECTED
-  └─→ WITHDRAWN
-
-HIRED (terminal state)
-OFFER_DECLINED (terminal state)
-WITHDRAWN (can be reopened to APPLIED)
-
-REJECTED
-  └─→ SHORTLISTED (reconsider)
-```
-
-All status changes are:
-- ✅ Validated against allowed transitions
-- 📝 Logged in audit trail with timestamp and user
-- 📧 Trigger email notifications to applicants
-- 🔒 Restricted to job owner (recruiter)
-
-## 🔐 Security Features
-
-- **Password Security**: bcrypt hashing with salt rounds
-- **CSRF Protection**: Built-in with Next.js Server Actions
-- **Rate Limiting**: Prevent abuse of API endpoints
-- **File Upload Security**:
-  - File type validation
-  - Size limits (5MB for resumes)
-  - Malicious filename detection
-  - Virus scanning ready
-- **SQL Injection Prevention**: Prisma ORM with parameterized queries
-- **XSS Protection**: React's built-in escaping
-- **Role-Based Access**: Middleware-enforced route protection
-
-## 📧 Email Notifications
-
-The system sends automated emails for:
-
-1. **Application Received** - Sent to applicant after submission
-2. **Status Updates** - Sent when recruiter changes application status
-
-Emails gracefully degrade if `RESEND_API_KEY` is not configured (logs warning instead of failing).
-
-## 🧪 Testing
-
-### Running Tests
-```bash
-# Run all unit tests
-corepack yarn test
-
-# Run full validation suite (lint + type-check + tests)
+```powershell
 corepack yarn validate
-
-# Run tests in watch mode
-corepack yarn test:watch
-```
-
-### Manual Testing Checklist
-
-1. **Authentication**
-   - [ ] Sign up as applicant
-   - [ ] Sign up as recruiter
-   - [ ] Login with valid credentials
-   - [ ] Login fails with invalid credentials
-   - [ ] Logout works correctly
-
-2. **Applicant Flow**
-   - [ ] Browse jobs
-   - [ ] Apply to job with resume upload
-   - [ ] View application status in dashboard
-   - [ ] Cannot apply to same job twice
-   - [ ] Cannot apply to closed job
-
-3. **Recruiter Flow**
-   - [ ] Create new job posting
-   - [ ] View applicants for job
-   - [ ] Update application status
-   - [ ] Invalid status transitions are rejected
-   - [ ] Add notes to application
-   - [ ] Close job posting
-
-4. **Security**
-   - [ ] Applicants cannot access recruiter routes
-   - [ ] Recruiters cannot modify other recruiters' jobs
-   - [ ] Soft-deleted records don't appear in queries
-
-## 🚀 Production Deployment
-
-Check the [Production Checklist](./PRODUCTION_CHECKLIST.md) for detailed deployment steps.
-
-### Build for Production
-
-```bash
 corepack yarn build
-corepack yarn start
+corepack yarn prisma validate
 ```
 
-### Environment Variables (Production)
+`validate` runs type-checking, ESLint, and unit tests. These checks do not replace integration testing with PostgreSQL, authenticated end-to-end workflow tests, migration testing, load testing, or deployment validation. Docker Compose configuration can be checked with `docker compose --env-file .env.example config --quiet`; starting containers requires a working Docker Engine.
 
-Ensure all environment variables are set in your production environment:
-- Use a production PostgreSQL database
-- Generate a new `NEXTAUTH_SECRET`
-- Configure `NEXTAUTH_URL` to your production domain
-- Set up Resend for email delivery
-- Configure UploadThing for file storage
+## Security and production operations
 
-### Database Migrations
+- Recruiter job/application actions check the authenticated role and ownership; applicant resume access is scoped to the signed-in user.
+- Application status changes validate the expected prior status and persist the transition history together in a database transaction.
+- Passwords are bcrypt-hashed; authentication uses generic credential failures and rate limiting.
+- API resume delivery is authenticated and private. Keep the storage volume private, encrypted where required, access-controlled, and included in backups.
+- `ADMIN`, `RECRUITER`, and `APPLICANT` are the implemented roles. There is no configurable permission matrix or tenant/workspace isolation.
+- Sessions use signed JWTs; account deletion or role changes are not rechecked against the database on every request, so already-issued sessions are not immediately revoked.
+- Rate limits currently use process-local memory. They do not coordinate across multiple application instances and reset on restart; use a shared store before horizontally scaling or relying on them as a production abuse-control boundary.
+- Configure external error monitoring, structured log retention, database backups/PITR, restore drills, TLS, secret rotation, retention/deletion policies, and incident response in the hosting environment. This repository does not provide those managed operational services.
+- AI screening is decision support only. Recruiters must review source material and make hiring decisions; do not use generated scores or summaries as the sole basis for employment decisions.
 
-```bash
-# Run migrations in production
-corepack yarn prisma migrate deploy
-```
+## Known verification limits
 
-### Recommended Hosting
-
-- **Application**: Vercel, Railway, or any Node.js hosting
-- **Database**: Neon, Supabase, or managed PostgreSQL
-- **File Storage**: UploadThing (built-in CDN)
-- **Email**: Resend (transactional email service)
-
-## 📊 Monitoring
-
-The application includes built-in monitoring:
-
-- **Logging**: Centralized logger with different levels (info, warn, error, debug)
-- **Performance Monitoring**: Track slow operations (>1s)
-- **Analytics**: Track key events (applications, status updates, job postings)
-- **Security Events**: Log unauthorized access attempts
-
-In production, integrate with services like:
-- Sentry (error tracking)
-- LogRocket (session replay)
-- PostHog/Mixpanel (analytics)
-
-## 🎨 Design System
-
-The application features a modern dark theme with:
-- **Colors**: Purple primary (#8b5cf6) with dark backgrounds
-- **Typography**: Inter font family with variable font features
-- **Components**: Glassmorphism effects, smooth animations, hover states
-- **Accessibility**: Focus-visible outlines, semantic HTML, ARIA labels
-
-## 📝 License
-
-MIT License - feel free to use this project for your own purposes.
-
-## 🤝 Contributing
-
-Contributions are welcome! Please follow these guidelines:
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes with clear commit messages
-4. Submit a pull request
-
-
-**Built with ❤️ By Tushar Using modern web technologies**
+The repository audit could run static checks and application builds, but the environment did not provide a working Docker Engine or configured production PostgreSQL credentials. Consequently, live migrations, database CRUD and concurrency, multi-user tenant isolation, realistic-volume performance, persisted authenticated end-to-end workflows, and backup/restore behavior remain unverified. Do not treat a passing build as proof of production readiness.

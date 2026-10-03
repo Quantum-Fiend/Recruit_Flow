@@ -34,11 +34,11 @@ export default function Error({
           </div>
 
           <h1 className="text-4xl font-black tracking-tighter mb-4">
-            Sequence Interrupted.
+            Something went wrong
           </h1>
           <p className="text-lg text-muted-foreground font-medium mb-10 max-w-md mx-auto text-balance">
-            The system encountered an unexpected exception in the telemetry
-            pipeline. Our core protocols have been notified.
+            We couldn’t load this page. You can try again or return to the home
+            page.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -47,7 +47,7 @@ export default function Error({
               className="h-14 px-8 rounded-xl font-black text-xs uppercase tracking-widest sapphire-gradient text-white shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all gap-2"
             >
               <RotateCcw className="w-4 h-4" />
-              Re-initialize Session
+              Try again
             </Button>
             <Link href="/">
               <Button
@@ -55,7 +55,7 @@ export default function Error({
                 className="h-14 px-8 rounded-xl font-black text-xs uppercase tracking-widest border-border hover:bg-secondary transition-all gap-2"
               >
                 <Home className="w-4 h-4" />
-                Return to Base
+                Go home
               </Button>
             </Link>
           </div>

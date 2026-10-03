@@ -5,10 +5,11 @@
   "packageManager": "yarn@1.22.22",
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
+    "build": "next build && node scripts/prepare-standalone.mjs",
+    "start": "node .next/standalone/server.js",
     "db:migrate:dev": "prisma migrate dev",
     "db:migrate:deploy": "prisma migrate deploy",
+    "db:secure-uploads": "tsx scripts/migrate-resumes-to-private.ts",
     "lint": "eslint",
     "test": "vitest run",
     "test:watch": "vitest",
@@ -36,7 +37,6 @@
     "resend": "^6.8.0",
     "sonner": "^2.0.7",
     "tailwind-merge": "^3.4.0",
-    "uploadthing": "^7.7.4",
     "zod": "^4.3.6"
   },
   "devDependencies": {

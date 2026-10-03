@@ -1,29 +1,30 @@
-'use client'
+"use client";
 
-import { useEffect, useState, useCallback } from "react"
+import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { getRecruiterDashboardAction } from "@/app/actions/recruiter";
+import { useSession } from "next-auth/react";
 import {
-  Briefcase,
-  Users,
+  ArrowRight,
+  ArrowUpRight,
+  BriefcaseBusiness,
+  Check,
+  CircleUserRound,
+  Clock3,
   Plus,
-  ChevronRight,
-  TrendingUp,
-  UserPlus,
-  Zap,
-  Sparkles,
-  Globe,
-  MapPin,
+  RefreshCw,
+  UsersRound,
 } from "lucide-react";
+import { toast } from "sonner";
+import { getRecruiterDashboardAction } from "@/app/actions/recruiter";
+import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { formatDate } from "@/lib/utils";
-import { motion } from "framer-motion";
 
-interface RecruiterDashboardStats {
+type DashboardStats = {
   activeJobsCount: number;
   totalApplicationsCount: number;
   pendingApplicationsCount: number;
+  applicationsByStatus: Record<string, number>;
   recentJobs: Array<{
     id: string;
     title: string;
@@ -38,294 +39,326 @@ interface RecruiterDashboardStats {
     applicant: { name: string };
     job: { title: string };
   }>;
-}
+};
+
+const pipelineStages = [
+  { status: "APPLIED", label: "Applied", color: "bg-sky-500" },
+  { status: "SHORTLISTED", label: "Shortlisted", color: "bg-violet-500" },
+  { status: "INTERVIEW", label: "Interview", color: "bg-amber-500" },
+  { status: "OFFER", label: "Offer", color: "bg-emerald-500" },
+  { status: "HIRED", label: "Hired", color: "bg-teal-600" },
+] as const;
 
 export default function RecruiterDashboard() {
-  const [stats, setStats] = useState<RecruiterDashboardStats | null>(null);
+  const { data: session } = useSession();
+  const [stats, setStats] = useState<DashboardStats | null>(null);
   const [loading, setLoading] = useState(true);
-
-  const isDashboardReady = !loading && stats !== null;
+  const [error, setError] = useState(false);
 
   const loadDashboard = useCallback(async () => {
-    const result = await getRecruiterDashboardAction();
-    if (result.success && result.data) {
+    setLoading(true);
+    setError(false);
+    try {
+      const result = await getRecruiterDashboardAction();
+      if (!result.success || !result.data) {
+        setError(true);
+        toast.error(result.error ?? "We couldn’t load your hiring overview.");
+        return;
+      }
       setStats(result.data);
+    } catch {
+      setError(true);
+      toast.error("We couldn’t load your hiring overview. Please try again.");
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   }, []);
 
   useEffect(() => {
-    queueMicrotask(loadDashboard);
+    void loadDashboard();
   }, [loadDashboard]);
 
+  const firstName = session?.user?.name?.trim().split(/\s+/)[0] ?? "there";
+  const interviewCount = stats?.applicationsByStatus.INTERVIEW ?? 0;
+
   return (
-    <div className="page-wrapper animate-reveal px-6">
-      {/* Dashboard Header */}
-      <header className="w-full mb-24 flex flex-col md:flex-row md:items-end justify-between gap-12">
-        <div className="max-w-3xl space-y-8">
-          <div className="inline-flex items-center gap-3 px-4 py-1.5 rounded-full glass-panel text-[10px] font-black uppercase tracking-[0.3em] text-primary">
-            <Zap className="w-3.5 h-3.5" />
-            <span>Enterprise Talent Console</span>
-          </div>
-          <h1 className="h-lg text-gradient leading-tight">
-            Command <br />
-            Center.
-          </h1>
-          <p className="text-xl text-muted-foreground font-medium opacity-60 leading-relaxed max-w-xl">
-            Strategic oversight and pipeline orchestration for the world&apos;s
-            most ambitious engineering organizations.
+    <div className="page-wrapper recruiter-dashboard">
+      <header className="dashboard-header">
+        <div>
+          <p className="dashboard-eyebrow">Recruiter workspace</p>
+          <h1 className="dashboard-title">Welcome back, {firstName}</h1>
+          <p className="dashboard-subtitle">
+            Here’s what’s happening across your hiring pipeline today.
           </p>
         </div>
-
-        <div className="flex items-center gap-6">
+        <div className="dashboard-actions">
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={() => void loadDashboard()}
+            disabled={loading}
+            aria-label="Refresh dashboard"
+            title="Refresh dashboard"
+          >
+            <RefreshCw className={loading ? "animate-spin" : ""} />
+          </Button>
           <Link href="/recruiter/jobs/new">
-            <Button className="btn-quantum h-16 px-10 rounded-2xl shadow-2xl flex items-center gap-3">
-              <Plus className="w-6 h-6" />
-              <span className="font-black text-xs uppercase tracking-widest">
-                Deploy Position
-              </span>
+            <Button className="dashboard-primary-action">
+              <Plus aria-hidden="true" />
+              Create a job
             </Button>
           </Link>
         </div>
       </header>
 
-      {/* Intelligence Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-24">
-        {loading ? (
-          Array(4)
-            .fill(0)
-            .map((_, i) => (
-              <Skeleton
-                key={i}
-                className="h-48 rounded-[2.5rem] glass-panel opacity-40"
-              />
-            ))
-        ) : (
-          <>
-            <StatBox
-              label="Active Missions"
-              value={stats?.activeJobsCount ?? 0}
-              icon={<Briefcase className="w-6 h-6" />}
-            />
-            <StatBox
-              label="Total Profiles"
-              value={stats?.totalApplicationsCount ?? 0}
-              icon={<TrendingUp className="w-6 h-6" />}
-            />
-            <StatBox
-              label="Screening Required"
-              value={stats?.pendingApplicationsCount ?? 0}
-              icon={<UserPlus className="w-6 h-6" />}
-            />
-            <StatBox
-              label="Hiring Velocity"
-              value="92%"
-              icon={<Zap className="w-6 h-6" />}
-            />
-          </>
-        )}
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 w-full mb-40">
-        {/* Active Openings Feed */}
-        <div className="lg:col-span-2 space-y-12">
-          <div className="flex items-center justify-between px-4 mb-4">
-            <h2 className="text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground/40">
-              Deployment Pipeline
-            </h2>
-            <Link
-              href="/recruiter/jobs"
-              className="text-[10px] font-black uppercase tracking-widest text-primary hover:underline underline-offset-8 transition-all"
-            >
-              Access Archives
-            </Link>
+      {error ? (
+        <section className="dashboard-error" role="alert">
+          <div>
+            <h2>Dashboard unavailable</h2>
+            <p>Your hiring data couldn’t be loaded. Check your connection and try again.</p>
           </div>
+          <Button variant="outline" onClick={() => void loadDashboard()}>
+            <RefreshCw aria-hidden="true" />
+            Try again
+          </Button>
+        </section>
+      ) : (
+        <>
+          <section className="dashboard-metrics" aria-label="Hiring overview">
+            <MetricCard
+              label="Open positions"
+              value={stats?.activeJobsCount}
+              detail="Currently accepting applications"
+              icon={<BriefcaseBusiness aria-hidden="true" />}
+              loading={loading}
+            />
+            <MetricCard
+              label="Applications"
+              value={stats?.totalApplicationsCount}
+              detail="Across all your positions"
+              icon={<UsersRound aria-hidden="true" />}
+              loading={loading}
+            />
+            <MetricCard
+              label="Needs review"
+              value={stats?.pendingApplicationsCount}
+              detail="New applications to screen"
+              icon={<Clock3 aria-hidden="true" />}
+              loading={loading}
+              accent="amber"
+            />
+            <MetricCard
+              label="In interviews"
+              value={interviewCount}
+              detail="Candidates in interview stage"
+              icon={<CircleUserRound aria-hidden="true" />}
+              loading={loading}
+              accent="violet"
+            />
+          </section>
 
-          {loading ? (
-            <div className="space-y-8">
-              {[1, 2, 3].map((i) => (
-                <Skeleton
-                  key={i}
-                  className="h-48 rounded-[2.5rem] glass-panel opacity-40"
-                />
-              ))}
-            </div>
-          ) : isDashboardReady && stats.recentJobs.length === 0 ? (
-            <div className="text-center py-48 glass-panel border-dashed rounded-[4rem] flex flex-col items-center">
-              <Briefcase className="w-20 h-20 mb-8 text-muted-foreground/10" />
-              <h3 className="text-4xl font-black mb-4 tracking-tighter">
-                No active deployments.
-              </h3>
-              <Link href="/recruiter/jobs/new">
-                <Button
-                  variant="outline"
-                  className="mt-8 rounded-2xl font-black px-12 h-16 border-border/50 hover:bg-secondary transition-all"
-                >
-                  Initialize Mission
-                </Button>
+          <section className="pipeline-panel" aria-labelledby="pipeline-title">
+            <div className="section-heading">
+              <div>
+                <h2 id="pipeline-title">Hiring pipeline</h2>
+                <p>Candidate progress across every stage</p>
+              </div>
+              <Link href="/recruiter/jobs" className="dashboard-text-link">
+                View positions <ArrowRight aria-hidden="true" />
               </Link>
             </div>
-          ) : (
-            <div className="space-y-8">
-              {isDashboardReady &&
-                stats.recentJobs.map((job, index) => (
-                  <JobConsoleCard key={job.id} job={job} index={index} />
-                ))}
+            <div className="pipeline-stages">
+              {pipelineStages.map((stage, index) => (
+                <div className="pipeline-stage" key={stage.status}>
+                  <div className="pipeline-stage-top">
+                    <span className={`pipeline-stage-dot ${stage.color}`} />
+                    <span className="pipeline-stage-label">{stage.label}</span>
+                    <span className="pipeline-stage-count">
+                      {loading ? (
+                        <Skeleton className="h-6 w-8" />
+                      ) : (
+                        stats?.applicationsByStatus[stage.status] ?? 0
+                      )}
+                    </span>
+                  </div>
+                  <div
+                    className="pipeline-stage-track"
+                    role="progressbar"
+                    aria-label={`${stage.label} applications`}
+                    aria-valuemin={0}
+                    aria-valuemax={stats?.totalApplicationsCount ?? 0}
+                    aria-valuenow={stats?.applicationsByStatus[stage.status] ?? 0}
+                  >
+                    <span
+                      className={`pipeline-stage-fill ${stage.color}`}
+                      style={{
+                        width: `${Math.min(
+                          100,
+                          stats?.totalApplicationsCount
+                            ? ((stats.applicationsByStatus[stage.status] ?? 0) /
+                                stats.totalApplicationsCount) *
+                                100
+                            : 0,
+                        )}%`,
+                      }}
+                    />
+                  </div>
+                  {index < pipelineStages.length - 1 && (
+                    <ArrowRight className="pipeline-stage-arrow" aria-hidden="true" />
+                  )}
+                </div>
+              ))}
             </div>
-          )}
-        </div>
+          </section>
 
-        {/* Real-time Activity Feed */}
-        <div className="space-y-12">
-          <div className="flex items-center justify-between px-4 mb-4">
-            <h2 className="text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground/40">
-              Global Telemetry
-            </h2>
-          </div>
-
-          <div className="premium-card p-10 glass-panel border-border/40 space-y-12 group/telemetry">
-            <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full blur-3xl -z-10 group-hover/telemetry:bg-primary/10 transition-all duration-1000" />
-            {loading ? (
-              Array(4)
-                .fill(0)
-                .map((_, i) => (
-                  <Skeleton
-                    key={i}
-                    className="h-16 w-full rounded-xl opacity-40"
-                  />
-                ))
-            ) : isDashboardReady && stats.recentApplications.length === 0 ? (
-              <div className="text-center py-16 space-y-6">
-                <Globe className="w-16 h-16 text-muted-foreground/10 mx-auto" />
-                <p className="text-sm font-bold text-muted-foreground/40 uppercase tracking-widest">
-                  Awaiting Transmission...
-                </p>
+          <div className="dashboard-content-grid">
+            <section className="dashboard-panel" aria-labelledby="positions-title">
+              <div className="section-heading">
+                <div>
+                  <h2 id="positions-title">Your positions</h2>
+                  <p>Application activity by open role</p>
+                </div>
+                <Link href="/recruiter/jobs" className="dashboard-text-link">
+                  All positions <ArrowRight aria-hidden="true" />
+                </Link>
               </div>
-            ) : (
-              <div className="space-y-12 relative">
-                <div className="absolute left-[11px] top-4 bottom-4 w-0.5 bg-border/40" />
-                {isDashboardReady &&
-                  stats.recentApplications.map((app) => (
-                    <div
-                      key={app.id}
-                      className="flex gap-8 relative group/item"
-                    >
-                      <div className="w-6 h-6 rounded-full bg-background border-2 border-border/60 mt-1 relative z-10 group-hover/item:border-primary transition-all duration-700 shadow-xl" />
-                      <div className="flex-1 space-y-2">
-                        <p className="text-base font-bold leading-tight text-balance">
-                          <span className="text-foreground">
-                            {app.applicant.name}
-                          </span>
-                          <span className="text-muted-foreground/60 font-medium">
-                            {" "}
-                            applied to{" "}
-                          </span>
-                          <span className="text-primary font-black">
-                            {app.job.title}
-                          </span>
-                        </p>
-                        <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/40">
-                          {formatDate(app.appliedAt)}
-                        </p>
-                      </div>
-                    </div>
+              {loading ? (
+                <div className="dashboard-list">
+                  {[0, 1, 2].map((item) => (
+                    <Skeleton className="h-[76px] w-full rounded-xl" key={item} />
                   ))}
-              </div>
-            )}
-          </div>
+                </div>
+              ) : stats?.recentJobs.length ? (
+                <div className="dashboard-list">
+                  {stats.recentJobs.map((job) => (
+                    <Link
+                      className="position-row"
+                      href={`/recruiter/jobs/${job.id}/applicants`}
+                      key={job.id}
+                    >
+                      <span className="position-icon">
+                        <BriefcaseBusiness aria-hidden="true" />
+                      </span>
+                      <span className="position-info">
+                        <span className="position-title">{job.title}</span>
+                        <span className="position-location">{job.location}</span>
+                      </span>
+                      <span className="position-applications">
+                        <strong>{job._count.applications}</strong>
+                        <span>applicants</span>
+                      </span>
+                      <ArrowRight className="position-arrow" aria-hidden="true" />
+                    </Link>
+                  ))}
+                </div>
+              ) : (
+                <EmptyState
+                  title="No positions yet"
+                  description="Create your first opening to start building your hiring pipeline."
+                  href="/recruiter/jobs/new"
+                  action="Create a position"
+                />
+              )}
+            </section>
 
-          {/* Insight Block */}
-          <div className="premium-card p-10 sapphire-gradient border-none flex flex-col gap-10 group overflow-hidden relative shadow-2xl shadow-primary/20 rounded-[2.5rem]">
-            <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10" />
-            <Sparkles className="w-24 h-24 text-white/20 absolute -top-6 -right-6 rotate-12 group-hover:scale-150 transition-all duration-1000" />
-            <div className="relative z-10 space-y-6">
-              <h3 className="text-3xl font-black text-white tracking-tighter leading-none">
-                Automate Talent <br />
-                Orchestration.
-              </h3>
-              <p className="text-base font-medium text-white/70 leading-relaxed">
-                Activate autonomous screening protocols to identify
-                high-trajectory talent 3x faster with neural vectoring.
-              </p>
-            </div>
-            <Button className="w-full rounded-2xl bg-white text-primary font-black h-16 text-[10px] uppercase tracking-[0.2em] shadow-2xl relative z-10 hover:bg-zinc-50 transition-all active:scale-95">
-              Initialize Intelligence
-            </Button>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function JobConsoleCard({
-  job,
-  index,
-}: {
-  job: RecruiterDashboardStats["recentJobs"][number];
-  index: number;
-}) {
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 30 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{
-        duration: 0.6,
-        delay: index * 0.05,
-        ease: [0.16, 1, 0.3, 1],
-      }}
-      className="group/card"
-    >
-      <Link
-        href={`/recruiter/jobs/${job.id}/applicants`}
-        className="block h-full"
-      >
-        <div className="premium-card p-0 glass-panel border-border/40 group-hover/card:border-primary/40 transition-all duration-700">
-          <div className="p-10 md:p-12 flex flex-col md:flex-row md:items-center justify-between gap-12">
-            <div className="flex items-center gap-10 flex-1">
-              <div className="w-20 h-20 rounded-3xl bg-foreground/5 flex items-center justify-center text-foreground group-hover/card:bg-foreground group-hover/card:text-background transition-all duration-700 shadow-2xl">
-                <Briefcase className="w-10 h-10" />
-              </div>
-              <div className="space-y-4">
-                <h3 className="text-3xl font-black tracking-tighter leading-tight group-hover/card:text-primary transition-colors">
-                  {job.title}
-                </h3>
-                <div className="flex items-center gap-8 text-[10px] font-black uppercase tracking-widest text-muted-foreground/40">
-                  <span className="flex items-center gap-3">
-                    <MapPin className="w-4 h-4" /> {job.location}
-                  </span>
-                  <span className="w-1.5 h-1.5 bg-border rounded-full" />
-                  <span className="flex items-center gap-3">
-                    <Users className="w-4 h-4" /> {job._count.applications}{" "}
-                    Profiles Ingested
-                  </span>
+            <section className="dashboard-panel" aria-labelledby="activity-title">
+              <div className="section-heading">
+                <div>
+                  <h2 id="activity-title">Recent applications</h2>
+                  <p>Latest candidate activity</p>
                 </div>
               </div>
-            </div>
-
-            <div className="flex items-center gap-6">
-              <div className="px-6 py-2 rounded-xl text-[10px] font-black uppercase tracking-[0.2em] bg-primary/10 text-primary border border-primary/20 shadow-xl">
-                {job.status}
-              </div>
-              <div className="w-14 h-14 rounded-2xl bg-foreground/[0.03] flex items-center justify-center text-muted-foreground/40 group-hover/card:bg-primary group-hover/card:text-white transition-all duration-700 shadow-sm">
-                <ChevronRight className="w-6 h-6" />
-              </div>
-            </div>
+              {loading ? (
+                <div className="dashboard-list">
+                  {[0, 1, 2, 3].map((item) => (
+                    <Skeleton className="h-[62px] w-full rounded-xl" key={item} />
+                  ))}
+                </div>
+              ) : stats?.recentApplications.length ? (
+                <div className="activity-list">
+                  {stats.recentApplications.map((application) => (
+                    <div className="activity-row" key={application.id}>
+                      <span className="activity-avatar" aria-hidden="true">
+                        {application.applicant.name.charAt(0).toUpperCase()}
+                      </span>
+                      <div className="activity-copy">
+                        <p>
+                          <strong>{application.applicant.name}</strong> applied
+                        </p>
+                        <span>{application.job.title}</span>
+                      </div>
+                      <time className="activity-time" dateTime={new Date(application.appliedAt).toISOString()}>
+                        {formatDate(application.appliedAt)}
+                      </time>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <EmptyState
+                  title="No applications yet"
+                  description="New applicants will appear here as soon as they apply."
+                  href="/recruiter/jobs"
+                  action="View positions"
+                />
+              )}
+            </section>
           </div>
-        </div>
-      </Link>
-    </motion.div>
+        </>
+      )}
+    </div>
   );
 }
 
-function StatBox({ label, value, icon }: { label: string; value: number | string; icon: React.ReactNode }) {
+function MetricCard({
+  label,
+  value,
+  detail,
+  icon,
+  loading,
+  accent = "blue",
+}: {
+  label: string;
+  value?: number;
+  detail: string;
+  icon: React.ReactNode;
+  loading: boolean;
+  accent?: "blue" | "amber" | "violet";
+}) {
   return (
-    <div className="premium-card p-10 flex flex-col items-center justify-center text-center group glass-panel border-border/40 hover:border-primary/40 transition-all duration-700">
-       <div className="w-16 h-16 rounded-2xl bg-foreground/[0.03] flex items-center justify-center text-foreground group-hover:bg-primary/10 group-hover:text-primary transition-all duration-700 mb-8 shadow-2xl">
-          {icon}
-       </div>
-       <div className="text-6xl font-black mb-4 tracking-tighter leading-none group-hover:scale-110 transition-transform duration-700">{value}</div>
-       <p className="text-[10px] font-black text-muted-foreground/40 uppercase tracking-[0.4em]">{label}</p>
+    <article className="metric-card">
+      <div className={`metric-icon metric-icon-${accent}`}>{icon}</div>
+      <p className="metric-label">{label}</p>
+      {loading ? (
+        <Skeleton className="mt-2 h-9 w-16" />
+      ) : (
+        <p className="metric-value">{value ?? 0}</p>
+      )}
+      <p className="metric-detail">{detail}</p>
+    </article>
+  );
+}
+
+function EmptyState({
+  title,
+  description,
+  href,
+  action,
+}: {
+  title: string;
+  description: string;
+  href: string;
+  action: string;
+}) {
+  return (
+    <div className="dashboard-empty">
+      <span className="empty-state-icon">
+        <Check aria-hidden="true" />
+      </span>
+      <h3>{title}</h3>
+      <p>{description}</p>
+      <Link href={href} className="dashboard-text-link">
+        {action} <ArrowUpRight aria-hidden="true" />
+      </Link>
     </div>
-  )
+  );
 }

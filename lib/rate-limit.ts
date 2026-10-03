@@ -12,8 +12,38 @@ const authLimiter = new RateLimiterMemory({
   duration: 60, // per 60 seconds
 })
 
-export async function checkRateLimit(key: string, type: 'api' | 'auth' = 'auth') {
-  const limiter = type === 'api' ? apiLimiter : authLimiter
+const uploadLimiter = new RateLimiterMemory({
+  points: 20,
+  duration: 60 * 60,
+})
+
+const aiLimiter = new RateLimiterMemory({
+  points: 5,
+  duration: 60 * 60,
+})
+
+export async function checkAiRateLimit(key: string) {
+  try {
+    await aiLimiter.consume(key)
+    return { success: true as const }
+  } catch (rejection) {
+    const waitMs = (rejection as { msBeforeNext?: number })?.msBeforeNext ?? 60_000
+    return {
+      success: false as const,
+      error: `AI request limit reached. Try again in about ${Math.max(1, Math.ceil(waitMs / 60_000))} minute(s).`,
+    }
+  }
+}
+
+export async function checkRateLimit(
+  key: string,
+  type: 'api' | 'auth' | 'upload' = 'auth',
+) {
+  const limiter = type === 'api'
+    ? apiLimiter
+    : type === 'upload'
+      ? uploadLimiter
+      : authLimiter
   try {
     await limiter.consume(key)
     return { success: true }

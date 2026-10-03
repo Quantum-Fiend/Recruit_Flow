@@ -8,24 +8,29 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { toast } from "sonner"
-import { Loader2, ArrowRight, User, Lock, AlertCircle, UserX } from "lucide-react"
+import { Loader2, ArrowRight, Mail, Lock, AlertCircle } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
-import { checkUserExistsAction } from "@/app/actions/auth"
 
 function LoginForm() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<{ type: 'not_found' | 'wrong_password' | 'generic'; message: string } | null>(null)
+  const [error, setError] = useState<string | null>(null)
 
   const callbackUrl = searchParams.get("callbackUrl")
-  const { status } = useSession()
+  const { status, data: session } = useSession()
 
   useEffect(() => {
     if (status === 'authenticated') {
-      router.push(callbackUrl || "/dashboard")
+      const defaultPath = session?.user?.role === "RECRUITER" || session?.user?.role === "ADMIN"
+        ? "/recruiter/dashboard"
+        : "/dashboard"
+      const safeCallback = callbackUrl?.startsWith("/") && !callbackUrl.startsWith("//")
+        ? callbackUrl
+        : null
+      router.push(safeCallback ?? defaultPath)
     }
-  }, [status, router, callbackUrl])
+  }, [status, router, callbackUrl, session?.user?.role])
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -37,17 +42,6 @@ function LoginForm() {
     const password = formData.get("password") as string
 
     try {
-      const { exists, role } = await checkUserExistsAction(email)
-
-      if (!exists) {
-        setError({
-          type: 'not_found',
-          message: "No account found with this email address. Please sign up.",
-        })
-        setLoading(false)
-        return
-      }
-
       const result = await signIn("credentials", {
         email,
         password,
@@ -55,28 +49,27 @@ function LoginForm() {
       })
 
       if (result?.error) {
-        setError({
-          type: 'wrong_password',
-          message: "Incorrect password. Please check your credentials.",
-        })
+        setError("Email or password is incorrect. Please check your credentials.")
       } else {
         toast.success("Welcome back!")
-        const defaultPath = role === "RECRUITER" ? "/recruiter/dashboard" : "/dashboard"
-        router.push(callbackUrl || defaultPath)
+        const defaultPath = session?.user?.role === "RECRUITER" || session?.user?.role === "ADMIN"
+          ? "/recruiter/dashboard"
+          : "/dashboard"
+        const safeCallback = callbackUrl?.startsWith("/") && !callbackUrl.startsWith("//")
+          ? callbackUrl
+          : null
+        router.push(safeCallback ?? defaultPath)
         router.refresh()
       }
     } catch {
-      setError({
-        type: 'generic',
-        message: "Something went wrong. Please try again.",
-      })
+      setError("Something went wrong. Please try again.")
     } finally {
       setLoading(false)
     }
   }
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-[90vh] w-full px-6 pt-40 pb-20">
+    <div className="flex flex-col items-center justify-center min-h-[65vh] w-full px-6 py-8">
       <motion.div
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
@@ -84,7 +77,7 @@ function LoginForm() {
         className="w-full max-w-[480px]"
       >
         <div className="text-center mb-10">
-          <h1 className="h-lg text-gradient leading-tight mb-3">Access Hub.</h1>
+          <h1 className="h-lg text-gradient leading-tight mb-3">Welcome back</h1>
           <p className="text-base text-muted-foreground font-medium opacity-60">
             Enter your credentials to access your dashboard.
           </p>
@@ -96,22 +89,12 @@ function LoginForm() {
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
-              className={`mb-6 p-4 rounded-2xl border flex gap-3 items-start ${
-                error.type === 'not_found'
-                  ? 'bg-amber-500/5 border-amber-500/20 text-amber-500'
-                  : 'bg-destructive/5 border-destructive/20 text-destructive'
-              }`}
+              className="mb-6 p-4 rounded-2xl border flex gap-3 items-start bg-destructive/5 border-destructive/20 text-destructive"
             >
-              {error.type === 'not_found' ? (
-                <UserX className="w-5 h-5 mt-0.5 shrink-0" />
-              ) : (
-                <AlertCircle className="w-5 h-5 mt-0.5 shrink-0" />
-              )}
+              <AlertCircle className="w-5 h-5 mt-0.5 shrink-0" />
               <div className="space-y-1">
-                <p className="text-sm font-bold">
-                  {error.type === 'not_found' ? 'Account Not Found' : 'Authentication Failed'}
-                </p>
-                <p className="text-sm font-medium opacity-80">{error.message}</p>
+                <p className="text-sm font-bold">Authentication Failed</p>
+                <p className="text-sm font-medium opacity-80">{error}</p>
               </div>
             </motion.div>
           )}
@@ -124,7 +107,7 @@ function LoginForm() {
                 Email Address
               </Label>
               <div className="relative group">
-                <User className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground/40 group-focus-within:text-primary transition-colors" />
+                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground/40 group-focus-within:text-primary transition-colors" />
                 <Input
                   id="email"
                   name="email"
@@ -142,9 +125,6 @@ function LoginForm() {
                 <Label htmlFor="password" className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60">
                   Password
                 </Label>
-                <Link href="#" className="text-[10px] font-black uppercase tracking-widest text-primary/60 hover:text-primary transition-colors">
-                  Forgot Password?
-                </Link>
               </div>
               <div className="relative group">
                 <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground/40 group-focus-within:text-primary transition-colors" />
@@ -172,7 +152,7 @@ function LoginForm() {
                 </span>
               ) : (
                 <span className="flex items-center gap-2">
-                  Login <ArrowRight className="w-4 h-4" />
+                  Sign in <ArrowRight className="w-4 h-4" />
                 </span>
               )}
             </Button>

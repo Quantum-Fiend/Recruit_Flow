@@ -2,38 +2,39 @@ import { auth } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
 import { createJobSchema } from "@/lib/validations"
 import { NextResponse } from "next/server"
-import { z } from "zod";
-import { rateLimit } from "@/lib/rate-limit";
+import { checkRateLimit, rateLimit } from "@/lib/rate-limit";
 import type { Prisma } from "@prisma/client";
+import { hasValidRequestOrigin } from "@/lib/security/request-origin";
 
 export async function POST(req: Request) {
   try {
-    const ip = req.headers.get("x-forwarded-for") || "127.0.0.1";
-    const { success } = await rateLimit(ip);
+    if (!hasValidRequestOrigin(req)) {
+      return new NextResponse("Forbidden", { status: 403 });
+    }
+    const session = await auth();
+    if (!session?.user?.id || !["RECRUITER", "ADMIN"].includes(session.user.role)) {
+      return new NextResponse("Unauthorized", { status: 401 });
+    }
+    const { success } = await rateLimit(`job-create:${session.user.id}`);
 
     if (!success) {
       return new NextResponse("Too Many Requests", { status: 429 });
     }
 
-    // CSRF Check
-    const origin = req.headers.get("origin");
-    const host = req.headers.get("host");
-    if (origin && host && !origin.includes(host)) {
-      return new NextResponse("Forbidden", { status: 403 });
+    const body = createJobSchema.safeParse(await req.json().catch(() => null));
+    if (!body.success) {
+      return NextResponse.json({ error: body.error.issues[0]?.message ?? "Invalid job details." }, { status: 400 });
     }
-
-    const session = await auth();
-
-    if (!session || !session.user || session.user.role !== "RECRUITER") {
-      return new NextResponse("Unauthorized", { status: 401 });
-    }
-
-    const body = await req.json();
-    const validatedData = createJobSchema.parse(body);
+    const validatedData = body.data;
 
     const job = await prisma.job.create({
       data: {
-        ...validatedData,
+        title: validatedData.title,
+        description: validatedData.description,
+        location: validatedData.location,
+        type: validatedData.type,
+        employmentType: validatedData.employmentType,
+        experienceLevel: validatedData.experienceLevel,
         skills: validatedData.skills.join(","),
         recruiterId: session.user.id,
       },
@@ -41,10 +42,6 @@ export async function POST(req: Request) {
 
     return NextResponse.json(job);
   } catch (error) {
-    if (error instanceof z.ZodError) {
-      return new NextResponse(JSON.stringify(error.issues), { status: 400 });
-    }
-
     console.error("[JOBS_POST]", error);
     return new NextResponse("Internal Error", { status: 500 });
   }
@@ -52,21 +49,20 @@ export async function POST(req: Request) {
 
 export async function GET(req: Request) {
   try {
+    const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
+    const limitResult = await checkRateLimit(`jobs-read:${ip}`, "api");
+    if (!limitResult.success) {
+      return NextResponse.json({ error: limitResult.error }, { status: 429 });
+    }
     const { searchParams } = new URL(req.url);
-    const recruiterId = searchParams.get("recruiterId");
-    const query = searchParams.get("query");
+    const query = searchParams.get("query")?.trim().slice(0, 200);
+    const page = Math.max(1, Number.parseInt(searchParams.get("page") ?? "1", 10) || 1);
+    const limit = Math.min(50, Math.max(1, Number.parseInt(searchParams.get("limit") ?? "20", 10) || 20));
 
-    // Build filter conditions
     const where: Prisma.JobWhereInput = {
       status: "OPEN",
       deletedAt: null,
     };
-
-    if (recruiterId) {
-      where.recruiterId = recruiterId;
-      // Recruiters might want to see CLOSED jobs too, so we might relax the status check if recruiterId is present
-      delete where.status;
-    }
 
     if (query) {
       where.OR = [
@@ -76,17 +72,33 @@ export async function GET(req: Request) {
       ];
     }
 
-    const jobs = await prisma.job.findMany({
-      where,
-      orderBy: { createdAt: "desc" },
-      include: {
-        recruiter: {
-          select: { name: true, email: true },
+    const [jobs, total] = await Promise.all([
+      prisma.job.findMany({
+        where,
+        orderBy: { createdAt: "desc" },
+        skip: (page - 1) * limit,
+        take: limit,
+        select: {
+          id: true,
+          title: true,
+          description: true,
+          location: true,
+          type: true,
+          employmentType: true,
+          experienceLevel: true,
+          skills: true,
+          status: true,
+          createdAt: true,
+          recruiter: { select: { name: true } },
         },
-      },
-    });
+      }),
+      prisma.job.count({ where }),
+    ]);
 
-    return NextResponse.json(jobs);
+    return NextResponse.json({
+      jobs,
+      pagination: { page, limit, total, pages: Math.ceil(total / limit) },
+    });
   } catch (error) {
     console.error("[JOBS_GET]", error);
     return new NextResponse("Internal Error", { status: 500 });

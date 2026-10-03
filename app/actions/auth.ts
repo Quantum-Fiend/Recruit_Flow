@@ -1,36 +1,20 @@
 'use server'
 
 import { signIn } from "@/lib/auth"
-import { prisma, basePrisma } from "@/lib/prisma"
+import { prisma } from "@/lib/prisma"
 import { signUpSchema, type SignUpInput } from "@/lib/validations"
 import bcrypt from "bcryptjs"
-import { AuthError } from "next-auth"
 import { logger, analytics } from "@/lib/monitoring"
 import { checkRateLimit } from "@/lib/rate-limit"
 
-/**
- * Check if a user account exists for a given email.
- * Used by login forms to give precise error feedback:
- * - "Account not found" vs "Incorrect password"
- */
-export async function checkUserExistsAction(email: string): Promise<{ exists: boolean, role?: string }> {
-  try {
-    const user = await basePrisma.user.findUnique({
-      where: { email: email.toLowerCase().trim() },
-      select: { id: true, role: true },
-    })
-    return { exists: !!user, role: user?.role }
-  } catch {
-    return { exists: false }
-  }
-}
-
 export async function signUpAction(data: SignUpInput) {
   try {
-    const rateLimit = await checkRateLimit(data.email);
-    if (!rateLimit.success) return { error: rateLimit.error };
-
     const validated = signUpSchema.parse(data);
+    const rateLimit = await checkRateLimit(validated.email.toLowerCase());
+    if (!rateLimit.success) return { error: rateLimit.error };
+    if (Buffer.byteLength(validated.password, "utf8") > 72) {
+      return { error: "Password must be 72 bytes or fewer." };
+    }
 
     // Check if user already exists
     const existingUser = await prisma.user.findUnique({
@@ -94,7 +78,7 @@ export async function signUpAction(data: SignUpInput) {
     if (digest?.startsWith("NEXT_REDIRECT")) throw error;
 
     logger.error("Signup error", error as Error, {
-      metadata: { email: data.email },
+      action: "signup",
     });
 
     if (process.env.NODE_ENV === "development") {
@@ -104,43 +88,5 @@ export async function signUpAction(data: SignUpInput) {
     }
 
     return { error: "Failed to create account. Please try again." };
-  }
-}
-
-export async function signInAction(email: string, password: string) {
-  try {
-    const rateLimit = await checkRateLimit(email);
-    if (!rateLimit.success) return { error: rateLimit.error };
-
-    await signIn("credentials", {
-      email,
-      password,
-      redirectTo: "/",
-    });
-
-    return { success: true };
-  } catch (error) {
-    const digest =
-      typeof error === "object" &&
-      error !== null &&
-      "digest" in error &&
-      typeof (error as { digest?: unknown }).digest === "string"
-        ? (error as { digest: string }).digest
-        : undefined;
-    if (digest?.startsWith("NEXT_REDIRECT")) throw error;
-
-    if (error instanceof AuthError) {
-      logger.logAuthEvent("SIGNIN_FAILURE", undefined, {
-        email,
-        type: error.type,
-      });
-      switch (error.type) {
-        case "CredentialsSignin":
-          return { error: "Incorrect password. Please try again." };
-        default:
-          return { error: "Authentication failed. Please try again." };
-      }
-    }
-    throw error;
   }
 }

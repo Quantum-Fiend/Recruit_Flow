@@ -1,98 +1,54 @@
-import { auth } from "@/lib/auth"
-import { prisma } from "@/lib/prisma"
-import { isValidTransition } from "@/lib/workflow"
-import { ApplicationStatus } from "@prisma/client";
-import { rateLimit } from "@/lib/rate-limit";
-import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 import { z } from "zod";
+import { auth } from "@/lib/auth";
+import { rateLimit } from "@/lib/rate-limit";
+import { hasValidRequestOrigin } from "@/lib/security/request-origin";
+import { updateApplicationStatusAction } from "@/app/actions/applications";
+import { ApplicationStatus } from "@prisma/client";
 
-// Use Prisma's runtime enum object for validation.
-const ApplicationStatusEnum = z.nativeEnum(ApplicationStatus);
-
-const statusSchema = z.object({
-  status: ApplicationStatusEnum,
-});
+const routeParamsSchema = z.object({ applicationId: z.string().cuid() });
+const statusSchema = z.object({ status: z.nativeEnum(ApplicationStatus) });
 
 export async function PATCH(
   req: Request,
-  { params }: { params: Promise<{ applicationId: string }> },
+  context: { params: Promise<unknown> },
 ) {
   try {
-    const headersList = await headers();
-    const ip = headersList.get("x-forwarded-for") || "127.0.0.1";
+    if (!hasValidRequestOrigin(req)) {
+      return new NextResponse("Forbidden", { status: 403 });
+    }
+    const routeParams = routeParamsSchema.safeParse(await context.params);
+    if (!routeParams.success) {
+      return NextResponse.json({ error: "Invalid application ID." }, { status: 400 });
+    }
 
-    // Rate Limiting
-    const limitResult = await rateLimit(ip);
+    const session = await auth();
+    if (!session?.user?.id || !["RECRUITER", "ADMIN"].includes(session.user.role)) {
+      return new NextResponse("Unauthorized", { status: 401 });
+    }
+
+    const limitResult = await rateLimit(`application-status:${session.user.id}`);
     if (!limitResult.success) {
       return new NextResponse("Too many requests", { status: 429 });
     }
 
-    // CSRF Check
-    const origin = headersList.get("origin");
-    const host = headersList.get("host");
-    if (origin && host && !origin.includes(host)) {
-      return new NextResponse("Forbidden", { status: 403 });
+    const body = statusSchema.safeParse(await req.json().catch(() => null));
+    if (!body.success) {
+      return NextResponse.json({ error: body.error.issues[0]?.message ?? "Invalid status." }, { status: 400 });
     }
 
-    const session = await auth();
-
-    if (
-      !session ||
-      !session.user ||
-      (session.user.role !== "RECRUITER" && session.user.role !== "ADMIN")
-    ) {
-      return new NextResponse("Unauthorized", { status: 401 });
-    }
-
-    const { applicationId } = await params;
-    const body = await req.json();
-    const { status: newStatus } = statusSchema.parse(body);
-    // Cast to Prisma enum type so TypeScript matches runtime-validated value
-    const newStatusTyped = newStatus as ApplicationStatus;
-
-    const application = await prisma.application.findUnique({
-      where: { id: applicationId },
+    const result = await updateApplicationStatusAction({
+      applicationId: routeParams.data.applicationId,
+      status: body.data.status,
     });
-
-    if (!application) {
-      return new NextResponse("Application not found", { status: 404 });
+    if (!result.success) {
+      const status = result.error === "Unauthorized" ? 403
+        : result.error === "Application not found" ? 404
+          : result.error?.startsWith("Invalid status transition") ? 400 : 409;
+      return NextResponse.json({ error: result.error }, { status });
     }
-
-    if (
-      !isValidTransition(
-        application.status as ApplicationStatus,
-        newStatusTyped,
-      )
-    ) {
-      return new NextResponse(
-        `Invalid transition from ${application.status} to ${newStatus}`,
-        { status: 400 },
-      );
-    }
-
-    // Perform update and history creation in a transaction
-    const [updatedApplication] = await prisma.$transaction([
-      prisma.application.update({
-        where: { id: applicationId },
-        data: { status: newStatusTyped },
-      }),
-      prisma.applicationHistory.create({
-        data: {
-          applicationId,
-          oldStatus: application.status,
-          newStatus,
-          changedById: session.user.id,
-        },
-      }),
-    ]);
-
-    return NextResponse.json(updatedApplication);
+    return NextResponse.json({ success: true });
   } catch (error) {
-    if (error instanceof z.ZodError) {
-      return new NextResponse(JSON.stringify(error.issues), { status: 400 });
-    }
-
     console.error("[APPLICATION_STATUS_UPDATE]", error);
     return new NextResponse("Internal Error", { status: 500 });
   }
