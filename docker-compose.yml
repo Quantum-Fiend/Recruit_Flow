@@ -24,6 +24,9 @@ services:
       target: migrator
     environment:
       DATABASE_URL: ${DATABASE_URL:?Set DATABASE_URL in your .env file}
+    volumes:
+      - recruitflow-uploads:/app/public/uploads
+      - recruitflow-private-uploads:/app/data/uploads
     depends_on:
       db:
         condition: service_healthy
@@ -37,10 +40,15 @@ services:
       DATABASE_URL: ${DATABASE_URL:?Set DATABASE_URL in your .env file}
       NEXTAUTH_URL: ${NEXTAUTH_URL:?Set NEXTAUTH_URL in your .env file}
       NEXTAUTH_SECRET: ${NEXTAUTH_SECRET:?Set NEXTAUTH_SECRET in your .env file}
+      AUTH_TRUST_HOST: ${AUTH_TRUST_HOST:-true}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      OPENAI_RESUME_MODEL: ${OPENAI_RESUME_MODEL:-gpt-4.1-mini}
+      RESEND_API_KEY: ${RESEND_API_KEY:-}
+      EMAIL_FROM: ${EMAIL_FROM:-}
     ports:
       - "127.0.0.1:${APP_PORT:-3000}:3000"
     volumes:
-      - recruitflow-uploads:/app/public/uploads
+      - recruitflow-private-uploads:/app/data/uploads
     depends_on:
       db:
         condition: service_healthy
@@ -57,3 +65,4 @@ services:
 volumes:
   recruitflow-db-data:
   recruitflow-uploads:
+  recruitflow-private-uploads:

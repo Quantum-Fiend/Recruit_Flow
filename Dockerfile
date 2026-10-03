@@ -1,14 +1,13 @@
 FROM node:20-alpine AS base
+RUN apk add --no-cache libc6-compat openssl
 
 # Install dependencies only when needed
 FROM base AS deps
-# Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
-RUN apk add --no-cache libc6-compat openssl
 WORKDIR /app
 
 # Install dependencies
-COPY package.json package-lock.json* ./
-RUN npm ci
+COPY package.json yarn.lock ./
+RUN corepack yarn install --frozen-lockfile
 
 # Rebuild the source code only when needed
 FROM base AS builder
@@ -17,13 +16,13 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
 # Generate Prisma Client
-RUN npx prisma generate
+RUN corepack yarn prisma generate
 
 # Disable Next.js telemetry during the build
 ENV NEXT_TELEMETRY_DISABLED=1
 
 # Build the Next.js application
-RUN npm run build
+RUN corepack yarn build
 
 # Production migration job with the Prisma CLI and migration files.
 FROM base AS migrator
@@ -32,8 +31,12 @@ RUN addgroup --system --gid 1001 nodejs && adduser --system --uid 1001 migrator
 COPY --from=deps --chown=migrator:nodejs /app/node_modules ./node_modules
 COPY --chown=migrator:nodejs package.json ./
 COPY --chown=migrator:nodejs prisma ./prisma
+COPY --chown=migrator:nodejs scripts ./scripts
+RUN corepack yarn prisma generate \
+    && mkdir -p data/uploads public/uploads \
+    && chown -R migrator:nodejs data/uploads public/uploads
 USER migrator
-CMD ["./node_modules/.bin/prisma", "migrate", "deploy"]
+CMD ["sh", "-c", "./node_modules/.bin/prisma migrate deploy && ./node_modules/.bin/tsx scripts/migrate-resumes-to-private.ts"]
 
 # Production image, copy all the files and run next
 FROM base AS runner
@@ -52,11 +55,9 @@ RUN chown nextjs:nodejs .next
 
 # Automatically leverage output traces to reduce image size
 # https://nextjs.org/docs/advanced-features/output-file-tracing
-COPY --from=builder /app/public ./public
-RUN mkdir -p public/uploads && chown nextjs:nodejs public/uploads
+RUN mkdir -p data/uploads && chown nextjs:nodejs data/uploads
 
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
-COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
 USER nextjs
 

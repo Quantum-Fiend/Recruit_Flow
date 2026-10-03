@@ -1,9 +1,13 @@
 import { PrismaClient } from '@prisma/client'
+import type { EmploymentType, JobStatus, JobType } from '@prisma/client'
 import bcrypt from 'bcryptjs'
 
 const prisma = new PrismaClient()
 
 async function main() {
+  if (process.env.NODE_ENV === 'production') {
+    throw new Error('Demo seed data cannot be applied in production.')
+  }
   console.log('Seeding database...')
 
   // Create Recruiter
@@ -38,64 +42,67 @@ async function main() {
       title: 'Senior Frontend Developer',
       description: 'We are looking for an experienced Frontend Developer to join our team. You should have deep knowledge of React, Next.js, and Tailwind CSS. Experience with TypeScript is a must.',
       location: 'San Francisco, CA',
-      type: 'FULL_TIME',
-      employmentType: 'REMOTE',
+      type: 'FULL_TIME' as JobType,
+      employmentType: 'REMOTE' as EmploymentType,
       experienceLevel: 'Senior',
       skills: 'React,Next.js,TypeScript,Tailwind CSS',
-      status: 'OPEN',
+      status: 'OPEN' as JobStatus,
       recruiterId: recruiter.id,
     },
     {
       title: 'Full Stack Engineer',
       description: 'Join our fast-growing startup as a Full Stack Engineer. You will work on everything from database design to UI components. Stack: Node.js, PostgreSQL, React.',
       location: 'New York, NY',
-      type: 'FULL_TIME',
-      employmentType: 'HYBRID',
+      type: 'FULL_TIME' as JobType,
+      employmentType: 'HYBRID' as EmploymentType,
       experienceLevel: 'Mid Level',
       skills: 'Node.js,PostgreSQL,React,Docker',
-      status: 'OPEN',
+      status: 'OPEN' as JobStatus,
       recruiterId: recruiter.id,
     },
     {
       title: 'UX/UI Designer',
       description: 'Create beautiful and intuitive user experiences for our enterprise platform. Proficiency in Figma and a strong portfolio are required.',
       location: 'Austin, TX',
-      type: 'CONTRACT',
-      employmentType: 'OFFICE',
+      type: 'CONTRACT' as JobType,
+      employmentType: 'OFFICE' as EmploymentType,
       experienceLevel: 'Mid Level',
       skills: 'Figma,Adobe XD,UI Design,UX Research',
-      status: 'OPEN',
+      status: 'OPEN' as JobStatus,
       recruiterId: recruiter.id,
     },
     {
       title: 'DevOps Engineer',
       description: 'Help us scale our infrastructure and automate our deployment pipelines. Knowledge of AWS, Kubernetes, and Terraform is essential.',
       location: 'Seattle, WA',
-      type: 'FULL_TIME',
-      employmentType: 'REMOTE',
+      type: 'FULL_TIME' as JobType,
+      employmentType: 'REMOTE' as EmploymentType,
       experienceLevel: 'Senior',
       skills: 'AWS,Kubernetes,Terraform,CI/CD',
-      status: 'OPEN',
+      status: 'OPEN' as JobStatus,
       recruiterId: recruiter.id,
     },
     {
       title: 'Product Manager',
       description: 'Define the vision and roadmap for our core product. Work closely with engineering, design, and marketing teams to deliver high-impact features.',
       location: 'Chicago, IL',
-      type: 'FULL_TIME',
-      employmentType: 'OFFICE',
+      type: 'FULL_TIME' as JobType,
+      employmentType: 'OFFICE' as EmploymentType,
       experienceLevel: 'Lead',
       skills: 'Product Strategy,Agile,Roadmapping,Analytics',
-      status: 'OPEN',
+      status: 'OPEN' as JobStatus,
       recruiterId: recruiter.id,
     },
   ]
 
   for (const job of jobsData) {
-    await prisma.job.create({
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      data: job as any, 
+    const existingJob = await prisma.job.findFirst({
+      where: { recruiterId: recruiter.id, title: job.title },
+      select: { id: true },
     })
+    if (!existingJob) {
+      await prisma.job.create({ data: job })
+    }
   }
 
   console.log('Seeding complete.')

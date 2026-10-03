@@ -12,24 +12,36 @@ import {
   Briefcase,
   Clock,
   ChevronRight,
-  SlidersHorizontal,
   Globe,
 } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton"
 import { getJobTypeLabel, formatDate } from "@/lib/utils"
 import { motion, AnimatePresence } from "framer-motion"
+import { toast } from "sonner"
 
 export default function JobsPage() {
   const [jobs, setJobs] = useState<Job[]>([]);
   const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState("")
+  const [loadError, setLoadError] = useState(false)
 
   const loadJobs = useCallback(async (query = "") => {
-    const result = await getJobsAction({ search: query })
-    if (result.success && result.jobs) {
-      setJobs(result.jobs)
+    setLoading(true)
+    setLoadError(false)
+    try {
+      const result = await getJobsAction({ search: query })
+      if (!result.success) {
+        setLoadError(true)
+        toast.error(result.error ?? "We couldn’t load open positions.")
+      } else {
+        setJobs(result.jobs ?? [])
+      }
+    } catch {
+      setLoadError(true)
+      toast.error("We couldn’t load open positions. Please try again.")
+    } finally {
+      setLoading(false)
     }
-    setLoading(false)
   }, [])
 
   useEffect(() => {
@@ -49,27 +61,16 @@ export default function JobsPage() {
           <div className="max-w-3xl space-y-8">
             <div className="inline-flex items-center gap-3 px-4 py-1.5 rounded-full glass-panel text-[10px] font-black uppercase tracking-[0.3em] text-primary">
               <Globe className="w-3.5 h-3.5" />
-              <span>Global Engineering Pipeline</span>
+              <span>Open positions</span>
             </div>
             <h1 className="h-lg text-gradient leading-tight">
-              The <br />
-              Network.
+              Find your next role
             </h1>
             <p className="text-xl text-muted-foreground font-medium opacity-60 max-w-xl leading-relaxed">
-              Access high-performance engineering roles within the world&apos;s
-              most ambitious technical ecosystems.
+              Explore open positions and follow your application from one place.
             </p>
           </div>
 
-          <div className="flex items-center gap-4">
-            <Button
-              variant="outline"
-              className="h-14 px-8 rounded-2xl border-border/50 flex items-center gap-3 font-bold text-xs uppercase tracking-widest hover:bg-secondary transition-all shadow-xl"
-            >
-              <SlidersHorizontal className="w-4 h-4" />
-              Intelligence Filters
-            </Button>
-          </div>
         </div>
 
         <form onSubmit={handleSearch} className="relative group w-full">
@@ -77,6 +78,7 @@ export default function JobsPage() {
             <Search className="w-8 h-8 text-muted-foreground/40 ml-4" />
             <Input
               placeholder="Search roles, engineering stacks, or locations..."
+              aria-label="Search open positions"
               className="flex-1 h-full bg-transparent border-none text-2xl font-black tracking-tight focus-visible:ring-0 placeholder:text-muted-foreground/20"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
@@ -85,7 +87,7 @@ export default function JobsPage() {
               type="submit"
               className="h-16 px-12 rounded-2xl btn-quantum text-white hidden sm:flex"
             >
-              Initialize Search
+              Search
             </Button>
           </div>
         </form>
@@ -102,14 +104,24 @@ export default function JobsPage() {
               />
             ))}
           </div>
+        ) : loadError ? (
+          <div className="dashboard-error" role="alert">
+            <div>
+              <h2>Positions unavailable</h2>
+              <p>We couldn’t retrieve open jobs. Please check your connection and try again.</p>
+            </div>
+            <Button variant="outline" onClick={() => void loadJobs(search)}>
+              Try again
+            </Button>
+          </div>
         ) : jobs.length === 0 ? (
           <div className="text-center py-48 premium-card w-full border-dashed rounded-[4rem] flex flex-col items-center glass-panel">
             <Briefcase className="w-20 h-20 mb-8 text-muted-foreground/10" />
             <h3 className="text-4xl font-black mb-4 tracking-tighter">
-              Telemetry mismatch.
+              No matching positions
             </h3>
             <p className="text-muted-foreground mb-16 max-w-sm font-medium opacity-60">
-              No active positions identified matching your search parameters.
+              Try another search or clear your filters to see more positions.
             </p>
             <Button
               variant="outline"
@@ -119,7 +131,7 @@ export default function JobsPage() {
               }}
               className="rounded-2xl px-12 h-16 font-black border-border/50 hover:bg-secondary transition-all"
             >
-              Reset Search Parameters
+              Clear search
             </Button>
           </div>
         ) : (

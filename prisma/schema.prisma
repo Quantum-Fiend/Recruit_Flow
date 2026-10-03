@@ -2,7 +2,7 @@
 // Prisma schema for PostgreSQL with focus on Data Integrity and Auditability
 
 generator client {
-  provider = "prisma-client-js"
+  provider   = "prisma-client-js"
   engineType = "library"
 }
 
@@ -13,11 +13,11 @@ datasource db {
 
 // User model - Supports Applicants, Recruiters, and Admins
 model User {
-  id        String   @id @default(cuid())
-  name      String
-  email     String   @unique
-  password  String   // Hashed with bcrypt
-  role      UserRole @default(APPLICANT)
+  id       String   @id @default(cuid())
+  name     String
+  email    String   @unique
+  password String // Hashed with bcrypt
+  role     UserRole @default(APPLICANT)
 
   // Soft delete flag
   deletedAt DateTime?
@@ -26,12 +26,12 @@ model User {
   updatedAt DateTime @updatedAt
 
   // Relations
-  jobsPosted      Job[]           @relation("RecruiterJobs")
-  applications    Application[]   @relation("ApplicantApplications")
+  jobsPosted       Job[]                @relation("RecruiterJobs")
+  applications     Application[]        @relation("ApplicantApplications")
   applicationNotes ApplicationNote[]
-  statusHistory   ApplicationHistory[] @relation("RecruiterHistory")
+  statusHistory    ApplicationHistory[] @relation("RecruiterHistory")
+  resumeAnalyses   ResumeAnalysis[]     @relation("AnalysisActor")
 
-  @@index([email])
   @@index([role])
   @@index([deletedAt])
 }
@@ -50,16 +50,16 @@ model Job {
   location        String
   type            JobType        @default(FULL_TIME)
   employmentType  EmploymentType @default(OFFICE)
-  experienceLevel String         // e.g., "Entry Level", "Mid Level", "Senior"
-  skills          String         // Comma-separated list of skills
+  experienceLevel String // e.g., "Entry Level", "Mid Level", "Senior"
+  skills          String // Comma-separated list of skills
   status          JobStatus      @default(OPEN)
   recruiterId     String
 
   // Soft delete flag
-  deletedAt       DateTime?
+  deletedAt DateTime?
 
-  createdAt       DateTime       @default(now())
-  updatedAt       DateTime       @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   // Relations
   recruiter    User          @relation("RecruiterJobs", fields: [recruiterId], references: [id], onDelete: Cascade)
@@ -69,6 +69,7 @@ model Job {
   @@index([status])
   @@index([createdAt])
   @@index([deletedAt])
+  @@index([recruiterId, status, createdAt])
 }
 
 enum JobType {
@@ -94,21 +95,22 @@ model Application {
   id          String            @id @default(cuid())
   jobId       String
   applicantId String
-  resumeUrl   String            // URL to uploaded resume
-  resumeName  String            // Original filename
+  resumeUrl   String // URL to uploaded resume
+  resumeName  String // Original filename
   status      ApplicationStatus @default(APPLIED)
 
   // Soft delete flag
-  deletedAt   DateTime?
+  deletedAt DateTime?
 
-  appliedAt   DateTime          @default(now())
-  updatedAt   DateTime          @updatedAt
+  appliedAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   // Relations
-  job          Job                  @relation(fields: [jobId], references: [id], onDelete: Cascade)
-  applicant    User                 @relation("ApplicantApplications", fields: [applicantId], references: [id], onDelete: Cascade)
-  notes        ApplicationNote[]
-  history      ApplicationHistory[]
+  job            Job                  @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  applicant      User                 @relation("ApplicantApplications", fields: [applicantId], references: [id], onDelete: Cascade)
+  notes          ApplicationNote[]
+  history        ApplicationHistory[]
+  resumeAnalyses ResumeAnalysis[]
 
   // Prevent duplicate applications (Production Requirement)
   @@unique([jobId, applicantId])
@@ -117,6 +119,8 @@ model Application {
   @@index([status])
   @@index([appliedAt])
   @@index([deletedAt])
+  @@index([jobId, appliedAt])
+  @@index([applicantId, appliedAt])
 }
 
 enum ApplicationStatus {
@@ -132,12 +136,12 @@ enum ApplicationStatus {
 
 // Audit Trail - Track every status change for compliance and transparency
 model ApplicationHistory {
-  id            String            @id @default(cuid())
+  id            String             @id @default(cuid())
   applicationId String
   oldStatus     ApplicationStatus?
   newStatus     ApplicationStatus
-  changedById   String            // Who made the change (Recruiter ID)
-  createdAt     DateTime          @default(now())
+  changedById   String // Who made the change (Recruiter ID)
+  createdAt     DateTime           @default(now())
 
   // Relations
   application Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
@@ -165,4 +169,19 @@ model ApplicationNote {
   @@index([applicationId])
   @@index([recruiterId])
   @@index([createdAt])
+}
+
+model ResumeAnalysis {
+  id            String   @id @default(cuid())
+  applicationId String
+  actorId       String
+  model         String
+  result        Json
+  createdAt     DateTime @default(now())
+
+  application Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  actor       User        @relation("AnalysisActor", fields: [actorId], references: [id], onDelete: Restrict)
+
+  @@index([applicationId, createdAt])
+  @@index([actorId, createdAt])
 }

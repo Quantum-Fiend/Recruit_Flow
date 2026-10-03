@@ -26,7 +26,7 @@ export async function requireRole(role: string | string[]) {
 }
 
 export async function requireRecruiter() {
-  return requireRole("RECRUITER")
+  return requireRole(["RECRUITER", "ADMIN"])
 }
 
 export async function requireApplicant() {

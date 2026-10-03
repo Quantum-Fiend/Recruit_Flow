@@ -3,6 +3,8 @@ import CredentialsProvider from "next-auth/providers/credentials"
 import { basePrisma } from "@/lib/prisma"
 import bcrypt from "bcryptjs"
 import { signInSchema } from "@/lib/validations"
+import { checkRateLimit } from "@/lib/rate-limit"
+import { logger } from "@/lib/monitoring"
 
 declare module "next-auth" {
   interface Session {
@@ -32,14 +34,20 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
+        const parsedCredentials = signInSchema.safeParse(credentials);
+        if (!parsedCredentials.success) return null;
+        const { email, password } = parsedCredentials.data;
+        if (Buffer.byteLength(password, "utf8") > 72) return null;
+
         try {
-          const { email, password } = signInSchema.parse(credentials);
+          const rateLimit = await checkRateLimit(email, "auth");
+          if (!rateLimit.success) return null;
 
           const user = await basePrisma.user.findUnique({
             where: { email },
           });
 
-          if (!user || !user.password) {
+          if (!user || user.deletedAt || !user.password) {
             return null;
           }
 
@@ -55,8 +63,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             email: user.email,
             role: user.role,
           };
-        } catch {
-          return null;
+        } catch (error) {
+          logger.error("Credential authorization failed", error);
+          throw error;
         }
       },
     }),

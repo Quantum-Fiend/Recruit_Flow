@@ -38,7 +38,11 @@ export default auth(async (req) => {
     return NextResponse.redirect(new URL("/login", nextUrl))
   }
 
-  if (isRecruiterRoute && req.auth?.user?.role !== "RECRUITER") {
+  if (
+    isRecruiterRoute &&
+    req.auth?.user?.role !== "RECRUITER" &&
+    req.auth?.user?.role !== "ADMIN"
+  ) {
     return NextResponse.redirect(new URL("/dashboard", nextUrl))
   }
 

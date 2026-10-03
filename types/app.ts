@@ -4,7 +4,6 @@ export interface Job extends Omit<PrismaJob, 'skills'> {
   skills: string[]
   recruiter: {
     name: string
-    email: string
   }
   _count?: {
     applications: number

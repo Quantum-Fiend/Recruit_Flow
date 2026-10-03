@@ -19,13 +19,14 @@
 
 # production
 /build
+/public/uploads/
+/data/uploads/
 
 # misc
 .DS_Store
 *.pem
 
 # debug
-npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
