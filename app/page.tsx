@@ -1,14 +1,12 @@
 "use client"
 
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
+import React from "react";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 import { Zap, Shield, ArrowRight, Cpu, Globe2 } from "lucide-react";
 import { motion } from "framer-motion";
-import { useRef } from "react";
 
 export default function LandingPage() {
-  const containerRef = useRef(null);
-
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -28,7 +26,6 @@ export default function LandingPage() {
 
   return (
     <motion.div
-      ref={containerRef}
       initial="hidden"
       animate="visible"
       variants={containerVariants}
