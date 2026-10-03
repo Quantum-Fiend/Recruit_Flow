@@ -42,11 +42,11 @@ type DashboardStats = {
 };
 
 const pipelineStages = [
-  { status: "APPLIED", label: "Applied", color: "bg-sky-500" },
-  { status: "SHORTLISTED", label: "Shortlisted", color: "bg-violet-500" },
-  { status: "INTERVIEW", label: "Interview", color: "bg-amber-500" },
-  { status: "OFFER", label: "Offer", color: "bg-emerald-500" },
-  { status: "HIRED", label: "Hired", color: "bg-teal-600" },
+  { status: "APPLIED", label: "Applied", color: "bg-info" },
+  { status: "SHORTLISTED", label: "Shortlisted", color: "bg-primary" },
+  { status: "INTERVIEW", label: "Interview", color: "bg-warning" },
+  { status: "OFFER", label: "Offer", color: "bg-success" },
+  { status: "HIRED", label: "Hired", color: "bg-success-strong" },
 ] as const;
 
 export default function RecruiterDashboard() {

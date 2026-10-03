@@ -54,19 +54,19 @@ export default function JobsPage() {
   };
 
   return (
-    <div className="page-wrapper animate-reveal px-6">
+    <div className="page-wrapper animate-reveal">
       {/* Header Section */}
-      <section className="w-full mb-24 space-y-16">
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-12">
-          <div className="max-w-3xl space-y-8">
-            <div className="inline-flex items-center gap-3 px-4 py-1.5 rounded-full glass-panel text-[10px] font-black uppercase tracking-[0.3em] text-primary">
+      <section className="w-full mb-12 sm:mb-20 space-y-8 sm:space-y-12">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 sm:gap-12">
+          <div className="max-w-3xl space-y-5 sm:space-y-8">
+            <div className="inline-flex max-w-full items-center gap-2 px-3 sm:px-4 py-1.5 rounded-full glass-panel text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-primary">
               <Globe className="w-3.5 h-3.5" />
               <span>Open positions</span>
             </div>
             <h1 className="h-lg text-gradient leading-tight">
               Find your next role
             </h1>
-            <p className="text-xl text-muted-foreground font-medium opacity-60 max-w-xl leading-relaxed">
+            <p className="text-base sm:text-lg text-muted-foreground font-medium max-w-xl leading-relaxed">
               Explore open positions and follow your application from one place.
             </p>
           </div>
@@ -74,18 +74,18 @@ export default function JobsPage() {
         </div>
 
         <form onSubmit={handleSearch} className="relative group w-full">
-          <div className="relative glass-panel h-24 px-6 flex items-center gap-6 rounded-[2rem] group-focus-within:border-primary/50 transition-all shadow-2xl group-focus-within:shadow-primary/5 overflow-hidden">
-            <Search className="w-8 h-8 text-muted-foreground/40 ml-4" />
+          <div className="relative glass-panel min-h-16 sm:min-h-20 px-3 sm:px-5 flex items-center gap-3 sm:gap-4 rounded-2xl sm:rounded-3xl group-focus-within:border-primary/50 transition-all shadow-sm overflow-hidden">
+            <Search className="w-5 h-5 sm:w-6 sm:h-6 shrink-0 text-muted-foreground/60" />
             <Input
               placeholder="Search roles, engineering stacks, or locations..."
               aria-label="Search open positions"
-              className="flex-1 h-full bg-transparent border-none text-2xl font-black tracking-tight focus-visible:ring-0 placeholder:text-muted-foreground/20"
+              className="min-w-0 flex-1 h-full bg-transparent border-none text-base sm:text-lg font-semibold tracking-tight focus-visible:ring-0 placeholder:text-muted-foreground/60"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
             <Button
               type="submit"
-              className="h-16 px-12 rounded-2xl btn-quantum text-white hidden sm:flex"
+              className="h-12 px-6 rounded-xl btn-quantum text-white hidden sm:flex"
             >
               Search
             </Button>
@@ -94,7 +94,7 @@ export default function JobsPage() {
       </section>
 
       {/* Grid Content */}
-      <div className="w-full mb-40">
+      <div className="w-full mb-20 sm:mb-32">
         {loading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
             {[1, 2, 3, 4, 5, 6].map((i) => (
@@ -115,12 +115,12 @@ export default function JobsPage() {
             </Button>
           </div>
         ) : jobs.length === 0 ? (
-          <div className="text-center py-48 premium-card w-full border-dashed rounded-[4rem] flex flex-col items-center glass-panel">
-            <Briefcase className="w-20 h-20 mb-8 text-muted-foreground/10" />
-            <h3 className="text-4xl font-black mb-4 tracking-tighter">
+          <div className="text-center py-20 sm:py-32 px-5 premium-card w-full border-dashed rounded-2xl flex flex-col items-center glass-panel">
+            <Briefcase className="w-14 h-14 mb-6 text-muted-foreground/30" />
+            <h3 className="text-2xl sm:text-3xl font-bold mb-3 tracking-tight">
               No matching positions
             </h3>
-            <p className="text-muted-foreground mb-16 max-w-sm font-medium opacity-60">
+            <p className="text-muted-foreground mb-8 max-w-sm font-medium">
               Try another search or clear your filters to see more positions.
             </p>
             <Button

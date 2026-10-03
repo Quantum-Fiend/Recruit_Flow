@@ -69,7 +69,7 @@ function LoginForm() {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-[65vh] w-full px-6 py-8">
+    <div className="flex flex-col items-center justify-center min-h-[65vh] w-full px-4 sm:px-6 py-8">
       <motion.div
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
@@ -100,7 +100,7 @@ function LoginForm() {
           )}
         </AnimatePresence>
 
-        <div className="glass-panel rounded-3xl p-8 md:p-10 space-y-8">
+        <div className="glass-panel rounded-2xl sm:rounded-3xl p-5 sm:p-8 md:p-10 space-y-6 sm:space-y-8">
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="space-y-2.5">
               <Label htmlFor="email" className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60 ml-1">

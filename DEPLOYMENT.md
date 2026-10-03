@@ -1,10 +1,10 @@
 # RecruitFlow deployment notes
 
-This guide supplements the setup and security notes in [README.md](./README.md). The repository has Docker Compose support and a standalone Next.js build, but deployment-specific database, storage, secrets, monitoring, and recovery procedures remain the operator's responsibility.
+This guide supplements [README.md](./README.md), which documents the primary Docker Compose workflow. Compose runs the Next.js frontend and API together with PostgreSQL and a one-shot migration/legacy-upload initialization service. PostgreSQL is the only infrastructure service currently required; there is no Redis, queue, or background worker integration.
 
 ## Before deploying
 
-- Provision PostgreSQL and configure `DATABASE_URL` using the provider's documented SSL and connection-pooling settings. Keep `NEXTAUTH_URL` and `NEXTAUTH_SECRET` accurate for the public application host.
+- For the included single-host Compose deployment, PostgreSQL runs as the `db` service on the private Compose network; the internal application database URL is generated from `POSTGRES_*` variables. For a managed database deployment, provide provider-specific PostgreSQL connectivity, SSL, and connection-pooling configuration instead of using the bundled local database service.
 - Set secrets in the hosting provider's secret manager. Generate a unique `NEXTAUTH_SECRET`; do not copy `.env.example` values into production.
 - Provide persistent private writable storage mounted at `data/uploads`. Back up this storage together with PostgreSQL, and restrict direct access to it.
 - Configure `RESEND_API_KEY` and a verified `EMAIL_FROM` if email notifications are required. Configure `OPENAI_API_KEY` only if recruiters should use AI-assisted features and the organization's data policy permits sending resumes/job context to OpenAI.
@@ -13,21 +13,19 @@ This guide supplements the setup and security notes in [README.md](./README.md).
 
 ## Docker Compose
 
-Use Docker Engine with Compose v2. Copy `.env.example` to `.env`, replace the local-only secrets, then run:
+For a single-host setup, use Docker Engine with Compose v2. Copy `.env.example` to `.env`, replace the placeholders with unique secrets, set `APP_BIND_ADDRESS=0.0.0.0` only when the host is protected by a trusted TLS reverse proxy, and set the public `NEXTAUTH_URL`. Start the entire stack with:
 
 ```powershell
-docker compose up --build -d
-docker compose ps
-docker compose logs -f web
+docker compose up --build --wait
 ```
 
-The migration service applies committed Prisma migrations and migrates any legacy files from the `recruitflow-uploads` volume into `recruitflow-private-uploads` before the web service starts. The web service is bound to `127.0.0.1` by default; put a TLS-enabled reverse proxy in front of it for external access. Database and resume data persist in named volumes when containers are stopped. Avoid removing those volumes unless intentionally deleting all stored data.
+Compose waits for PostgreSQL health, applies committed Prisma migrations, migrates any legacy files from the `recruitflow-uploads` volume into `recruitflow-private-uploads`, and then starts the web service. The app is bound to `127.0.0.1` by default. Database and resume data persist in named volumes across container restarts and image rebuilds; avoid `docker compose down -v` unless intentionally deleting all stored data.
 
 For existing installs, back up both database and volume contents and test the migration against a copy before upgrading. The migration is designed to be idempotent and to stop on unexpected paths or file-content conflicts, but it has not been exercised against a live production database in this repository audit.
 
 ## Node.js hosting
 
-Use Node.js 20.9 or later and Yarn via Corepack:
+Use a supported Node.js release (20.9 or later) and Yarn via Corepack:
 
 ```powershell
 corepack yarn install --frozen-lockfile
@@ -51,4 +49,4 @@ Commit reviewed migrations in `prisma/migrations` and apply with `corepack yarn 
 
 ## Verification boundary
 
-Repository checks (`corepack yarn validate`, `corepack yarn build`, and `corepack yarn prisma validate`) verify code quality, unit tests, build output, and schema syntax, but do not prove production readiness. Run authenticated PostgreSQL integration tests, end-to-end workflows, migration and restore drills, storage access tests, and representative load tests in the target environment before enabling real candidate data.
+Repository checks (`corepack yarn validate`, `corepack yarn build`, and `corepack yarn prisma validate`) verify code quality, unit tests, build output, and schema syntax, but do not prove production readiness. Run authenticated PostgreSQL integration tests, end-to-end workflows, migration and restore drills, storage access tests, and representative load tests in the target environment before enabling real candidate data. Compose is a single-host deployment, not a highly available or horizontally scaled architecture.

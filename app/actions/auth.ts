@@ -45,25 +45,17 @@ export async function signUpAction(data: SignUpInput) {
     analytics.track("user_signup", { userId: user.id, role: validated.role });
     logger.logAuthEvent("SIGNUP_SUCCESS", user.id, { role: validated.role });
 
-    // Auto sign in after signup — NextAuth throws a redirect on success
-    try {
-      await signIn("credentials", {
-        email: validated.email,
-        password: validated.password,
-        redirectTo:
-          validated.role === "RECRUITER"
-            ? "/recruiter/dashboard"
-            : "/dashboard",
-      });
-    } catch (err) {
-      const digest =
-        typeof err === "object" &&
-        err !== null &&
-        "digest" in err &&
-        typeof (err as { digest?: unknown }).digest === "string"
-          ? (err as { digest: string }).digest
-          : undefined;
-      if (digest?.startsWith("NEXT_REDIRECT")) throw err;
+    const signInUrl = await signIn("credentials", {
+      email: validated.email,
+      password: validated.password,
+      redirect: false,
+      redirectTo:
+        validated.role === "RECRUITER"
+          ? "/recruiter/dashboard"
+          : "/dashboard",
+    });
+    if (new URL(signInUrl).searchParams.has("error")) {
+      throw new Error("The new account could not be signed in.");
     }
 
     return { success: true };

@@ -53,6 +53,16 @@ describe("resume analysis result validation", () => {
       expect(hasValidRequestOrigin(request)).toBe(true);
     });
 
+    it("matches the browser origin to the host behind an internal container URL", () => {
+      const request = new Request("http://web:3000/api/action", {
+        headers: {
+          host: "localhost:3000",
+          origin: "http://localhost:3000",
+        },
+      });
+      expect(hasValidRequestOrigin(request)).toBe(true);
+    });
+
     it("rejects origins that only share a hostname prefix", () => {
       const request = new Request("https://recruitflow.example/api/action", {
         headers: { origin: "https://recruitflow.example.attacker.invalid" },

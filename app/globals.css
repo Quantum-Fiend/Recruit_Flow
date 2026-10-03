@@ -24,53 +24,96 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-success-strong: var(--success-strong);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-warning-strong: var(--warning-strong);
+  --color-info: var(--info);
+  --color-info-foreground: var(--info-foreground);
+  --color-surface: var(--surface);
+  --color-error: var(--destructive);
+  --color-focus: var(--ring);
 }
 
 :root {
   color-scheme: light;
   --background: hsl(220 20% 98%);
-  --foreground: hsl(222 33% 15%);
+  --foreground: hsl(222 29% 16%);
   --card: hsl(0 0% 100%);
-  --card-foreground: hsl(222 33% 15%);
+  --card-foreground: hsl(222 29% 16%);
   --popover: hsl(0 0% 100%);
-  --popover-foreground: hsl(222 33% 15%);
-  --primary: hsl(221 72% 48%);
+  --popover-foreground: hsl(222 29% 16%);
+  --primary: hsl(219 70% 46%);
+  --primary-hover: hsl(219 72% 40%);
   --primary-foreground: hsl(0 0% 100%);
   --secondary: hsl(220 18% 95%);
   --secondary-foreground: hsl(222 25% 23%);
+  --surface: hsl(220 18% 96%);
   --muted: hsl(220 18% 95%);
-  --muted-foreground: hsl(218 11% 46%);
+  --muted-foreground: hsl(218 11% 42%);
   --accent: hsl(220 22% 94%);
   --accent-foreground: hsl(222 30% 20%);
   --destructive: hsl(0 67% 49%);
   --destructive-foreground: hsl(0 0% 100%);
+  --success: hsl(157 52% 34%);
+  --success-foreground: hsl(0 0% 100%);
+  --success-strong: hsl(166 55% 31%);
+  --warning: hsl(35 78% 40%);
+  --warning-foreground: hsl(0 0% 100%);
+  --warning-strong: hsl(28 78% 37%);
+  --info: hsl(211 62% 43%);
+  --info-foreground: hsl(0 0% 100%);
   --border: hsl(220 15% 88%);
+  --border-hover: hsl(219 24% 78%);
   --input: hsl(220 15% 88%);
   --ring: hsl(221 72% 48%);
+  --overlay: hsl(222 29% 16% / 0.48);
+  --chart-1: hsl(219 70% 46%);
+  --chart-2: hsl(157 52% 34%);
+  --chart-3: hsl(35 78% 40%);
+  --chart-4: hsl(263 35% 48%);
   --radius: 0.75rem;
 }
 
 .dark {
   color-scheme: dark;
-  --background: hsl(222 24% 9%);
+  --background: hsl(222 19% 10%);
   --foreground: hsl(216 20% 94%);
-  --card: hsl(222 22% 12%);
+  --card: hsl(222 19% 13%);
   --card-foreground: hsl(216 20% 94%);
-  --popover: hsl(222 22% 12%);
+  --popover: hsl(222 19% 13%);
   --popover-foreground: hsl(216 20% 94%);
-  --primary: hsl(217 86% 65%);
+  --primary: hsl(216 78% 68%);
+  --primary-hover: hsl(216 82% 74%);
   --primary-foreground: hsl(222 30% 10%);
-  --secondary: hsl(222 18% 17%);
+  --secondary: hsl(222 17% 18%);
   --secondary-foreground: hsl(216 20% 94%);
-  --muted: hsl(222 18% 17%);
-  --muted-foreground: hsl(218 12% 66%);
-  --accent: hsl(222 18% 19%);
+  --surface: hsl(222 18% 15%);
+  --muted: hsl(222 17% 18%);
+  --muted-foreground: hsl(218 12% 70%);
+  --accent: hsl(222 17% 20%);
   --accent-foreground: hsl(216 20% 94%);
   --destructive: hsl(0 62% 55%);
   --destructive-foreground: hsl(0 0% 100%);
-  --border: hsl(222 16% 23%);
-  --input: hsl(222 16% 23%);
-  --ring: hsl(217 86% 65%);
+  --success: hsl(154 48% 57%);
+  --success-foreground: hsl(222 30% 10%);
+  --success-strong: hsl(167 50% 55%);
+  --warning: hsl(38 76% 64%);
+  --warning-foreground: hsl(222 30% 10%);
+  --warning-strong: hsl(28 76% 64%);
+  --info: hsl(211 76% 70%);
+  --info-foreground: hsl(222 30% 10%);
+  --border: hsl(222 15% 25%);
+  --border-hover: hsl(217 20% 36%);
+  --input: hsl(222 15% 25%);
+  --ring: hsl(216 78% 68%);
+  --overlay: hsl(222 30% 4% / 0.68);
+  --chart-1: hsl(216 78% 68%);
+  --chart-2: hsl(154 48% 57%);
+  --chart-3: hsl(38 76% 64%);
+  --chart-4: hsl(263 55% 72%);
 }
 
 * {
@@ -85,14 +128,24 @@ html {
   text-size-adjust: 100%;
 }
 
+body,
+body > *,
+main,
+main > *,
+section,
+article,
+aside,
+form,
+fieldset {
+  min-width: 0;
+}
+
 body {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
   margin: 0;
-  background:
-    radial-gradient(ellipse at 50% -20%, hsl(220 70% 94% / 0.58), transparent 48%),
-    var(--background);
+  background: var(--background);
   color: var(--foreground);
   font-family: var(--font-sans);
   font-size: 0.9375rem;
@@ -128,12 +181,12 @@ a:focus-visible,
 input:focus-visible,
 textarea:focus-visible,
 select:focus-visible {
-  outline: 3px solid hsl(221 72% 48% / 0.3);
+  outline: 3px solid color-mix(in srgb, var(--ring) 34%, transparent);
   outline-offset: 2px;
 }
 
 ::selection {
-  background: hsl(221 72% 48% / 0.17);
+  background: color-mix(in srgb, var(--primary) 17%, transparent);
 }
 
 .app-header {
@@ -141,15 +194,15 @@ select:focus-visible {
   z-index: 40;
   top: 0;
   width: 100%;
-  border-bottom: 1px solid hsl(220 15% 88% / 0.8);
-  background: hsl(0 0% 100% / 0.9);
-  backdrop-filter: blur(16px);
+  border-bottom: 1px solid color-mix(in srgb, var(--border) 82%, transparent);
+  background: color-mix(in srgb, var(--background) 92%, transparent);
+  backdrop-filter: blur(14px);
   transition: background-color 180ms ease, border-color 180ms ease;
 }
 
 .dark .app-header {
   border-color: var(--border);
-  background: hsl(222 24% 9% / 0.9);
+  background: color-mix(in srgb, var(--background) 92%, transparent);
 }
 
 .app-navbar {
@@ -178,10 +231,10 @@ select:focus-visible {
   width: 34px;
   height: 34px;
   place-items: center;
-  border-radius: 10px;
+  border-radius: 11px;
   background: var(--primary);
   color: var(--primary-foreground);
-  box-shadow: 0 4px 10px hsl(221 72% 48% / 0.2);
+  box-shadow: 0 4px 10px color-mix(in srgb, var(--primary) 20%, transparent);
 }
 
 .app-brand-mark svg {
@@ -264,8 +317,8 @@ select:focus-visible {
 
 .dashboard-primary-action:hover {
   transform: translateY(-1px);
-  background: hsl(221 72% 43%);
-  box-shadow: 0 5px 12px hsl(221 72% 48% / 0.18);
+  background: var(--primary-hover);
+  box-shadow: 0 5px 12px color-mix(in srgb, var(--primary) 18%, transparent);
 }
 
 .dashboard-primary-action:active {
@@ -275,6 +328,11 @@ select:focus-visible {
 .dashboard-primary-action svg {
   width: 16px;
   height: 16px;
+}
+
+.dashboard-primary-action:hover,
+.btn-quantum:hover {
+  color: var(--primary-foreground);
 }
 
 .account-trigger {
@@ -324,6 +382,39 @@ select:focus-visible {
   box-shadow: 0 12px 28px hsl(222 33% 15% / 0.14);
 }
 
+.theme-menu {
+  min-width: 160px;
+  padding: 6px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--popover);
+  color: var(--popover-foreground);
+  box-shadow: 0 12px 28px color-mix(in srgb, var(--foreground) 14%, transparent);
+}
+
+.theme-menu [role="menuitemradio"] {
+  display: flex;
+  min-height: 38px;
+  align-items: center;
+  gap: 9px;
+  padding: 0 10px;
+  border-radius: 7px;
+  cursor: pointer;
+  font-size: 0.875rem;
+}
+
+.theme-menu [role="menuitemradio"] > svg {
+  width: 16px;
+  height: 16px;
+}
+
+.theme-menu .theme-menu-check {
+  width: 15px;
+  height: 15px;
+  margin-left: auto;
+  color: var(--primary);
+}
+
 .account-menu-label {
   display: grid;
   gap: 2px;
@@ -368,8 +459,19 @@ select:focus-visible {
   display: none;
 }
 
+[data-sonner-toaster] {
+  width: min(356px, calc(100vw - 2rem)) !important;
+  max-width: calc(100vw - 2rem) !important;
+}
+
+[data-sonner-toast] {
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
+
 .app-main {
   flex: 1;
+  width: 100%;
   min-height: calc(100vh - 132px);
   padding: 36px 0 72px;
 }
@@ -382,6 +484,7 @@ select:focus-visible {
   justify-content: space-between;
   gap: 16px;
   margin-inline: auto;
+  gap: 20px;
   border-top: 1px solid var(--border);
   color: var(--muted-foreground);
   font-size: 0.75rem;
@@ -391,6 +494,29 @@ select:focus-visible {
   color: var(--foreground);
   font-size: 0.8125rem;
   font-weight: 700;
+}
+
+.app-footer-copy {
+  display: grid;
+  gap: 2px;
+}
+
+.app-footer-copy span:last-child {
+  color: var(--muted-foreground);
+  font-size: 0.75rem;
+}
+
+.app-footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px 18px;
+  color: var(--muted-foreground);
+  font-size: 0.8125rem;
+}
+
+.app-footer-links a:hover {
+  color: var(--primary);
 }
 
 .premium-container {
@@ -407,6 +533,11 @@ select:focus-visible {
   padding: 0 0 20px;
 }
 
+.page-wrapper > *,
+.premium-container > * {
+  min-width: 0;
+}
+
 .premium-card {
   overflow: hidden;
   border: 1px solid var(--border);
@@ -417,7 +548,7 @@ select:focus-visible {
 }
 
 .premium-card:hover {
-  border-color: hsl(221 30% 78%);
+  border-color: var(--border-hover);
   box-shadow: 0 8px 20px hsl(222 33% 15% / 0.06);
 }
 
@@ -425,7 +556,7 @@ select:focus-visible {
 .glass-surface,
 .glass-card {
   border: 1px solid var(--border);
-  background: hsl(0 0% 100% / 0.82);
+  background: color-mix(in srgb, var(--card) 88%, transparent);
   box-shadow: 0 1px 2px hsl(222 33% 15% / 0.035);
   backdrop-filter: blur(12px);
 }
@@ -433,7 +564,7 @@ select:focus-visible {
 .dark .glass-panel,
 .dark .glass-surface,
 .dark .glass-card {
-  background: hsl(222 22% 12% / 0.86);
+  background: color-mix(in srgb, var(--card) 90%, transparent);
   box-shadow: 0 1px 2px hsl(0 0% 0% / 0.14);
 }
 
@@ -445,7 +576,7 @@ select:focus-visible {
 }
 
 .sapphire-gradient {
-  background: linear-gradient(135deg, hsl(221 72% 48%), hsl(229 66% 42%));
+  background: linear-gradient(135deg, var(--primary), var(--primary-hover));
   color: white;
 }
 
@@ -497,8 +628,8 @@ select:focus-visible {
 
 .btn-quantum:hover {
   transform: translateY(-1px);
-  background: hsl(221 72% 43%);
-  box-shadow: 0 5px 12px hsl(221 72% 48% / 0.18);
+  background: var(--primary-hover);
+  box-shadow: 0 5px 12px color-mix(in srgb, var(--primary) 18%, transparent);
 }
 
 .btn-quantum:active {
@@ -532,6 +663,10 @@ select:focus-visible {
   justify-content: space-between;
   gap: 24px;
   padding: 8px 0 2px;
+}
+
+.dashboard-header > :first-child {
+  min-width: 0;
 }
 
 .dashboard-eyebrow {
@@ -602,13 +737,13 @@ select:focus-visible {
 }
 
 .metric-icon-amber {
-  background: hsl(35 90% 50% / 0.12);
-  color: hsl(29 82% 40%);
+  background: color-mix(in srgb, var(--warning) 13%, transparent);
+  color: var(--warning);
 }
 
 .metric-icon-violet {
-  background: hsl(263 72% 55% / 0.1);
-  color: hsl(263 62% 50%);
+  background: color-mix(in srgb, var(--chart-4) 12%, transparent);
+  color: var(--chart-4);
 }
 
 .metric-label {
@@ -921,8 +1056,8 @@ select:focus-visible {
   height: 36px;
   place-items: center;
   border-radius: 50%;
-  background: hsl(153 52% 43% / 0.1);
-  color: hsl(153 52% 34%);
+  background: color-mix(in srgb, var(--success) 11%, transparent);
+  color: var(--success);
 }
 
 .empty-state-icon svg {
@@ -949,9 +1084,9 @@ select:focus-visible {
   justify-content: space-between;
   gap: 20px;
   padding: 20px;
-  border: 1px solid hsl(0 67% 49% / 0.24);
+  border: 1px solid color-mix(in srgb, var(--destructive) 24%, transparent);
   border-radius: 12px;
-  background: hsl(0 67% 49% / 0.04);
+  background: color-mix(in srgb, var(--destructive) 4%, transparent);
 }
 
 .dashboard-error h2 {
@@ -999,8 +1134,8 @@ select:focus-visible {
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: hsl(153 52% 43%);
-  box-shadow: 0 0 0 4px hsl(153 52% 43% / 0.1);
+  background: var(--success);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--success) 10%, transparent);
 }
 
 .landing-copy h1 {
@@ -1066,7 +1201,7 @@ select:focus-visible {
 .landing-trust svg {
   width: 14px;
   height: 14px;
-  color: hsl(153 52% 38%);
+  color: var(--success);
 }
 
 .workflow-preview {
@@ -1193,30 +1328,30 @@ select:focus-visible {
 }
 
 .workflow-step-marker.workflow-applied {
-  border-color: hsl(221 72% 48% / 0.2);
-  background: hsl(221 72% 48% / 0.1);
-  color: var(--primary);
+  border-color: color-mix(in srgb, var(--info) 22%, transparent);
+  background: color-mix(in srgb, var(--info) 11%, transparent);
+  color: var(--info);
 }
 
 .workflow-step-marker.workflow-shortlisted {
-  border-color: hsl(263 72% 55% / 0.2);
-  background: hsl(263 72% 55% / 0.1);
-  color: hsl(263 62% 50%);
+  border-color: color-mix(in srgb, var(--primary) 22%, transparent);
+  background: color-mix(in srgb, var(--primary) 11%, transparent);
+  color: var(--primary);
 }
 
 .workflow-step-marker.workflow-interview {
-  background: hsl(35 90% 50% / 0.08);
-  color: hsl(29 82% 40%);
+  background: color-mix(in srgb, var(--warning) 9%, transparent);
+  color: var(--warning);
 }
 
 .workflow-step-marker.workflow-offer {
-  background: hsl(153 52% 43% / 0.08);
-  color: hsl(153 52% 34%);
+  background: color-mix(in srgb, var(--success) 9%, transparent);
+  color: var(--success);
 }
 
 .workflow-step-marker.workflow-hired {
-  background: hsl(170 55% 38% / 0.08);
-  color: hsl(170 55% 32%);
+  background: color-mix(in srgb, var(--success-strong) 9%, transparent);
+  color: var(--success-strong);
 }
 
 .workflow-step-copy {
@@ -1301,7 +1436,7 @@ select:focus-visible {
 
 .landing-feature-card:hover {
   transform: translateY(-2px);
-  border-color: hsl(221 35% 79%);
+  border-color: var(--border-hover);
   box-shadow: 0 8px 18px hsl(222 33% 15% / 0.06);
 }
 
@@ -1344,8 +1479,23 @@ select:focus-visible {
   border: 1px solid var(--border);
   border-radius: 14px;
   background:
-    linear-gradient(110deg, hsl(221 72% 48% / 0.06), transparent 70%),
+    linear-gradient(110deg, color-mix(in srgb, var(--primary) 6%, transparent), transparent 70%),
     var(--card);
+}
+
+.landing-intelligence-card {
+  min-height: clamp(27rem, 60vh, 42rem);
+  padding: clamp(1.25rem, 5vw, 5rem);
+}
+
+.landing-feature-title {
+  max-width: 100%;
+  font-size: clamp(2rem, 8vw, 6rem);
+  font-weight: 800;
+  letter-spacing: -0.06em;
+  line-height: 1.04;
+  overflow-wrap: anywhere;
+  text-wrap: balance;
 }
 
 .landing-cta .landing-eyebrow {
@@ -1384,14 +1534,78 @@ textarea::placeholder {
 ::-webkit-scrollbar-thumb {
   border: 2px solid var(--background);
   border-radius: 999px;
-  background: hsl(218 12% 65% / 0.55);
+  background: color-mix(in srgb, var(--muted-foreground) 55%, transparent);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: hsl(218 12% 48% / 0.7);
+  background: color-mix(in srgb, var(--muted-foreground) 75%, transparent);
 }
 
 @media (max-width: 900px) {
+  .app-navbar {
+    width: calc(100% - 40px);
+    gap: 12px;
+  }
+
+  .app-nav-links,
+  .app-auth-actions,
+  .nav-create-job,
+  .desktop-theme-toggle,
+  .account-name {
+    display: none;
+  }
+
+  .app-nav-actions {
+    gap: 7px;
+  }
+
+  .mobile-nav-toggle {
+    display: inline-flex;
+  }
+
+  .mobile-nav-panel {
+    display: grid;
+    gap: 5px;
+    padding: 8px max(16px, calc((100vw - 1280px) / 2)) 14px;
+    border-top: 1px solid var(--border);
+    background: var(--card);
+    box-shadow: 0 12px 16px color-mix(in srgb, var(--foreground) 7%, transparent);
+  }
+
+  .mobile-nav-link {
+    display: flex;
+    min-height: 42px;
+    align-items: center;
+    gap: 10px;
+    padding: 0 10px;
+    border: 0;
+    border-radius: 8px;
+    background: transparent;
+    color: var(--foreground);
+    font-size: 0.9rem;
+    font-weight: 570;
+    text-align: left;
+  }
+
+  .mobile-nav-link svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .mobile-nav-link-active {
+    background: var(--secondary);
+  }
+
+  .mobile-nav-link-primary {
+    background: color-mix(in srgb, var(--primary) 8%, transparent);
+    color: var(--primary);
+  }
+
+  .mobile-nav-link.account-signout {
+    color: var(--destructive);
+    cursor: pointer;
+  }
+
   .dashboard-metrics {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -1417,6 +1631,10 @@ textarea::placeholder {
 
   .landing-feature-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .app-footer {
+    width: calc(100% - 40px);
   }
 }
 
@@ -1474,6 +1692,11 @@ textarea::placeholder {
     background: var(--secondary);
   }
 
+  .mobile-nav-link-primary {
+    background: color-mix(in srgb, var(--primary) 8%, transparent);
+    color: var(--primary);
+  }
+
   .mobile-nav-link.account-signout {
     color: var(--destructive);
     cursor: pointer;
@@ -1486,14 +1709,20 @@ textarea::placeholder {
 
   .app-footer {
     width: calc(100% - 32px);
-    min-height: 58px;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    padding: 12px 0;
+    min-height: 0;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 0 18px;
+    text-align: center;
   }
 
-  .app-footer > span:nth-child(2) {
-    display: none;
+  .app-footer-copy {
+    justify-items: center;
+  }
+
+  .app-footer-links {
+    justify-content: center;
   }
 
   .premium-container,
@@ -1508,6 +1737,13 @@ textarea::placeholder {
 
   .dashboard-header {
     align-items: flex-start;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .dashboard-actions {
+    max-width: 100%;
+    flex-wrap: wrap;
   }
 
   .dashboard-title {
@@ -1521,6 +1757,15 @@ textarea::placeholder {
 
   .dashboard-header .dashboard-actions > .outline {
     display: none;
+  }
+
+  .dashboard-actions > a {
+    max-width: 100%;
+  }
+
+  .dashboard-actions .dashboard-primary-action {
+    max-width: 100%;
+    white-space: normal;
   }
 
   .dashboard-primary-action {
@@ -1639,6 +1884,78 @@ textarea::placeholder {
     align-items: flex-start;
     flex-direction: column;
     padding: 21px;
+  }
+
+  .landing-intelligence-card {
+    min-height: 0;
+    padding: clamp(1.25rem, 6vw, 2rem);
+  }
+
+  .landing-cta > a {
+    max-width: 100%;
+  }
+
+  .landing-intelligence-card .landing-feature-title {
+    font-size: clamp(2rem, 9.5vw, 3.5rem);
+  }
+
+  .landing-intelligence-card > div:not(.absolute) {
+    max-width: 100%;
+  }
+
+  .dashboard-panel,
+  .pipeline-panel {
+    min-width: 0;
+  }
+
+  .section-heading {
+    flex-wrap: wrap;
+  }
+
+  .app-footer-links {
+    gap: 8px 14px;
+  }
+}
+
+@media (max-width: 380px) {
+  .app-navbar {
+    width: calc(100% - 24px);
+  }
+
+  .app-brand {
+    gap: 8px;
+    font-size: 0.98rem;
+  }
+
+  .app-brand-mark {
+    width: 32px;
+    height: 32px;
+  }
+
+  .app-nav-actions {
+    gap: 5px;
+  }
+
+  .page-wrapper,
+  .premium-container,
+  .landing-page {
+    width: calc(100% - 28px);
+  }
+
+  .landing-intelligence-card .landing-feature-title {
+    font-size: 2rem;
+  }
+
+  .dashboard-metrics {
+    gap: 10px;
+  }
+
+  .metric-card {
+    padding: 12px;
+  }
+
+  .metric-value {
+    font-size: 1.5rem;
   }
 }
 

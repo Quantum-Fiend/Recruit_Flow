@@ -80,8 +80,8 @@ export default function RecruiterJobsPage() {
       className="page-wrapper animate-slide-up"
     >
       {/* Header Section */}
-      <header className="w-full mb-16 flex flex-col md:flex-row md:items-end justify-between gap-10">
-        <div className="max-w-2xl space-y-6">
+      <header className="w-full mb-10 sm:mb-14 flex flex-col md:flex-row md:items-end justify-between gap-6 sm:gap-8">
+        <div className="max-w-2xl space-y-5">
           <Link href="/recruiter/dashboard">
             <Button
               variant="ghost"
@@ -94,16 +94,16 @@ export default function RecruiterJobsPage() {
           <h1 className="h-lg">
             Your jobs
           </h1>
-          <p className="text-xl text-muted-foreground font-medium text-balance">
+          <p className="text-base sm:text-lg text-muted-foreground font-medium text-balance">
             Manage your open roles, review application activity, and keep each
             hiring process moving.
           </p>
         </div>
 
-        <div className="flex items-center gap-4">
+        <div className="flex items-center">
           <Link href="/recruiter/jobs/new">
-            <Button className="h-14 px-8 rounded-xl sapphire-gradient text-white font-black text-sm uppercase tracking-widest shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all">
-              <Plus className="w-5 h-5 mr-3" />
+            <Button className="h-12 px-5 sm:px-6 rounded-xl sapphire-gradient text-white font-semibold text-sm transition-colors">
+              <Plus className="w-5 h-5 mr-2" />
               Create a job
             </Button>
           </Link>
@@ -111,7 +111,7 @@ export default function RecruiterJobsPage() {
       </header>
 
       {/* Grid Content */}
-      <div className="w-full mb-32">
+      <div className="w-full mb-20 sm:mb-28">
         {loading ? (
           <div className="space-y-6">
             {[1, 2, 3].map((i) => (
@@ -132,16 +132,16 @@ export default function RecruiterJobsPage() {
             </Button>
           </div>
         ) : jobs.length === 0 ? (
-          <div className="text-center py-40 glass-surface w-full border-dashed rounded-3xl flex flex-col items-center">
-            <Briefcase className="w-16 h-16 mb-8 text-muted-foreground/10" />
-            <h3 className="text-3xl font-black mb-4 tracking-tighter">
+          <div className="text-center py-20 sm:py-28 px-5 glass-surface w-full border-dashed rounded-2xl flex flex-col items-center">
+            <Briefcase className="w-14 h-14 mb-6 text-muted-foreground/30" />
+            <h3 className="text-2xl sm:text-3xl font-bold mb-3 tracking-tight">
               No jobs yet
             </h3>
-            <p className="text-xl text-muted-foreground mb-12 max-w-sm font-medium">
+            <p className="text-base text-muted-foreground mb-8 max-w-sm font-medium">
               Create your first job to start receiving applications.
             </p>
             <Link href="/recruiter/jobs/new">
-              <Button className="h-16 px-12 rounded-xl sapphire-gradient text-white font-black text-lg">
+              <Button className="h-12 px-5 rounded-xl sapphire-gradient text-white font-semibold">
                 Create your first job
               </Button>
             </Link>
@@ -181,14 +181,14 @@ function RecruiterJobCard({
       transition={{ duration: 0.5, delay: index * 0.05 }}
     >
       <Card className="premium-card p-2 bg-card/40 group overflow-hidden border-border/50">
-        <CardContent className="p-8 flex flex-col md:flex-row md:items-center justify-between gap-10">
-          <div className="flex items-center gap-8 flex-1">
-            <div className="w-16 h-16 rounded-2xl bg-secondary flex items-center justify-center group-hover:sapphire-gradient group-hover:text-white transition-all duration-500 shadow-xl shadow-primary/5">
+        <CardContent className="p-4 sm:p-6 flex flex-col lg:flex-row lg:items-center justify-between gap-5 sm:gap-7">
+          <div className="flex min-w-0 items-start sm:items-center gap-4 sm:gap-6">
+            <div className="w-12 h-12 sm:w-14 sm:h-14 shrink-0 rounded-xl bg-secondary flex items-center justify-center">
               <Briefcase className="w-8 h-8" />
             </div>
-            <div className="space-y-3">
-              <div className="flex items-center gap-4 flex-wrap">
-                <h3 className="text-2xl md:text-3xl font-black tracking-tighter leading-none group-hover:text-primary transition-colors">
+            <div className="min-w-0 space-y-3">
+              <div className="flex items-center gap-3 flex-wrap">
+                <h3 className="break-words text-lg sm:text-xl lg:text-2xl font-semibold tracking-tight leading-tight group-hover:text-primary transition-colors">
                   {job.title}
                 </h3>
                 <div
@@ -200,25 +200,25 @@ function RecruiterJobCard({
                   {job.status}
                 </div>
               </div>
-              <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-[10px] font-black uppercase tracking-widest text-muted-foreground/60">
-                <span className="flex items-center gap-2">
-                  <MapPin className="w-4 h-4" /> {job.location}
+              <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
+                <span className="flex min-w-0 items-center gap-2 break-words">
+                  <MapPin className="w-4 h-4 shrink-0" /> {job.location}
                 </span>
                 <span className="flex items-center gap-2">
-                  <Users className="w-4 h-4" /> {job._count.applications}{" "}
+                  <Users className="w-4 h-4 shrink-0" /> {job._count.applications}{" "}
                   Profiles
                 </span>
                 <span className="flex items-center gap-2">
-                  <Activity className="w-4 h-4" /> Active since{" "}
+                  <Activity className="w-4 h-4 shrink-0" /> Active since{" "}
                   {formatDate(job.createdAt)}
                 </span>
               </div>
             </div>
           </div>
 
-          <div className="flex items-center gap-4 flex-wrap">
+          <div className="flex w-full flex-wrap items-center gap-2 lg:w-auto">
             <Link href={`/recruiter/jobs/${job.id}/applicants`}>
-              <Button className="h-12 px-8 rounded-xl font-black text-xs uppercase tracking-widest sapphire-gradient text-white shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all">
+              <Button className="h-11 px-4 sm:px-5 rounded-xl font-semibold text-xs uppercase tracking-wide sapphire-gradient text-white">
                 Analyze Talent
               </Button>
             </Link>
@@ -228,6 +228,7 @@ function RecruiterJobCard({
                 variant="ghost"
                 className="h-12 w-12 rounded-xl bg-secondary hover:bg-secondary/80 p-0 border border-border"
                 title="Preview Perspective"
+                aria-label={`Preview ${job.title}`}
               >
                 <Eye className="w-5 h-5 text-muted-foreground" />
               </Button>
@@ -239,6 +240,7 @@ function RecruiterJobCard({
                 className="h-12 w-12 rounded-xl text-muted-foreground hover:text-destructive hover:bg-destructive/5 transition-all p-0 border border-border"
                 onClick={() => onClose(job.id)}
                 title="Close job"
+                aria-label={`Close ${job.title}`}
               >
                 <XCircle className="w-5 h-5" />
               </Button>

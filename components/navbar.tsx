@@ -6,12 +6,13 @@ import { usePathname } from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
 import {
   BriefcaseBusiness,
-  Command,
   LayoutDashboard,
   LogOut,
   Menu,
+  Plus,
   UserRound,
   X,
+  Workflow,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -54,7 +55,7 @@ export function Navbar() {
           onClick={closeMobileMenu}
         >
           <span className="app-brand-mark">
-            <Command aria-hidden="true" />
+            <Workflow aria-hidden="true" />
           </span>
           <span>RecruitFlow</span>
         </Link>
@@ -171,21 +172,47 @@ export function Navbar() {
             </Link>
           ))}
           {session ? (
-            <button
-              className="mobile-nav-link account-signout"
-              onClick={() => {
-                closeMobileMenu();
-                void signOut({ callbackUrl: "/" });
-              }}
-            >
-              <LogOut aria-hidden="true" />
-              Sign out
-            </button>
+            <>
+              {isRecruiter && (
+                <Link
+                  href="/recruiter/jobs/new"
+                  className="mobile-nav-link mobile-nav-link-primary"
+                  onClick={closeMobileMenu}
+                >
+                  <Plus aria-hidden="true" />
+                  Create a job
+                </Link>
+              )}
+              <button
+                className="mobile-nav-link account-signout"
+                onClick={() => {
+                  closeMobileMenu();
+                  void signOut({ callbackUrl: "/" });
+                }}
+              >
+                <LogOut aria-hidden="true" />
+                Sign out
+              </button>
+            </>
           ) : (
-            <Link href="/login" className="mobile-nav-link" onClick={closeMobileMenu}>
-              <UserRound aria-hidden="true" />
-              Sign in
-            </Link>
+            <>
+              <Link
+                href="/signup"
+                className="mobile-nav-link mobile-nav-link-primary"
+                onClick={closeMobileMenu}
+              >
+                <Plus aria-hidden="true" />
+                Get started
+              </Link>
+              <Link
+                href="/login"
+                className="mobile-nav-link"
+                onClick={closeMobileMenu}
+              >
+                <UserRound aria-hidden="true" />
+                Sign in
+              </Link>
+            </>
           )}
         </div>
       )}

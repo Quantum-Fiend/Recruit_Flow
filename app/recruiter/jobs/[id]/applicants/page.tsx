@@ -246,10 +246,10 @@ export default function ApplicantsPage() {
   }
 
   return (
-    <div className="page-wrapper animate-reveal px-6">
+    <div className="page-wrapper animate-reveal">
       {/* Header Section */}
-      <header className="w-full mb-24 flex flex-col md:flex-row md:items-end justify-between gap-12">
-        <div className="max-w-3xl space-y-8">
+      <header className="w-full mb-12 sm:mb-20 flex flex-col md:flex-row md:items-end justify-between gap-6 sm:gap-10">
+        <div className="min-w-0 max-w-3xl space-y-5 sm:space-y-7">
            <Link href="/recruiter/jobs" className="inline-flex">
               <Button variant="ghost" className="rounded-xl h-10 px-4 group font-black text-[10px] uppercase tracking-widest text-muted-foreground/60 hover:text-foreground">
                  <ArrowLeft className="w-4 h-4 mr-2 transition-transform group-hover:-translate-x-1" />
@@ -259,13 +259,13 @@ export default function ApplicantsPage() {
            <h1 className="h-lg text-gradient leading-tight">
             {job?.title}
            </h1>
-           <p className="text-xl text-muted-foreground font-medium opacity-60 leading-relaxed max-w-xl">
+           <p className="text-base sm:text-lg text-muted-foreground font-medium leading-relaxed max-w-xl">
              Review applications, update candidate stages, and keep recruiter notes together.
            </p>
         </div>
 
         <div className="flex flex-wrap items-center gap-3">
-           <div className="px-8 py-4 rounded-2xl glass-panel border-border/50 flex items-center gap-4 shadow-xl">
+           <div className="px-4 sm:px-6 py-3 rounded-xl glass-panel border-border/50 flex items-center gap-3 shadow-sm">
               <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
                  <Users className="w-5 h-5" />
               </div>
@@ -367,7 +367,7 @@ export default function ApplicantsPage() {
       )}
 
       {/* Main Content */}
-      <div className="w-full mb-40 space-y-12">
+      <div className="w-full mb-20 sm:mb-32 space-y-8 sm:space-y-10">
         {loadError ? (
           <div className="dashboard-error" role="alert">
             <div>
@@ -377,13 +377,13 @@ export default function ApplicantsPage() {
             <Button variant="outline" onClick={() => void loadData(applicationPage)}>Try again</Button>
           </div>
         ) : applications.length === 0 ? (
-          <div className="text-center py-48 glass-panel w-full border-dashed rounded-[4rem] flex flex-col items-center">
-            <Users className="w-20 h-20 mb-8 text-muted-foreground/10" />
-            <h3 className="text-4xl font-black mb-4 tracking-tighter">No applications yet</h3>
-            <p className="text-xl text-muted-foreground max-w-sm font-medium opacity-60">Applications for this position will appear here when candidates apply.</p>
+          <div className="text-center py-20 sm:py-32 px-5 glass-panel w-full border-dashed rounded-2xl flex flex-col items-center">
+            <Users className="w-14 h-14 mb-6 text-muted-foreground/30" />
+            <h3 className="text-2xl sm:text-3xl font-bold mb-3 tracking-tight">No applications yet</h3>
+            <p className="text-base text-muted-foreground max-w-sm font-medium opacity-60">Applications for this position will appear here when candidates apply.</p>
           </div>
         ) : (
-          <div className="space-y-12">
+          <div className="space-y-6 sm:space-y-8">
             <AnimatePresence>
               {applications.map((app, index) => {
                 const possibleTransitions = getPossibleNextStatuses(app.status as ApplicationStatus)
@@ -398,17 +398,17 @@ export default function ApplicantsPage() {
                     className="group/card"
                   >
                     <div className="premium-card p-0 glass-panel border-border/40 group-hover/card:border-primary/30 transition-all duration-700">
-                      <div className="p-10 md:p-14 space-y-12">
+                      <div className="p-4 sm:p-6 lg:p-8 space-y-7 sm:space-y-9">
                         {/* Identity & Status */}
                         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-                           <div className="flex items-center gap-8 flex-1">
-                              <div className="w-20 h-20 rounded-3xl bg-foreground/5 flex items-center justify-center text-foreground shadow-2xl group-hover/card:bg-foreground group-hover/card:text-background transition-all duration-700">
+                           <div className="flex min-w-0 items-start sm:items-center gap-4 sm:gap-6 flex-1">
+                              <div className="w-12 h-12 sm:w-14 sm:h-14 shrink-0 rounded-xl bg-foreground/5 flex items-center justify-center text-foreground">
                                  <Users className="w-10 h-10" />
                               </div>
-                              <div className="space-y-2">
-                                 <h3 className="text-3xl md:text-4xl font-black tracking-tighter leading-tight">{app.applicant.name}</h3>
-                                 <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-[10px] font-black uppercase tracking-widest text-muted-foreground/40">
-                                    <span className="text-primary/80 font-black">{app.applicant.email}</span>
+                              <div className="min-w-0 space-y-2">
+                                 <h3 className="break-words text-xl sm:text-2xl lg:text-3xl font-semibold tracking-tight leading-tight">{app.applicant.name}</h3>
+                                 <div className="flex flex-wrap items-center gap-x-3 gap-y-2 text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
+                                    <span className="break-all text-primary">{app.applicant.email}</span>
                                     <span className="w-1.5 h-1.5 bg-border rounded-full" />
                                     <span className="flex items-center gap-2 font-black">Applied {formatDate(app.appliedAt)}</span>
                                  </div>
@@ -424,7 +424,7 @@ export default function ApplicantsPage() {
                                  <GitCompareArrows className="h-4 w-4" />
                                  {comparisonIds.includes(app.id) ? "Selected" : "Compare"}
                               </Button>
-                              <div className={cn("px-5 py-3 rounded-xl text-[10px] uppercase tracking-[0.2em] font-black shadow-xl", getStatusColor(app.status))}>
+                              <div className={cn("max-w-full px-3 py-2 rounded-lg text-[9px] uppercase tracking-wider font-semibold", getStatusColor(app.status))}>
                                  {app.status}
                               </div>
                            </div>
@@ -475,7 +475,7 @@ export default function ApplicantsPage() {
                         </section>
 
                         {/* Workflow Controls */}
-                        <div className="grid lg:grid-cols-2 gap-12 pt-4">
+                        <div className="grid min-w-0 lg:grid-cols-2 gap-6 sm:gap-8 pt-4">
                            <div className="space-y-6">
                               <div className="flex items-center gap-3 text-[10px] font-black uppercase tracking-widest text-muted-foreground/40 px-2">
                                  <FileText className="w-4 h-4" />
@@ -485,9 +485,9 @@ export default function ApplicantsPage() {
                                  href={app.resumeUrl}
                                  target="_blank"
                                  rel="noopener noreferrer"
-                                 className="flex items-center justify-between p-8 bg-foreground/[0.02] rounded-3xl border border-border/40 hover:border-primary/40 transition-all group/res shadow-sm"
+                                 className="flex min-w-0 items-center justify-between gap-3 p-4 sm:p-6 bg-foreground/[0.02] rounded-2xl border border-border/40 hover:border-primary/40 transition-colors"
                               >
-                                 <div className="flex items-center gap-4">
+                                 <div className="flex min-w-0 items-center gap-3">
                                     <div className="w-10 h-10 rounded-xl bg-foreground/5 flex items-center justify-center">
                                        <FileText className="w-5 h-5 text-muted-foreground" />
                                     </div>
@@ -672,7 +672,7 @@ function AnalysisPanel({ analysis }: { analysis: SavedAnalysis }) {
           <ul className="space-y-2">
             {result.matchedRequirements.map((item, index) => (
               <li key={`${item.requirement}-${index}`} className="flex gap-2 text-sm">
-                <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600" />
+                <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-success" />
                 <span><strong>{item.requirement}</strong> <span className="text-muted-foreground">— {item.evidence}</span></span>
               </li>
             ))}
@@ -689,8 +689,8 @@ function AnalysisPanel({ analysis }: { analysis: SavedAnalysis }) {
         </div>
       )}
       {result.cautions.length > 0 && (
-        <div className="rounded-xl border border-amber-500/20 bg-amber-500/[0.06] p-4">
-          <h5 className="mb-2 flex items-center gap-2 text-sm font-semibold"><AlertTriangle className="h-4 w-4 text-amber-600" />Evidence gaps to clarify</h5>
+        <div className="rounded-xl border border-warning/20 bg-warning/5 p-4">
+          <h5 className="mb-2 flex items-center gap-2 text-sm font-semibold"><AlertTriangle className="h-4 w-4 text-warning" />Evidence gaps to clarify</h5>
           <ul className="space-y-1 text-sm text-muted-foreground">
             {result.cautions.map((item) => <li key={item}>• {item}</li>)}
           </ul>

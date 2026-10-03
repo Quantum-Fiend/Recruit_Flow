@@ -137,8 +137,8 @@ export default function NewJobPage() {
                   className={cn(
                     "text-[10px] font-black uppercase tracking-widest",
                     formData.description.length < 50
-                      ? "text-amber-500"
-                      : "text-emerald-500",
+                      ? "text-warning"
+                      : "text-success",
                   )}
                 >
                   {formData.description.length}/50 min

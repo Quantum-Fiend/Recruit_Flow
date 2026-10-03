@@ -7,8 +7,6 @@ services:
       POSTGRES_DB: ${POSTGRES_DB:-recruitflow}
     volumes:
       - recruitflow-db-data:/var/lib/postgresql/data
-    ports:
-      - "127.0.0.1:${POSTGRES_PORT:-5432}:5432"
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U \"$${POSTGRES_USER}\" -d \"$${POSTGRES_DB}\""]
       interval: 5s
@@ -16,14 +14,19 @@ services:
       retries: 10
       start_period: 10s
     restart: unless-stopped
+    stop_grace_period: 1m
 
   migrate:
     build:
       context: .
       dockerfile: Dockerfile
       target: migrator
-    environment:
-      DATABASE_URL: ${DATABASE_URL:?Set DATABASE_URL in your .env file}
+    environment: &database-environment
+      DATABASE_HOST: db
+      DATABASE_PORT: 5432
+      POSTGRES_USER: ${POSTGRES_USER:-recruitflow}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in your .env file}
+      POSTGRES_DB: ${POSTGRES_DB:-recruitflow}
     volumes:
       - recruitflow-uploads:/app/public/uploads
       - recruitflow-private-uploads:/app/data/uploads
@@ -36,8 +39,9 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      target: runner
     environment:
-      DATABASE_URL: ${DATABASE_URL:?Set DATABASE_URL in your .env file}
+      <<: *database-environment
       NEXTAUTH_URL: ${NEXTAUTH_URL:?Set NEXTAUTH_URL in your .env file}
       NEXTAUTH_SECRET: ${NEXTAUTH_SECRET:?Set NEXTAUTH_SECRET in your .env file}
       AUTH_TRUST_HOST: ${AUTH_TRUST_HOST:-true}
@@ -46,21 +50,25 @@ services:
       RESEND_API_KEY: ${RESEND_API_KEY:-}
       EMAIL_FROM: ${EMAIL_FROM:-}
     ports:
-      - "127.0.0.1:${APP_PORT:-3000}:3000"
+      - "${APP_BIND_ADDRESS:-127.0.0.1}:${APP_PORT:-3000}:3000"
     volumes:
       - recruitflow-private-uploads:/app/data/uploads
+    init: true
     depends_on:
-      db:
-        condition: service_healthy
       migrate:
         condition: service_completed_successfully
     healthcheck:
-      test: ["CMD-SHELL", "wget --quiet --tries=1 --spider http://127.0.0.1:3000/api/health || exit 1"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
+      test:
+        - CMD
+        - node
+        - -e
+        - "fetch('http://127.0.0.1:3000/api/health').then(r => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))"
+      interval: 15s
+      timeout: 5s
+      retries: 5
       start_period: 30s
     restart: unless-stopped
+    stop_grace_period: 30s
 
 volumes:
   recruitflow-db-data:

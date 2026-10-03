@@ -85,26 +85,26 @@ export default function ApplicantDashboard() {
   }, [loadApplications]);
 
   return (
-    <div className="page-wrapper animate-reveal px-6">
+    <div className="page-wrapper animate-reveal">
       {/* Dashboard Header */}
-      <header className="w-full mb-24 flex flex-col md:flex-row md:items-end justify-between gap-12">
-        <div className="max-w-3xl space-y-8">
-          <div className="inline-flex items-center gap-3 px-4 py-1.5 rounded-full glass-panel text-[10px] font-black uppercase tracking-[0.3em] text-primary">
+      <header className="w-full mb-12 sm:mb-20 flex flex-col md:flex-row md:items-end justify-between gap-6 sm:gap-10">
+        <div className="max-w-3xl space-y-5 sm:space-y-7">
+          <div className="inline-flex max-w-full items-center gap-2 px-3 sm:px-4 py-1.5 rounded-full glass-panel text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-primary">
             <LayoutDashboard className="w-3.5 h-3.5" />
             <span>Candidate workspace</span>
           </div>
           <h1 className="h-lg text-gradient leading-tight">
             My applications
           </h1>
-          <p className="text-xl text-muted-foreground font-medium opacity-60 leading-relaxed max-w-xl">
+          <p className="text-base sm:text-lg text-muted-foreground font-medium leading-relaxed max-w-xl">
             Review your applications and see the latest status updates from
             hiring teams.
           </p>
         </div>
 
-        <div className="flex items-center gap-6">
+        <div className="flex items-center">
           <Link href="/jobs">
-            <Button className="btn-quantum h-16 px-10 rounded-2xl shadow-2xl">
+            <Button className="btn-quantum min-h-12 h-auto px-5 sm:px-8 py-3 rounded-xl shadow-sm">
               Browse jobs <ArrowRight className="w-4 h-4 ml-2" />
             </Button>
           </Link>
@@ -112,7 +112,7 @@ export default function ApplicantDashboard() {
       </header>
 
       {/* Intelligence Grid */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-24 w-full">
+      <div className="grid grid-cols-1 min-[480px]:grid-cols-2 md:grid-cols-4 gap-3 sm:gap-5 mb-12 sm:mb-20 w-full">
         {loading ? (
           [0, 1, 2, 3].map((item) => (
             <Skeleton key={item} className="h-40 rounded-2xl" />
@@ -146,9 +146,9 @@ export default function ApplicantDashboard() {
       </div>
 
       {/* Main Pipeline Feed */}
-      <div className="w-full space-y-12">
-        <div className="flex items-center justify-between px-4 mb-4">
-          <h2 className="text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground/40">
+      <div className="w-full space-y-8 sm:space-y-10">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
             Application activity
           </h2>
         </div>
@@ -173,18 +173,18 @@ export default function ApplicantDashboard() {
             </Button>
           </div>
         ) : applications.length === 0 ? (
-          <div className="text-center py-48 glass-panel w-full border-dashed rounded-[4rem] flex flex-col items-center">
-            <Briefcase className="w-20 h-20 mb-8 text-muted-foreground/10" />
-            <h3 className="text-4xl font-black mb-4 tracking-tighter">
+          <div className="text-center py-20 sm:py-32 px-5 glass-panel w-full border-dashed rounded-2xl flex flex-col items-center">
+            <Briefcase className="w-14 h-14 mb-6 text-muted-foreground/30" />
+            <h3 className="text-2xl sm:text-3xl font-bold mb-3 tracking-tight">
               No applications yet
             </h3>
-            <p className="text-xl text-muted-foreground mb-16 max-w-sm font-medium opacity-60">
+            <p className="text-base text-muted-foreground mb-8 max-w-sm font-medium">
               Browse open positions and apply to roles that fit your experience.
             </p>
             <Link href="/jobs">
               <Button
                 variant="outline"
-                className="rounded-2xl px-12 h-16 font-black border-border/50 hover:bg-secondary transition-all"
+                className="rounded-xl px-5 h-12 font-semibold border-border/50 hover:bg-secondary transition-all"
               >
                 Browse open positions
               </Button>
@@ -255,58 +255,58 @@ function ApplicationListItem({
       }}
       className="group/card"
     >
-      <div className="premium-card p-0 glass-panel border-border/40 group-hover/card:border-primary/30 transition-all duration-700">
-        <div className="p-10 md:p-12 flex flex-col md:flex-row md:items-center justify-between gap-12">
-          <div className="flex items-center gap-10 flex-1">
-            <div className="w-20 h-20 rounded-3xl bg-foreground/5 flex items-center justify-center text-foreground group-hover/card:bg-foreground group-hover/card:text-background transition-all duration-700 shadow-2xl">
+      <div className="premium-card p-0 glass-panel border-border/40">
+        <div className="p-4 sm:p-6 lg:p-8 flex flex-col lg:flex-row lg:items-center justify-between gap-5 sm:gap-7">
+          <div className="flex min-w-0 items-start sm:items-center gap-4 sm:gap-6">
+            <div className="w-12 h-12 sm:w-14 sm:h-14 shrink-0 rounded-xl bg-foreground/5 flex items-center justify-center text-foreground">
               <Briefcase className="w-10 h-10" />
             </div>
-            <div className="space-y-4">
-              <div className="flex items-center gap-6 flex-wrap">
-                <h3 className="text-3xl font-black tracking-tighter leading-tight group-hover/card:text-primary transition-colors">
+            <div className="min-w-0 space-y-3">
+              <div className="flex items-center gap-3 flex-wrap">
+                <h3 className="min-w-0 break-words text-lg sm:text-xl lg:text-2xl font-semibold tracking-tight leading-tight group-hover/card:text-primary transition-colors">
                   {application.job.title}
                 </h3>
                 <div
                   className={cn(
-                    "px-6 py-2 rounded-xl text-[10px] uppercase tracking-[0.2em] font-black shadow-xl",
+                    "max-w-full px-3 py-1.5 rounded-lg text-[9px] uppercase tracking-wider font-semibold",
                     getStatusColor(application.status),
                   )}
                 >
                   {application.status}
                 </div>
               </div>
-              <div className="flex flex-wrap items-center gap-x-8 gap-y-2 text-[10px] font-black uppercase tracking-widest text-muted-foreground/40">
-                <span className="flex items-center gap-3">
-                  <MapPin className="w-4 h-4" /> {application.job.location}
+              <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
+                <span className="flex min-w-0 items-center gap-2 break-words">
+                  <MapPin className="w-4 h-4 shrink-0" /> {application.job.location}
                 </span>
-                <span className="flex items-center gap-3">
-                  <Calendar className="w-4 h-4" />{" "}
+                <span className="flex items-center gap-2">
+                  <Calendar className="w-4 h-4 shrink-0" />{" "}
                   {formatDate(application.appliedAt)}
                 </span>
-                <span className="flex items-center gap-3 text-primary/60">
-                  <FileText className="w-4 h-4" /> {application.resumeName}
+                <span className="flex min-w-0 items-center gap-2 break-all text-primary">
+                  <FileText className="w-4 h-4 shrink-0" /> {application.resumeName}
                 </span>
               </div>
             </div>
           </div>
 
-          <div className="flex items-center gap-4">
+          <div className="flex w-full flex-wrap items-center gap-2 lg:w-auto">
             <Link
               href={`/jobs/${application.job.id}`}
-              className="flex-1 md:flex-none"
+              className="flex-1 lg:flex-none"
             >
               <Button
                 variant="outline"
-                className="h-14 px-8 rounded-2xl font-black text-[10px] uppercase tracking-widest border-border/50 hover:bg-secondary transition-all shadow-sm"
+                className="h-11 px-4 rounded-xl font-semibold text-xs uppercase tracking-wide border-border/50 hover:bg-secondary transition-all shadow-sm"
               >
                 Full Specs
               </Button>
             </Link>
 
             {isOffer && (
-              <div className="flex items-center gap-3">
+              <div className="flex flex-wrap items-center gap-2">
                 <Button
-                  className="h-14 px-10 rounded-2xl btn-quantum shadow-2xl active:scale-[0.98]"
+                  className="h-11 px-4 rounded-xl btn-quantum shadow-sm active:scale-[0.98]"
                   onClick={async () => {
                     if (
                       confirm(
@@ -327,7 +327,7 @@ function ApplicationListItem({
                 </Button>
                 <Button
                   variant="ghost"
-                  className="h-14 px-8 rounded-2xl font-black text-[10px] uppercase tracking-widest text-muted-foreground/60 hover:text-destructive hover:bg-destructive/5 transition-all"
+                  className="h-11 px-4 rounded-xl font-semibold text-xs uppercase tracking-wide text-muted-foreground hover:text-destructive hover:bg-destructive/5 transition-all"
                   onClick={async () => {
                     if (confirm("Decline this offer?")) {
                       const result = await declineOfferAction(application.id);
@@ -348,7 +348,7 @@ function ApplicationListItem({
             {isActionable && (
               <Button
                 variant="ghost"
-                className="h-14 px-6 rounded-2xl text-muted-foreground/40 hover:text-destructive hover:bg-destructive/5 transition-all font-black text-[10px] uppercase tracking-widest gap-3"
+                className="h-11 px-4 rounded-xl text-muted-foreground hover:text-destructive hover:bg-destructive/5 transition-all font-semibold text-xs uppercase tracking-wide gap-2"
                 onClick={async () => {
                   if (confirm("Withdraw this application?")) {
                     const result = await withdrawApplicationAction(
@@ -376,12 +376,12 @@ function ApplicationListItem({
 
 function StatBox({ label, value, icon }: { label: string; value: number | string; icon: React.ReactNode }) {
   return (
-    <div className="premium-card p-10 flex flex-col items-center justify-center text-center group glass-panel border-border/40 hover:border-primary/40 transition-all duration-700">
-       <div className="w-16 h-16 rounded-2xl bg-foreground/[0.03] flex items-center justify-center text-foreground group-hover:bg-primary/10 group-hover:text-primary transition-all duration-700 mb-8 shadow-2xl">
+    <div className="premium-card p-5 sm:p-6 flex flex-col items-center justify-center text-center glass-panel border-border/40">
+       <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-foreground/[0.03] flex items-center justify-center text-foreground mb-4 sm:mb-5">
           {icon}
        </div>
-       <div className="text-6xl font-black mb-4 tracking-tighter leading-none group-hover:scale-110 transition-transform duration-700">{value}</div>
-       <p className="text-[10px] font-black text-muted-foreground/40 uppercase tracking-[0.4em]">{label}</p>
+       <div className="text-4xl sm:text-5xl font-bold mb-2 tracking-tight leading-none">{value}</div>
+       <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">{label}</p>
     </div>
   )
 }

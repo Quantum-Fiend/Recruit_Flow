@@ -1,17 +1,22 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import Link from "next/link";
 import { Toaster } from "sonner";
 import { ThemeProvider } from "@/components/theme-provider";
 import { SessionProvider } from "@/components/session-provider";
 import { Navbar } from "@/components/navbar";
 
 export const metadata: Metadata = {
+  applicationName: "RecruitFlow",
   title: {
-    default: "RecruitFlow | Hiring, thoughtfully",
+    default: "RecruitFlow | A clearer way to hire",
     template: "%s | RecruitFlow",
   },
   description:
     "A clear, collaborative workspace for finding great people and building thoughtful hiring processes.",
+  icons: {
+    icon: "/icon.svg",
+  },
 };
 
 export default function RootLayout({
@@ -31,8 +36,15 @@ export default function RootLayout({
             <Navbar />
             <main className="app-main">{children}</main>
             <footer className="app-footer">
-              <span className="app-footer-brand">RecruitFlow</span>
-              <span>Thoughtful hiring starts with a clearer process.</span>
+              <div className="app-footer-copy">
+                <span className="app-footer-brand">RecruitFlow</span>
+                <span>Thoughtful hiring starts with a clearer process.</span>
+              </div>
+              <nav className="app-footer-links" aria-label="Footer navigation">
+                <Link href="/jobs">Explore roles</Link>
+                <Link href="/login">Sign in</Link>
+                <Link href="/signup">Create account</Link>
+              </nav>
               <span>© {new Date().getFullYear()} RecruitFlow</span>
             </footer>
             <Toaster position="bottom-right" richColors closeButton />

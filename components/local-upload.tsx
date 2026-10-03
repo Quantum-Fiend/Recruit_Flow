@@ -91,8 +91,8 @@ export function LocalUpload({ onUploadComplete }: LocalUploadProps) {
               if (e.dataTransfer.files[0]) selectFile(e.dataTransfer.files[0]);
             }}
             className={`
-              relative group flex flex-col items-center justify-center p-16 rounded-[2.5rem] 
-              border-2 border-dashed transition-all duration-500
+              relative group flex min-w-0 flex-col items-center justify-center p-5 sm:p-8 rounded-2xl
+              border-2 border-dashed transition-colors
               ${
                 isDragOver
                   ? "border-foreground bg-foreground/5"
@@ -100,16 +100,16 @@ export function LocalUpload({ onUploadComplete }: LocalUploadProps) {
               }
             `}
           >
-            <div className="absolute top-0 right-0 p-8 opacity-0 group-hover:opacity-100 transition-opacity">
-              <Sparkles className="w-6 h-6 text-foreground/20 animate-pulse" />
+            <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity">
+              <Sparkles className="w-5 h-5 text-primary/50" />
             </div>
 
-            <div className="w-20 h-20 rounded-3xl bg-foreground/5 flex items-center justify-center mb-8 group-hover:scale-110 transition-transform duration-500">
-              <Upload className="w-10 h-10 text-foreground/40 group-hover:text-foreground transition-colors" />
+            <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mb-5 text-primary">
+              <Upload className="w-7 h-7" />
             </div>
 
-            <div className="text-center space-y-4">
-              <h3 className="text-2xl font-black tracking-tighter">
+            <div className="max-w-full text-center space-y-2">
+              <h3 className="text-lg sm:text-xl font-semibold tracking-tight">
                 Upload your resume
               </h3>
               <p className="text-sm text-muted-foreground font-medium max-w-xs mx-auto leading-relaxed">
@@ -130,26 +130,26 @@ export function LocalUpload({ onUploadComplete }: LocalUploadProps) {
             key="file-preview"
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="glass p-8 flex flex-col items-center gap-8 relative overflow-hidden"
+            className="glass w-full min-w-0 p-4 sm:p-6 flex flex-col items-center gap-5 relative overflow-hidden rounded-2xl"
           >
             <div className="absolute -top-12 -right-12 w-32 h-32 bg-foreground/5 rounded-full blur-2xl" />
 
-            <div className="flex items-center gap-6 w-full">
-              <div className="w-16 h-16 rounded-2xl bg-foreground/5 flex items-center justify-center text-foreground">
-                <FileText className="w-8 h-8" />
+            <div className="flex min-w-0 items-start sm:items-center gap-3 w-full">
+              <div className="w-12 h-12 shrink-0 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+                <FileText className="w-6 h-6" />
               </div>
               <div className="flex-1 min-w-0">
-                <p className="font-black text-xl truncate tracking-tight">
+                <p className="font-semibold text-sm sm:text-base truncate tracking-tight">
                   {file.name}
                 </p>
-                <div className="flex items-center gap-3 mt-1">
+                <div className="flex flex-wrap items-center gap-x-2 gap-y-1 mt-1">
                   <Badge
                     variant="outline"
-                    className="text-[10px] font-black uppercase tracking-widest border-foreground/10"
+                    className="text-[9px] font-semibold uppercase tracking-wide border-foreground/10"
                   >
                     {(file.size / 1024 / 1024).toFixed(2)} MB
                   </Badge>
-                  <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
+                  <span className="text-[9px] font-semibold uppercase tracking-wide text-muted-foreground">
                     Ready to upload
                   </span>
                 </div>
@@ -157,6 +157,8 @@ export function LocalUpload({ onUploadComplete }: LocalUploadProps) {
               <Button
                 variant="ghost"
                 size="icon"
+                aria-label="Remove selected resume"
+                title="Remove selected resume"
                 onClick={() => setFile(null)}
                 className="rounded-xl hover:bg-destructive/10 hover:text-destructive"
               >
@@ -167,7 +169,7 @@ export function LocalUpload({ onUploadComplete }: LocalUploadProps) {
             <Button
               onClick={handleUpload}
               disabled={uploading}
-              className="w-full h-16 rounded-2xl bg-foreground text-background font-black text-lg shadow-xl shadow-foreground/10 group"
+              className="w-full min-h-12 h-auto rounded-xl bg-primary text-primary-foreground font-semibold text-sm shadow-sm group py-3"
             >
               {uploading ? (
                 <div className="flex items-center gap-3">
@@ -175,7 +177,7 @@ export function LocalUpload({ onUploadComplete }: LocalUploadProps) {
                   <span>Uploading resume...</span>
                 </div>
               ) : (
-                <span className="flex items-center gap-3">
+                <span className="flex items-center gap-2">
                   Upload resume
                   <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                 </span>

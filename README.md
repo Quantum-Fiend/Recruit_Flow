@@ -25,70 +25,74 @@ This is not yet a multi-tenant enterprise ATS. It does not currently implement c
 - Private local filesystem storage for uploaded resumes
 - Yarn Classic managed through Corepack
 
-## Requirements
+## Run the complete application with Docker
 
-- Node.js 20.9 or later
-- Corepack and Yarn 1.22.22
-- PostgreSQL 14 or later for a non-Docker development environment
-- Docker Engine with Compose v2 to use the containerized setup
+Docker Compose is the primary way to run RecruitFlow. The app is a single Next.js service (UI and API), backed by PostgreSQL. Compose waits for PostgreSQL to become healthy, applies versioned Prisma migrations, safely migrates any legacy resume files, and only then starts the app. The database and uploaded resumes use persistent named volumes.
 
-Use Yarn for dependency management and project commands. Do not use npm.
+Redis, a separate API container, and background workers are not part of this application's current architecture: there is no Redis/queue integration or worker process to run. Adding unused services would not improve the app.
 
-## Local development
+### Configure once
 
-1. Install dependencies:
-
-   ```powershell
-   corepack yarn install --frozen-lockfile
-   ```
-
-2. Create a `.env` file using `.env.example` as a starting point. For a local PostgreSQL instance, set `DATABASE_URL` to a PostgreSQL connection string pointing to that database, and set `NEXTAUTH_URL` to `http://localhost:3000`. Generate a development-only secret with `openssl rand -base64 32` (or another secure random generator) for `NEXTAUTH_SECRET`. Never use the example secret or credentials in production.
-
-3. Generate the Prisma client and apply migrations:
-
-   ```powershell
-   corepack yarn prisma generate
-   corepack yarn db:migrate:dev
-   ```
-
-4. Start the development server:
-
-   ```powershell
-   corepack yarn dev
-   ```
-
-   Open [http://localhost:3000](http://localhost:3000).
-
-Optional demo seed data can be loaded into a non-production database with `corepack yarn prisma db seed`. The seed script refuses to run when `NODE_ENV=production`; seeded accounts use the development-only password `password123` and must never be used in a deployed environment.
-
-## Docker Compose
-
-Copy `.env.example` to `.env` (PowerShell: `Copy-Item .env.example .env`) and replace the local-only secrets before exposing the service. Compose starts PostgreSQL, applies committed migrations, migrates legacy resume files when present, and then starts the standalone Next.js server:
+Copy the environment template and edit `.env`:
 
 ```powershell
-docker compose up --build -d
-docker compose ps
-docker compose logs -f web
+Copy-Item .env.example .env
+notepad .env
 ```
 
-Open [http://localhost:3000](http://localhost:3000). `docker compose down` preserves the named database and private-upload volumes. Do not use `docker compose down -v` unless intentionally discarding all persistent data.
+Set unique, random values for `POSTGRES_PASSWORD` and `NEXTAUTH_SECRET` (at least 32 characters). Do not commit `.env` or use example/placeholder values for a real deployment. Keep `APP_BIND_ADDRESS=127.0.0.1` for local-only access; for a deployment, expose the app only behind a trusted TLS reverse proxy and configure the bind address and canonical `NEXTAUTH_URL` accordingly. Set optional email and AI credentials only if those integrations are enabled.
 
-Compose uses a local PostgreSQL URL from `.env`. For hosted PostgreSQL, configure `DATABASE_URL` with the provider's required SSL and connection-pooling options; verify the provider-specific Prisma connection string and migration strategy before deployment. Production secrets must be unique and managed outside source control.
+### Start everything
+
+From the repository directory, run this single command:
+
+```powershell
+docker compose up --build --wait
+```
+
+Compose builds the app and starts all required services; no extra terminal, manual database setup, migration command, or separate frontend/API command is needed. When the command reports the services ready, open [http://localhost:3000](http://localhost:3000) and create a recruiter or applicant account. There are no demo accounts or automatic demo seeds; the seed script contains public development credentials and is intentionally not run by the production Docker startup.
+
+The app connects to PostgreSQL using the Docker-internal `db` hostname. Its database URL is generated from the same `POSTGRES_*` values used by the database, including passwords with URL-special characters. PostgreSQL is not published on a host port; only the web app is exposed.
+
+Useful optional operations:
+
+```powershell
+docker compose ps
+docker compose logs -f web
+docker compose down
+```
+
+Stopping the stack or rebuilding images preserves database and resume data. **Destructive reset only:** `docker compose down -v` removes the named volumes and permanently deletes the local database and uploaded files.
+
+## Local development without Docker
+
+Docker is the recommended workflow. For development outside containers, use Node.js 20.9 or later, Corepack/Yarn 1.22.22, and a PostgreSQL database. Configure `DATABASE_URL` to point to that database and set `NEXTAUTH_URL` and a unique `NEXTAUTH_SECRET` in `.env`; then run:
+
+```powershell
+corepack yarn install --frozen-lockfile
+corepack yarn prisma generate
+corepack yarn db:migrate:dev
+corepack yarn dev
+```
+
+Optional demo seed data can be loaded into a non-production database with `corepack yarn prisma db seed`. The seed script refuses to run when `NODE_ENV=production`; seeded accounts use the development-only password `password123` and must never be used in a deployed environment.
 
 ## Configuration
 
 | Variable | Required | Purpose |
 | --- | --- | --- |
-| `DATABASE_URL` | Yes | PostgreSQL connection used by Prisma. Use SSL and a provider-appropriate pooler in production. |
-| `NEXTAUTH_URL` | Yes for deployment | Canonical application URL. |
-| `NEXTAUTH_SECRET` | Yes | Secret used to sign authentication tokens; generate a unique high-entropy value. |
-| `AUTH_TRUST_HOST` | Deployment-dependent | Set to `true` only when the application is behind a trusted proxy or in the provided local Compose setup. |
+| `POSTGRES_USER` | No | Docker Compose database user (defaults to `recruitflow`). |
+| `POSTGRES_PASSWORD` | Yes for Docker | Unique database password; the app's internal PostgreSQL URL is built from this and the other `POSTGRES_*` values. |
+| `POSTGRES_DB` | No | Docker Compose database name (defaults to `recruitflow`). |
+| `APP_PORT` | No | Host port for the web app (defaults to `3000`). |
+| `APP_BIND_ADDRESS` | No | Host interface for the web port (defaults to `127.0.0.1`). |
+| `NEXTAUTH_URL` | Yes | Canonical application URL (defaults in `.env.example` to `http://localhost:3000`). |
+| `NEXTAUTH_SECRET` | Yes | Unique random secret of at least 32 characters used to sign authentication tokens. |
+| `AUTH_TRUST_HOST` | No | Set to `true` in the local Compose setup; configure appropriately behind a trusted proxy. |
 | `OPENAI_API_KEY` | No | Enables recruiter-triggered resume analysis and copilot. Requests send resume/job context to OpenAI; configure according to your privacy and retention obligations. |
 | `OPENAI_RESUME_MODEL` | No | Optional model override for resume analysis. |
 | `RESEND_API_KEY` | No | Enables transactional email. |
 | `EMAIL_FROM` | No | Verified sender address; email is skipped when this or the API key is absent. |
-| `APP_PORT` | No | Host port exposed by Compose (defaults to `3000`). |
-| `POSTGRES_USER`, `POSTGRES_PASSWORD`, `POSTGRES_DB`, `POSTGRES_PORT` | Compose only | Local PostgreSQL container configuration. |
 
 The former UploadThing integration has been removed: resumes are uploaded to private local storage instead. The application requires persistent writable storage at `data/uploads` (provided by a named volume in Compose). Do not deploy multiple app replicas with node-local disks unless you provide shared durable storage and verify its access controls and lifecycle.
 
@@ -96,7 +100,7 @@ The former UploadThing integration has been removed: resumes are uploaded to pri
 
 Resume uploads are limited to 5 MB and validated for supported extension, MIME type, and file signature. Files are stored outside `public/`. The authenticated `/api/resumes/[filename]` route only serves files referenced by an application to its applicant, the recruiter who owns the associated job, or an admin. Upload delivery is private and non-cacheable.
 
-The Compose migration service safely copies files from the existing `recruitflow-uploads` volume to the private volume, updates matching database URLs, verifies that references resolve, then removes legacy public files. Back up both the database and upload volume before upgrading. For non-Compose deployments, preserve the old `public/uploads` files and run `corepack yarn db:secure-uploads` with the production database and old/new storage mounted at the expected paths before routing traffic to the updated application. Test this process against a production-like copy first; it has not been verified against a live deployment in this repository.
+The Compose migration service safely copies files from the existing `recruitflow-uploads` volume to the private volume, updates matching database URLs, verifies that references resolve, then removes legacy public files. It runs automatically after database readiness and before the app starts. Back up both the database and upload volume before upgrading. For non-Compose deployments, preserve the old `public/uploads` files and run `corepack yarn db:secure-uploads` with the production database and old/new storage mounted at the expected paths before routing traffic to the updated application.
 
 Uploads that are not attached to an application can remain as orphaned files; there is not yet a scheduled orphan cleanup or resume-retention policy.
 
@@ -108,13 +112,13 @@ The supported database is PostgreSQL. `prisma/schema.prisma` is the data model a
 corepack yarn db:migrate:dev
 ```
 
-For a deployment, apply reviewed, committed migrations before serving traffic:
+For Docker Compose, reviewed committed migrations run automatically before the app starts. For other deployments, apply migrations before serving traffic:
 
 ```powershell
 corepack yarn db:migrate:deploy
 ```
 
-Never use `prisma db push` as a substitute for production migrations. Back up production data, review generated SQL, and test upgrades and rollback/recovery procedures against a database copy. Migrations and CRUD operations have not been exercised against a live PostgreSQL instance as part of the current repository audit.
+Never use `prisma db push` as a substitute for production migrations. Back up production data, review generated SQL, and test upgrades and rollback/recovery procedures against a database copy.
 
 ## Checks
 
@@ -124,7 +128,7 @@ corepack yarn build
 corepack yarn prisma validate
 ```
 
-`validate` runs type-checking, ESLint, and unit tests. These checks do not replace integration testing with PostgreSQL, authenticated end-to-end workflow tests, migration testing, load testing, or deployment validation. Docker Compose configuration can be checked with `docker compose --env-file .env.example config --quiet`; starting containers requires a working Docker Engine.
+`validate` runs type-checking, ESLint, and unit tests. Local Compose verification covers clean migration startup, service health, account creation/sign-in, recruiter job creation, candidate resume upload and authorized retrieval, application submission, status changes, recruiter notes, and database/upload persistence across a stop and image rebuild. The OpenAI/Resend integrations need valid external credentials and are not exercised without them. These checks do not replace load testing, high-availability testing, managed-backup/restore drills, or deployment validation. Validate Compose interpolation with `docker compose config --quiet`.
 
 ## Security and production operations
 
@@ -140,4 +144,4 @@ corepack yarn prisma validate
 
 ## Known verification limits
 
-The repository audit could run static checks and application builds, but the environment did not provide a working Docker Engine or configured production PostgreSQL credentials. Consequently, live migrations, database CRUD and concurrency, multi-user tenant isolation, realistic-volume performance, persisted authenticated end-to-end workflows, and backup/restore behavior remain unverified. Do not treat a passing build as proof of production readiness.
+Compose is a single-host deployment and does not provide high availability, horizontal scaling, distributed rate limits, managed backups, or a restore process. Back up the database and resume volumes together, rehearse recovery, and validate performance and operational controls in the target environment before enabling real candidate data.

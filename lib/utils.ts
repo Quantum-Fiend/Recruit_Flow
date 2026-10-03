@@ -29,16 +29,16 @@ export function formatRelativeTime(date: Date | string): string {
 
 export function getStatusColor(status: string): string {
   const colors: Record<string, string> = {
-    APPLIED: 'bg-blue-500/10 text-blue-500 border-blue-500/20',
-    SHORTLISTED: 'bg-purple-500/10 text-purple-500 border-purple-500/20',
-    INTERVIEW: 'bg-yellow-500/10 text-yellow-500 border-yellow-500/20',
-    OFFER: 'bg-green-500/10 text-green-500 border-green-500/20',
-    HIRED: 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20',
-    REJECTED: 'bg-red-500/10 text-red-500 border-red-500/20',
-    OPEN: 'bg-green-500/10 text-green-500 border-green-500/20',
-    CLOSED: 'bg-gray-500/10 text-gray-500 border-gray-500/20',
+    APPLIED: 'bg-info/10 text-info border-info/20',
+    SHORTLISTED: 'bg-primary/10 text-primary border-primary/20',
+    INTERVIEW: 'bg-warning/10 text-warning border-warning/20',
+    OFFER: 'bg-success/10 text-success border-success/20',
+    HIRED: 'bg-success-strong/10 text-success-strong border-success-strong/20',
+    REJECTED: 'bg-error/10 text-error border-error/20',
+    OPEN: 'bg-success/10 text-success border-success/20',
+    CLOSED: 'bg-muted text-muted-foreground border-border',
   }
-  return colors[status] || 'bg-gray-500/10 text-gray-500 border-gray-500/20'
+  return colors[status] || 'bg-muted text-muted-foreground border-border'
 }
 
 export function getJobTypeLabel(type: string): string {

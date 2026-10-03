@@ -164,9 +164,9 @@ export default function JobDetailsPage() {
   }
 
   return (
-    <div className="page-wrapper animate-reveal px-6">
+    <div className="page-wrapper animate-reveal">
       {/* Navigation & Technical Identity */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-10 mb-20">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 sm:gap-8 mb-10 sm:mb-16">
         <Link href="/jobs">
           <Button
             variant="ghost"
@@ -177,7 +177,7 @@ export default function JobDetailsPage() {
           </Button>
         </Link>
 
-        <div className="flex items-center gap-6">
+        <div className="flex items-center gap-3">
           <Button
             variant="outline"
             className="h-12 w-12 rounded-2xl border-border/50 hover:bg-secondary p-0 shadow-sm transition-all"
@@ -190,24 +190,24 @@ export default function JobDetailsPage() {
         </div>
       </div>
 
-      <div className="grid lg:grid-cols-3 gap-12 items-start w-full mb-40">
+      <div className="grid lg:grid-cols-3 gap-6 sm:gap-8 items-start w-full mb-20 sm:mb-32">
         {/* Main Technical Specs */}
-        <div className="lg:col-span-2 space-y-12">
+        <div className="min-w-0 lg:col-span-2 space-y-6 sm:space-y-8">
           {/* Header Identity */}
-          <div className="premium-card p-12 md:p-16 glass-panel border-border/40 group overflow-hidden relative">
+          <div className="premium-card p-5 sm:p-8 lg:p-10 glass-panel border-border/40 group overflow-hidden relative">
             <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-primary/5 rounded-full blur-[120px] -z-10 group-hover:bg-primary/10 transition-all duration-1000" />
 
-            <div className="flex flex-col md:flex-row md:items-start justify-between gap-12 mb-16">
-              <div className="space-y-8">
-                <div className="w-20 h-20 rounded-3xl bg-foreground/5 flex items-center justify-center text-foreground shadow-2xl group-hover:bg-foreground group-hover:text-background transition-all duration-700">
+            <div className="flex flex-col md:flex-row md:items-start justify-between gap-6 sm:gap-8 mb-8 sm:mb-12">
+              <div className="min-w-0 space-y-5 sm:space-y-7">
+                <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-foreground/5 flex items-center justify-center text-foreground">
                   <Briefcase className="w-10 h-10" />
                 </div>
-                <h1 className="text-5xl md:text-7xl font-black tracking-tighter leading-[0.9] text-balance">
+                <h1 className="text-3xl sm:text-5xl lg:text-6xl font-bold tracking-tight leading-tight text-balance break-words">
                   {job.title}
                 </h1>
               </div>
-              <div className="flex flex-col items-end gap-4 shrink-0">
-                <div className="px-8 py-3 rounded-xl text-[10px] font-black uppercase tracking-[0.2em] bg-primary/10 text-primary border border-primary/20 shadow-xl">
+              <div className="flex flex-col items-start md:items-end gap-3 shrink-0">
+                <div className="max-w-full px-4 sm:px-6 py-2 rounded-xl text-[10px] font-bold uppercase tracking-wider bg-primary/10 text-primary border border-primary/20">
                   {job.status}
                 </div>
                 <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/40">
@@ -216,7 +216,7 @@ export default function JobDetailsPage() {
               </div>
             </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-12 pt-12 border-t border-border/40">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 sm:gap-8 pt-6 sm:pt-8 border-t border-border/40">
               <SpecItem
                 icon={<MapPin className="w-5 h-5" />}
                 label="Target Location"
@@ -236,20 +236,20 @@ export default function JobDetailsPage() {
           </div>
 
           {/* Description Body */}
-          <div className="premium-card p-12 md:p-16 glass-panel border-border/40">
-            <h2 className="text-[10px] font-black mb-12 tracking-[0.4em] uppercase text-muted-foreground/40">
+          <div className="premium-card p-5 sm:p-8 lg:p-10 glass-panel border-border/40">
+            <h2 className="text-[10px] font-bold mb-6 sm:mb-8 tracking-wider uppercase text-muted-foreground">
               Job description
             </h2>
             <div className="prose prose-invert max-w-none">
-              <p className="text-xl text-muted-foreground font-medium leading-relaxed whitespace-pre-wrap opacity-80">
+              <p className="text-base sm:text-lg text-muted-foreground font-medium leading-relaxed whitespace-pre-wrap">
                 {job.description}
               </p>
             </div>
           </div>
 
           {/* Competencies */}
-          <div className="premium-card p-12 md:p-16 glass-panel border-border/40">
-            <div className="flex items-center gap-4 mb-12">
+          <div className="premium-card p-5 sm:p-8 lg:p-10 glass-panel border-border/40">
+            <div className="flex items-start sm:items-center gap-3 mb-6 sm:mb-8">
               <Sparkles className="w-6 h-6 text-primary" />
               <h2 className="text-[10px] font-black tracking-[0.4em] uppercase text-muted-foreground/40">
                 Required Competencies
@@ -259,7 +259,7 @@ export default function JobDetailsPage() {
               {job.skills.map((skill: string) => (
                 <div
                   key={skill}
-                  className="px-8 py-3.5 rounded-2xl bg-foreground/[0.03] border border-border/50 text-[11px] font-black tracking-widest uppercase hover:border-primary/40 hover:bg-primary/5 transition-all cursor-default shadow-sm"
+                  className="max-w-full px-4 py-2.5 rounded-xl bg-foreground/[0.03] border border-border/50 text-[10px] font-semibold tracking-wide uppercase break-words"
                 >
                   {skill}
                 </div>
@@ -269,15 +269,15 @@ export default function JobDetailsPage() {
         </div>
 
         {/* Strategic Action Sidebar */}
-        <aside className="space-y-10 sticky top-32">
-          <div className="premium-card p-10 md:p-12 glass-panel border-border/40 space-y-12 shadow-2xl relative overflow-hidden">
+        <aside className="min-w-0 space-y-6 lg:sticky lg:top-24">
+          <div className="premium-card p-5 sm:p-8 glass-panel border-border/40 space-y-7 shadow-sm relative overflow-hidden">
             <div className="absolute top-0 left-0 w-full h-1 sapphire-gradient opacity-50" />
 
             <div className="space-y-4 text-center">
-              <h3 className="text-3xl font-black tracking-tighter">
+              <h3 className="text-2xl font-bold tracking-tight">
                 Interested in this role?
               </h3>
-              <p className="text-base text-muted-foreground font-medium opacity-60 text-balance">
+              <p className="text-sm sm:text-base text-muted-foreground font-medium text-balance">
                 Submit your resume to apply. You can track updates in your candidate dashboard.
               </p>
             </div>

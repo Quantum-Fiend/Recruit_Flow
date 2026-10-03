@@ -47,7 +47,7 @@ export default function SignupPage() {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-[65vh] w-full px-6 py-8">
+    <div className="flex flex-col items-center justify-center min-h-[65vh] w-full px-4 sm:px-6 py-8">
       <motion.div
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
@@ -55,13 +55,13 @@ export default function SignupPage() {
         className="w-full max-w-[500px]"
       >
         <div className="text-center mb-12 space-y-4">
-          <div className={`w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-xl transition-all ${role === 'APPLICANT' ? 'sapphire-gradient text-white shadow-primary/20' : 'bg-emerald-500 text-white shadow-emerald-500/20'}`}>
+          <div className={`w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-md transition-all ${role === 'APPLICANT' ? 'sapphire-gradient text-white shadow-primary/20' : 'bg-success text-success-foreground shadow-success/20'}`}>
             {role === 'APPLICANT' ? <User className="w-8 h-8" /> : <Briefcase className="w-8 h-8" />}
           </div>
-          <h1 className="text-4xl font-black tracking-tighter">
+          <h1 className="text-3xl sm:text-4xl font-bold tracking-tight">
             {role === 'APPLICANT' ? "Candidate Registration" : "Recruiter Registration"}
           </h1>
-          <p className="text-lg text-muted-foreground font-medium">
+          <p className="text-base sm:text-lg text-muted-foreground font-medium">
             {role === 'APPLICANT' ? "Create an account to track your applications." : "Set up a workspace for your hiring process."}
           </p>
         </div>
@@ -83,15 +83,15 @@ export default function SignupPage() {
             aria-pressed={role === "RECRUITER"}
             onClick={() => setRole("RECRUITER")}
             className={`flex-1 py-3 text-xs font-black uppercase tracking-widest rounded-xl transition-all ${
-              role === "RECRUITER" ? "bg-background shadow-md text-emerald-500" : "text-muted-foreground hover:text-foreground"
+              role === "RECRUITER" ? "bg-background shadow-sm text-success" : "text-muted-foreground hover:text-foreground"
             }`}
           >
             Recruiter
           </button>
         </div>
 
-        <div className="glass-panel rounded-[2.5rem] p-1 border-none shadow-2xl relative overflow-hidden">
-          <div className="p-10 space-y-8">
+        <div className="glass-panel rounded-2xl sm:rounded-[2rem] p-1 border shadow-lg relative overflow-hidden">
+          <div className="p-5 sm:p-8 space-y-6 sm:space-y-8">
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="space-y-2">
                 <Label htmlFor="name" className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Full name</Label>
@@ -115,7 +115,7 @@ export default function SignupPage() {
                 </div>
               </div>
 
-              <Button type="submit" className={`w-full h-16 rounded-xl font-black text-lg shadow-xl hover:opacity-95 transition-all text-white ${role === 'APPLICANT' ? 'sapphire-gradient shadow-primary/20' : 'bg-emerald-500 shadow-emerald-500/20'}`} disabled={loading}>
+              <Button type="submit" className={`w-full min-h-14 h-auto rounded-xl font-semibold text-base shadow-md hover:opacity-95 transition-all text-white ${role === 'APPLICANT' ? 'sapphire-gradient shadow-primary/20' : 'bg-success shadow-success/20'}`} disabled={loading}>
                 {loading ? <Loader2 className="w-6 h-6 animate-spin" /> : "Create account"}
               </Button>
             </form>
