@@ -15,6 +15,7 @@ export async function getRecruiterDashboardAction() {
       activeJobsCount,
       totalApplicationsCount,
       pendingApplicationsCount,
+      applicationsByStatus,
       recentJobs,
       recentApplications,
     ] = await Promise.all([
@@ -29,6 +30,11 @@ export async function getRecruiterDashboardAction() {
           job: { recruiterId: session.user.id },
           status: "APPLIED",
         },
+      }),
+      prisma.application.groupBy({
+        by: ["status"],
+        where: { job: { recruiterId: session.user.id } },
+        _count: { _all: true },
       }),
       prisma.job.findMany({
         where: { recruiterId: session.user.id },
@@ -61,6 +67,9 @@ export async function getRecruiterDashboardAction() {
         activeJobsCount,
         totalApplicationsCount,
         pendingApplicationsCount,
+        applicationsByStatus: Object.fromEntries(
+          applicationsByStatus.map(({ status, _count }) => [status, _count._all]),
+        ),
         recentJobs,
         recentApplications
       }

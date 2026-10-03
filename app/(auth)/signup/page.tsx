@@ -35,19 +35,19 @@ export default function SignupPage() {
       if (result?.error) {
         toast.error(result.error);
       } else {
-        toast.success(role === "APPLICANT" ? "Candidate Profile Initialized." : "Recruiter Console Initialized.");
+        toast.success(role === "APPLICANT" ? "Your candidate account is ready." : "Your recruiter account is ready.");
         router.push(role === "APPLICANT" ? "/dashboard" : "/recruiter/dashboard");
         router.refresh();
       }
     } catch {
-      toast.error("System Error: Unable to process registration.")
+      toast.error("We couldn’t create your account. Please try again.")
     } finally {
       setLoading(false)
     }
   }
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-[90vh] w-full px-6 pt-40 pb-20">
+    <div className="flex flex-col items-center justify-center min-h-[65vh] w-full px-6 py-8">
       <motion.div
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
@@ -62,13 +62,15 @@ export default function SignupPage() {
             {role === 'APPLICANT' ? "Candidate Registration" : "Recruiter Registration"}
           </h1>
           <p className="text-lg text-muted-foreground font-medium">
-            {role === 'APPLICANT' ? "Join the global engineering network." : "Deploy hiring infrastructure."}
+            {role === 'APPLICANT' ? "Create an account to track your applications." : "Set up a workspace for your hiring process."}
           </p>
         </div>
 
         {/* Role Toggle */}
         <div className="flex p-1 mb-8 bg-foreground/5 rounded-2xl">
           <button
+            type="button"
+            aria-pressed={role === "APPLICANT"}
             onClick={() => setRole("APPLICANT")}
             className={`flex-1 py-3 text-xs font-black uppercase tracking-widest rounded-xl transition-all ${
               role === "APPLICANT" ? "bg-background shadow-md text-primary" : "text-muted-foreground hover:text-foreground"
@@ -77,6 +79,8 @@ export default function SignupPage() {
             Candidate
           </button>
           <button
+            type="button"
+            aria-pressed={role === "RECRUITER"}
             onClick={() => setRole("RECRUITER")}
             className={`flex-1 py-3 text-xs font-black uppercase tracking-widest rounded-xl transition-all ${
               role === "RECRUITER" ? "bg-background shadow-md text-emerald-500" : "text-muted-foreground hover:text-foreground"
@@ -90,21 +94,21 @@ export default function SignupPage() {
           <div className="p-10 space-y-8">
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="space-y-2">
-                <Label htmlFor="name" className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Full Identity</Label>
+                <Label htmlFor="name" className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Full name</Label>
                 <div className="relative group">
                   <User className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground/40 group-focus-within:text-foreground transition-colors" />
                   <Input id="name" name="name" placeholder={role === "APPLICANT" ? "John Doe" : "Jane Smith"} required className="h-14 pl-12 rounded-xl bg-foreground/5 border-none font-bold" />
                 </div>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="email" className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">{role === 'APPLICANT' ? "Network Email" : "Corporate Email"}</Label>
+                <Label htmlFor="email" className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Work email</Label>
                 <div className="relative group">
                   <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground/40 group-focus-within:text-foreground transition-colors" />
                   <Input id="email" name="email" type="email" placeholder={role === "APPLICANT" ? "john@example.com" : "jane@company.com"} required className="h-14 pl-12 rounded-xl bg-foreground/5 border-none font-bold" />
                 </div>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="password" className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Security Key</Label>
+                <Label htmlFor="password" className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Password</Label>
                 <div className="relative group">
                   <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground/40 group-focus-within:text-foreground transition-colors" />
                   <Input id="password" name="password" type="password" placeholder="••••••••" required minLength={8} className="h-14 pl-12 rounded-xl bg-foreground/5 border-none font-bold" />
@@ -112,7 +116,7 @@ export default function SignupPage() {
               </div>
 
               <Button type="submit" className={`w-full h-16 rounded-xl font-black text-lg shadow-xl hover:opacity-95 transition-all text-white ${role === 'APPLICANT' ? 'sapphire-gradient shadow-primary/20' : 'bg-emerald-500 shadow-emerald-500/20'}`} disabled={loading}>
-                {loading ? <Loader2 className="w-6 h-6 animate-spin" /> : (role === "APPLICANT" ? "Deploy Candidate Profile" : "Initialize Recruiter Console")}
+                {loading ? <Loader2 className="w-6 h-6 animate-spin" /> : "Create account"}
               </Button>
             </form>
 

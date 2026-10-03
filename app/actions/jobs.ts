@@ -252,6 +252,6 @@ export async function deleteJobAction(jobId: string) {
     return { success: true }
   } catch (error) {
     console.error("Delete job error:", error)
-    return { error: "Failed to delete job deployment." }
+    return { error: "Failed to delete job." }
   }
 }

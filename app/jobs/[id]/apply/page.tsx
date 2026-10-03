@@ -85,7 +85,7 @@ export default function ApplyPage() {
         toast.error(result.error);
       } else {
         setSuccess(true);
-        toast.success("Application Ingested Successfully");
+        toast.success("Application submitted");
         setTimeout(() => {
           router.push("/dashboard");
         }, 3000);
@@ -126,11 +126,10 @@ export default function ApplyPage() {
               </div>
               <div className="space-y-6">
                 <h2 className="text-5xl md:text-6xl font-black tracking-tighter leading-tight">
-                  Payload <br />
-                  Ingested.
+                  Application submitted
                 </h2>
                 <p className="text-xl text-muted-foreground font-medium leading-relaxed opacity-60">
-                  Your professional profile is now being processed by{" "}
+                  Your application has been sent to{" "}
                   <span className="text-foreground font-bold underline underline-offset-8 decoration-primary/30">
                     {job.recruiter.name}
                   </span>
@@ -139,7 +138,7 @@ export default function ApplyPage() {
               </div>
               <Link href="/dashboard" className="block">
                 <Button className="w-full h-18 rounded-2xl text-xs font-black uppercase tracking-[0.2em] bg-emerald-500 hover:bg-emerald-600 text-white shadow-2xl shadow-emerald-500/20 active:scale-95 transition-all py-6">
-                  Access My Command Center
+                  View my applications
                 </Button>
               </Link>
             </div>
@@ -163,7 +162,7 @@ export default function ApplyPage() {
             className="rounded-xl h-12 px-6 group font-black text-[10px] uppercase tracking-widest text-muted-foreground/60 hover:text-foreground"
           >
             <ArrowLeft className="w-4 h-4 mr-3 transition-transform group-hover:-translate-x-1" />
-            Return to Specifications
+            Back to job details
           </Button>
         </Link>
 
@@ -171,18 +170,17 @@ export default function ApplyPage() {
         <header className="space-y-8">
           <div className="inline-flex items-center gap-3 px-4 py-1.5 rounded-full glass-panel text-[10px] font-black uppercase tracking-[0.3em] text-primary">
             <Zap className="w-4 h-4" />
-            <span>Sequence Initialization</span>
+            <span>Job application</span>
           </div>
           <h1 className="h-lg text-gradient leading-tight">
-            Deploy for <br />
+            Apply for <br />
             <span>{job.title}</span>
           </h1>
           <p className="text-xl text-muted-foreground font-medium opacity-60 max-w-xl leading-relaxed">
-            Connecting your talent profile with the{" "}
+            Your application will be shared with{" "}
             <span className="text-foreground font-black">
               {job.recruiter.name}
-            </span>{" "}
-            engineering infrastructure.
+            </span>.
           </p>
         </header>
 
@@ -199,10 +197,10 @@ export default function ApplyPage() {
                 </div>
                 <div>
                   <h3 className="text-3xl font-black tracking-tighter">
-                    Identity Payload
+                    Your resume
                   </h3>
                   <p className="text-sm text-muted-foreground font-medium opacity-60">
-                    Your resume is the core telemetry of your talent profile.
+                    Upload a recent resume so the hiring team can review your experience.
                   </p>
                 </div>
               </div>
@@ -224,7 +222,7 @@ export default function ApplyPage() {
                         {resume.name}
                       </p>
                       <p className="text-[10px] text-emerald-500/60 font-black uppercase tracking-[0.2em]">
-                        Telemetry Ingested
+                        Resume uploaded
                       </p>
                     </div>
                   </div>
@@ -244,12 +242,12 @@ export default function ApplyPage() {
               <IntegrityFeature
                 icon={<ShieldCheck className="w-6 h-6" />}
                 label="Identity Protection"
-                desc="Your data is encrypted at the application level via Quantum Slate protocols."
+                desc="Your resume is shared with the recruiter managing this role."
               />
               <IntegrityFeature
                 icon={<Zap className="w-6 h-6" />}
-                label="Zero Latency"
-                desc="Direct, non-buffered delivery to the hiring manager's infrastructure."
+                label="One application"
+                desc="Submit a resume for this role and follow its status from your dashboard."
               />
             </div>
 
@@ -263,11 +261,11 @@ export default function ApplyPage() {
                 {submitting ? (
                   <span className="flex items-center gap-4 text-xs font-black uppercase tracking-[0.2em]">
                     <Loader2 className="w-6 h-6 animate-spin" />
-                    <span>Ingesting Payload...</span>
+                    <span>Submitting application...</span>
                   </span>
                 ) : (
                   <span className="flex items-center gap-4 text-xs font-black uppercase tracking-[0.3em]">
-                    Deploy Final Application
+                    Submit application
                     <ArrowRight className="w-6 h-6 transition-transform group-hover:translate-x-2" />
                   </span>
                 )}

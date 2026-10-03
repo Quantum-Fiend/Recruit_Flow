@@ -82,7 +82,7 @@ export default function NewJobPage() {
             className="rounded-xl h-12 px-6 group font-bold text-muted-foreground hover:text-foreground"
           >
             <ArrowLeft className="w-4 h-4 mr-3 transition-transform group-hover:-translate-x-1" />
-            Back to Console
+            Back to overview
           </Button>
         </Link>
 
@@ -92,14 +92,14 @@ export default function NewJobPage() {
             <Plus className="w-4 h-4" />
             <span>New Position</span>
           </div>
-          <h1 className="h-lg">Deploy New Position.</h1>
+          <h1 className="h-lg">Create a job</h1>
           <p className="text-lg text-muted-foreground font-medium">
-            Initialize a new talent acquisition sequence within the global
-            engineering pipeline.
+            Share the role, requirements, and working arrangement with
+            prospective candidates.
           </p>
         </header>
 
-        {/* Deployment Interface */}
+        {/* Job details */}
         <Card className="premium-card p-8 md:p-12 bg-card/40 relative overflow-hidden">
           <div className="absolute top-0 right-0 w-80 h-80 bg-primary/5 rounded-full blur-[120px] -z-10" />
 

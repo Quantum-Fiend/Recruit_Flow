@@ -43,13 +43,25 @@ interface Application {
 export default function ApplicantDashboard() {
   const [applications, setApplications] = useState<Application[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
 
   const loadApplications = useCallback(async () => {
-    const result = await getMyApplicationsAction();
-    if (result.success && result.applications) {
+    setLoading(true);
+    setLoadError(false);
+    try {
+      const result = await getMyApplicationsAction();
+      if (!result.success || !result.applications) {
+        setLoadError(true);
+        toast.error(result.error ?? "We couldn’t load your applications.");
+        return;
+      }
       setApplications(result.applications as Application[]);
+    } catch {
+      setLoadError(true);
+      toast.error("We couldn’t load your applications. Please try again.");
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   }, []);
 
   useEffect(() => {
@@ -63,22 +75,21 @@ export default function ApplicantDashboard() {
         <div className="max-w-3xl space-y-8">
           <div className="inline-flex items-center gap-3 px-4 py-1.5 rounded-full glass-panel text-[10px] font-black uppercase tracking-[0.3em] text-primary">
             <LayoutDashboard className="w-3.5 h-3.5" />
-            <span>Personal Command Center</span>
+            <span>Candidate workspace</span>
           </div>
           <h1 className="h-lg text-gradient leading-tight">
-            My <br />
-            Journey.
+            My applications
           </h1>
           <p className="text-xl text-muted-foreground font-medium opacity-60 leading-relaxed max-w-xl">
-            Tracking your professional trajectory across the world&apos;s most
-            ambitious technical ecosystems.
+            Review your applications and see the latest status updates from
+            hiring teams.
           </p>
         </div>
 
         <div className="flex items-center gap-6">
           <Link href="/jobs">
             <Button className="btn-quantum h-16 px-10 rounded-2xl shadow-2xl">
-              Explore The Network <ArrowRight className="w-4 h-4 ml-2" />
+              Browse jobs <ArrowRight className="w-4 h-4 ml-2" />
             </Button>
           </Link>
         </div>
@@ -86,46 +97,47 @@ export default function ApplicantDashboard() {
 
       {/* Intelligence Grid */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-24 w-full">
-        <StatBox
-          label="Live Sequences"
-          value={
-            applications.filter(
-              (a) =>
-                !["WITHDRAWN", "REJECTED", "OFFER_DECLINED"].includes(a.status),
-            ).length
-          }
-          icon={<Activity className="w-6 h-6" />}
-        />
-        <StatBox
-          label="Screening"
-          value={applications.filter((a) => a.status === "INTERVIEW").length}
-          icon={<Target className="w-6 h-6" />}
-        />
-        <StatBox
-          label="Offers"
-          value={applications.filter((a) => a.status === "OFFER").length}
-          icon={<Sparkles className="w-6 h-6" />}
-        />
-        <StatBox
-          label="Total Feed"
-          value={applications.length}
-          icon={<Briefcase className="w-6 h-6" />}
-        />
+        {loading ? (
+          [0, 1, 2, 3].map((item) => (
+            <Skeleton key={item} className="h-40 rounded-2xl" />
+          ))
+        ) : (
+          <>
+            <StatBox
+              label="In progress"
+              value={
+                applications.filter(
+                  (a) =>
+                    !["WITHDRAWN", "REJECTED", "OFFER_DECLINED"].includes(a.status),
+                ).length
+              }
+              icon={<Activity className="w-6 h-6" />}
+            />
+            <StatBox
+              label="Interviews"
+              value={applications.filter((a) => a.status === "INTERVIEW").length}
+              icon={<Target className="w-6 h-6" />}
+            />
+            <StatBox
+              label="Offers"
+              value={applications.filter((a) => a.status === "OFFER").length}
+              icon={<Sparkles className="w-6 h-6" />}
+            />
+            <StatBox
+              label="Applications"
+              value={applications.length}
+              icon={<Briefcase className="w-6 h-6" />}
+            />
+          </>
+        )}
       </div>
 
       {/* Main Pipeline Feed */}
       <div className="w-full space-y-12">
         <div className="flex items-center justify-between px-4 mb-4">
           <h2 className="text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground/40">
-            Active Pipeline Sequences
+            Application activity
           </h2>
-          <div className="flex items-center gap-3 text-[10px] font-black uppercase tracking-widest text-primary/60">
-            <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
-            </span>
-            <span>Telemetry Sync Active</span>
-          </div>
         </div>
 
         {loading ? (
@@ -137,22 +149,31 @@ export default function ApplicantDashboard() {
               />
             ))}
           </div>
+        ) : loadError ? (
+          <div className="dashboard-error" role="alert">
+            <div>
+              <h2>Applications unavailable</h2>
+              <p>We couldn’t retrieve your applications. Please try again.</p>
+            </div>
+            <Button variant="outline" onClick={() => void loadApplications()}>
+              Try again
+            </Button>
+          </div>
         ) : applications.length === 0 ? (
           <div className="text-center py-48 glass-panel w-full border-dashed rounded-[4rem] flex flex-col items-center">
             <Briefcase className="w-20 h-20 mb-8 text-muted-foreground/10" />
             <h3 className="text-4xl font-black mb-4 tracking-tighter">
-              Pipeline offline.
+              No applications yet
             </h3>
             <p className="text-xl text-muted-foreground mb-16 max-w-sm font-medium opacity-60">
-              Your professional trajectory is waiting for its next
-              high-performance mission deployment.
+              Browse open positions and apply to roles that fit your experience.
             </p>
             <Link href="/jobs">
               <Button
                 variant="outline"
                 className="rounded-2xl px-12 h-16 font-black border-border/50 hover:bg-secondary transition-all"
               >
-                Initialize Search Sequence
+                Browse open positions
               </Button>
             </Link>
           </div>
@@ -255,14 +276,12 @@ function ApplicationListItem({
                   onClick={async () => {
                     if (
                       confirm(
-                        "Officially accept this mission deployment? This will finalize your recruitment sequence.",
+                        "Accept this offer? This will update your application status.",
                       )
                     ) {
                       const result = await acceptOfferAction(application.id);
                       if (result.success) {
-                        toast.success(
-                          "Welcome to the team. Initialization complete.",
-                        );
+                        toast.success("Offer accepted");
                         onRefresh();
                       } else {
                         toast.error(result.error);
@@ -276,10 +295,10 @@ function ApplicationListItem({
                   variant="ghost"
                   className="h-14 px-8 rounded-2xl font-black text-[10px] uppercase tracking-widest text-muted-foreground/60 hover:text-destructive hover:bg-destructive/5 transition-all"
                   onClick={async () => {
-                    if (confirm("Decline this offer sequence?")) {
+                    if (confirm("Decline this offer?")) {
                       const result = await declineOfferAction(application.id);
                       if (result.success) {
-                        toast.success("Offer declined. Sequence terminated.");
+                        toast.success("Offer declined");
                         onRefresh();
                       } else {
                         toast.error(result.error);
@@ -297,12 +316,12 @@ function ApplicationListItem({
                 variant="ghost"
                 className="h-14 px-6 rounded-2xl text-muted-foreground/40 hover:text-destructive hover:bg-destructive/5 transition-all font-black text-[10px] uppercase tracking-widest gap-3"
                 onClick={async () => {
-                  if (confirm("Terminate this application sequence?")) {
+                  if (confirm("Withdraw this application?")) {
                     const result = await withdrawApplicationAction(
                       application.id,
                     );
                     if (result.success) {
-                      toast.success("Sequence Terminated");
+                      toast.success("Application withdrawn");
                       onRefresh();
                     } else {
                       toast.error(result.error);

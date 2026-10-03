@@ -111,7 +111,11 @@ Start the app and PostgreSQL with Docker Compose:
 
 ```bash
 docker compose up --build -d
+docker compose ps
+docker compose logs -f web
 ```
+
+Open [http://localhost:3000](http://localhost:3000) after the `web` service is healthy. Stop the services with `docker compose down`; this preserves the database and uploaded files in their named volumes.
 
 For a local non-Docker setup, create the PostgreSQL database first, then run migrations:
 

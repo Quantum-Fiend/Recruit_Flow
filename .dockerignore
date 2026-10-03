@@ -4,6 +4,7 @@ node_modules
 README.md
 .next
 .git
+/public/uploads/
 .env*
 !.env.example
 prisma/*.db

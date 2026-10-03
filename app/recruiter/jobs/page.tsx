@@ -27,34 +27,49 @@ interface RecruiterJob {
 export default function RecruiterJobsPage() {
   const [jobs, setJobs] = useState<RecruiterJob[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
 
   const loadJobs = useCallback(async () => {
-    const result = await getJobsAction({});
-    if (result.success && result.jobs) {
-      setJobs(result.jobs as RecruiterJob[]);
+    setLoading(true);
+    setLoadError(false);
+    try {
+      const result = await getJobsAction({});
+      if (!result.success) {
+        setLoadError(true);
+        toast.error(result.error ?? "We couldn’t load your jobs.");
+      } else {
+        setJobs(result.jobs as RecruiterJob[]);
+      }
+    } catch {
+      setLoadError(true);
+      toast.error("We couldn’t load your jobs. Please try again.");
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   }, []);
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     loadJobs();
   }, [loadJobs]);
 
   const handleCloseJob = async (jobId: string) => {
     if (
       !confirm(
-        "Decommission this job deployment? This will halt all incoming telemetry.",
+        "Close this job? Candidates will no longer be able to apply.",
       )
     )
       return;
 
-    const result = await closeJobAction(jobId);
-    if (result.error) {
-      toast.error(result.error);
-    } else {
-      toast.success("Deployment Decommissioned");
-      loadJobs();
+    try {
+      const result = await closeJobAction(jobId);
+      if (result.error) {
+        toast.error(result.error);
+      } else {
+        toast.success("Job closed");
+        void loadJobs();
+      }
+    } catch {
+      toast.error("Couldn’t close this job. Please try again.");
     }
   };
 
@@ -73,16 +88,15 @@ export default function RecruiterJobsPage() {
               className="rounded-xl h-10 px-4 group font-bold text-muted-foreground hover:text-foreground mb-4"
             >
               <ArrowLeft className="w-4 h-4 mr-2 transition-transform group-hover:-translate-x-1" />
-              Back to Console
+              Back to overview
             </Button>
           </Link>
           <h1 className="h-lg">
-            Mission <br />
-            <span className="text-primary">Archives.</span>
+            Your jobs
           </h1>
           <p className="text-xl text-muted-foreground font-medium text-balance">
-            Historical and active recruitment sequences within your
-            jurisdiction.
+            Manage your open roles, review application activity, and keep each
+            hiring process moving.
           </p>
         </div>
 
@@ -90,7 +104,7 @@ export default function RecruiterJobsPage() {
           <Link href="/recruiter/jobs/new">
             <Button className="h-14 px-8 rounded-xl sapphire-gradient text-white font-black text-sm uppercase tracking-widest shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all">
               <Plus className="w-5 h-5 mr-3" />
-              New Deployment
+              Create a job
             </Button>
           </Link>
         </div>
@@ -107,18 +121,28 @@ export default function RecruiterJobsPage() {
               />
             ))}
           </div>
+        ) : loadError ? (
+          <div className="dashboard-error" role="alert">
+            <div>
+              <h2>Jobs unavailable</h2>
+              <p>We couldn’t retrieve your jobs. Please try again.</p>
+            </div>
+            <Button variant="outline" onClick={() => void loadJobs()}>
+              Try again
+            </Button>
+          </div>
         ) : jobs.length === 0 ? (
           <div className="text-center py-40 glass-surface w-full border-dashed rounded-3xl flex flex-col items-center">
             <Briefcase className="w-16 h-16 mb-8 text-muted-foreground/10" />
             <h3 className="text-3xl font-black mb-4 tracking-tighter">
-              Archives empty
+              No jobs yet
             </h3>
             <p className="text-xl text-muted-foreground mb-12 max-w-sm font-medium">
-              No historical or active missions detected.
+              Create your first job to start receiving applications.
             </p>
             <Link href="/recruiter/jobs/new">
               <Button className="h-16 px-12 rounded-xl sapphire-gradient text-white font-black text-lg">
-                Initialize First Sequence
+                Create your first job
               </Button>
             </Link>
           </div>
@@ -214,7 +238,7 @@ function RecruiterJobCard({
                 variant="ghost"
                 className="h-12 w-12 rounded-xl text-muted-foreground hover:text-destructive hover:bg-destructive/5 transition-all p-0 border border-border"
                 onClick={() => onClose(job.id)}
-                title="Decommission Deployment"
+                title="Close job"
               >
                 <XCircle className="w-5 h-5" />
               </Button>

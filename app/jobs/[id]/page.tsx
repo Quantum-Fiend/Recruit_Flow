@@ -9,7 +9,11 @@ import {
   getMyApplicationsAction,
   withdrawApplicationAction,
 } from "@/app/actions/applications";
-import { formatDate, getJobTypeLabel } from "@/lib/utils";
+import {
+  formatDate,
+  getEmploymentTypeLabel,
+  getJobTypeLabel,
+} from "@/lib/utils";
 import {
   MapPin,
   Briefcase,
@@ -99,15 +103,34 @@ export default function JobDetailsPage() {
     if (!application) return
 
     setWithdrawing(true)
-    const result = await withdrawApplicationAction(application.id)
-
-    if (result.success) {
-      toast.success("Application Withdrawn")
-      setApplication(prev => prev ? { ...prev, status: "WITHDRAWN" } : null)
-    } else {
-      toast.error(result.error || "Failed to withdraw")
+    try {
+      const result = await withdrawApplicationAction(application.id)
+      if (result.success) {
+        toast.success("Application withdrawn")
+        setApplication((prev) => prev ? { ...prev, status: "WITHDRAWN" } : null)
+      } else {
+        toast.error(result.error || "Failed to withdraw application")
+      }
+    } catch {
+      toast.error("Failed to withdraw application. Please try again.")
+    } finally {
+      setWithdrawing(false)
     }
-    setWithdrawing(false)
+  }
+
+  const handleShare = async () => {
+    const url = window.location.href
+    try {
+      if (navigator.share) {
+        await navigator.share({ title: job?.title, url })
+      } else {
+        await navigator.clipboard.writeText(url)
+        toast.success("Job link copied")
+      }
+    } catch (error) {
+      if (error instanceof DOMException && error.name === "AbortError") return
+      toast.error("Unable to share this job. Please copy the page URL.")
+    }
   }
 
   if (loading) {
@@ -150,17 +173,17 @@ export default function JobDetailsPage() {
             className="rounded-xl h-12 px-6 group font-black text-[10px] uppercase tracking-widest text-muted-foreground/60 hover:text-foreground"
           >
             <ArrowLeft className="w-4 h-4 mr-3 transition-transform group-hover:-translate-x-1" />
-            Return to Pipeline
+            Back to jobs
           </Button>
         </Link>
 
         <div className="flex items-center gap-6">
-          <div className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/20">
-            Payload-ID: {job.id.split("-")[0]}
-          </div>
           <Button
             variant="outline"
             className="h-12 w-12 rounded-2xl border-border/50 hover:bg-secondary p-0 shadow-sm transition-all"
+            onClick={() => void handleShare()}
+            aria-label="Share this job"
+            title="Share this job"
           >
             <Share2 className="w-5 h-5" />
           </Button>
@@ -215,7 +238,7 @@ export default function JobDetailsPage() {
           {/* Description Body */}
           <div className="premium-card p-12 md:p-16 glass-panel border-border/40">
             <h2 className="text-[10px] font-black mb-12 tracking-[0.4em] uppercase text-muted-foreground/40">
-              Mission Briefing
+              Job description
             </h2>
             <div className="prose prose-invert max-w-none">
               <p className="text-xl text-muted-foreground font-medium leading-relaxed whitespace-pre-wrap opacity-80">
@@ -252,10 +275,10 @@ export default function JobDetailsPage() {
 
             <div className="space-y-4 text-center">
               <h3 className="text-3xl font-black tracking-tighter">
-                Initialize Deployment
+                Interested in this role?
               </h3>
               <p className="text-base text-muted-foreground font-medium opacity-60 text-balance">
-                Begin your recruitment sequence for this position.
+                Submit your resume to apply. You can track updates in your candidate dashboard.
               </p>
             </div>
 
@@ -285,10 +308,10 @@ export default function JobDetailsPage() {
               >
                 <span className="relative z-10 flex items-center gap-4 text-xs uppercase tracking-[0.2em] font-black">
                   {application?.status === "WITHDRAWN"
-                    ? "Sequence Terminated"
+                    ? "Application withdrawn"
                     : job.status === "OPEN"
-                      ? "Initialize Application"
-                      : "Position Inactive"}
+                      ? "Apply for this job"
+                      : "Position closed"}
                   {application?.status !== "WITHDRAWN" &&
                     job.status === "OPEN" && (
                       <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-2" />
@@ -300,39 +323,38 @@ export default function JobDetailsPage() {
             <div className="space-y-10 pt-4">
               <SidebarInsight
                 icon={<Globe2 className="w-6 h-6" />}
-                title="Global Operations"
-                desc="Fully supports asynchronous, distributed technical contribution."
+                title="Work arrangement"
+                desc={getEmploymentTypeLabel(job.employmentType)}
               />
               <SidebarInsight
                 icon={<Shield className="w-6 h-6" />}
-                title="Verified Specs"
-                desc="Endorsed by RecruitFlow corporate engineering integrity protocols."
+                title="Application process"
+                desc="Submit your resume and track application updates from your candidate dashboard."
               />
               <SidebarInsight
                 icon={<Users className="w-6 h-6" />}
-                title="High Activity"
-                desc={`${job._count.applications}+ active telemetry streams currently in screening.`}
+                title="Applications"
+                desc={`${job._count.applications} ${job._count.applications === 1 ? "candidate has" : "candidates have"} applied so far.`}
               />
             </div>
 
             <div className="p-8 rounded-[2rem] bg-primary/5 border border-primary/10 relative overflow-hidden">
               <div className="absolute top-0 right-0 w-20 h-20 bg-primary/10 rounded-full blur-2xl -z-10" />
               <p className="text-[10px] font-black uppercase tracking-[0.3em] text-primary mb-4">
-                Lead Intelligence
+                Posted by
               </p>
-              <p className="text-sm font-bold leading-relaxed text-foreground/80 opacity-90">
-                Orchestrated by{" "}
+              <p className="text-sm font-medium leading-relaxed text-foreground/80 opacity-90">
                 <span className="text-primary font-black underline underline-offset-4 decoration-primary/30">
                   {job.recruiter.name}
                 </span>
-                . Expect high-density technical feedback sequences.
+                . You can follow your application status from your candidate dashboard.
               </p>
             </div>
           </div>
 
           <div className="px-10 text-center opacity-20">
             <p className="text-[10px] font-black uppercase tracking-[0.5em] leading-relaxed">
-              Secured via Quantum-Slate Protocols
+              RecruitFlow keeps each role and its applications in one place.
             </p>
           </div>
         </aside>

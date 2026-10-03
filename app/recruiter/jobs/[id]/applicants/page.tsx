@@ -9,7 +9,7 @@ import { getJobApplicationsAction, addApplicationNoteAction } from "@/app/action
 import { getJobByIdAction } from "@/app/actions/jobs"
 import { getStatusColor, formatDate } from "@/lib/utils"
 import { getPossibleNextStatuses } from "@/lib/workflow"
-import { ArrowLeft, FileText, Users, Zap, ChevronRight, MessageSquare, Loader2 } from "lucide-react"
+import { ArrowLeft, FileText, Users, ChevronRight, MessageSquare, Loader2 } from "lucide-react"
 import { toast } from "sonner"
 import { ApplicationStatus } from "@prisma/client"
 import { motion, AnimatePresence } from "framer-motion"
@@ -134,14 +134,14 @@ export default function ApplicantsPage() {
            <Link href="/recruiter/jobs" className="inline-flex">
               <Button variant="ghost" className="rounded-xl h-10 px-4 group font-black text-[10px] uppercase tracking-widest text-muted-foreground/60 hover:text-foreground">
                  <ArrowLeft className="w-4 h-4 mr-2 transition-transform group-hover:-translate-x-1" />
-                 Return to Hub
+                 Back to jobs
               </Button>
            </Link>
            <h1 className="h-lg text-gradient leading-tight">
-            {job?.title} <br /><span>Telemetry.</span>
+            {job?.title}
            </h1>
            <p className="text-xl text-muted-foreground font-medium opacity-60 leading-relaxed max-w-xl">
-             Reviewing and orchestrating the high-performance talent ingestion stream for this sequence.
+             Review applications, update candidate stages, and keep recruiter notes together.
            </p>
         </div>
 
@@ -151,8 +151,8 @@ export default function ApplicantsPage() {
                  <Users className="w-5 h-5" />
               </div>
               <div className="flex flex-col">
-                 <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/40 leading-none mb-1">Total Payload</span>
-                 <span className="text-xl font-black tracking-tight">{applications.length} Candidates</span>
+                 <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/40 leading-none mb-1">Applications</span>
+                 <span className="text-xl font-black tracking-tight">{applications.length}</span>
               </div>
            </div>
         </div>
@@ -163,8 +163,8 @@ export default function ApplicantsPage() {
         {applications.length === 0 ? (
           <div className="text-center py-48 glass-panel w-full border-dashed rounded-[4rem] flex flex-col items-center">
             <Users className="w-20 h-20 mb-8 text-muted-foreground/10" />
-            <h3 className="text-4xl font-black mb-4 tracking-tighter">No data points.</h3>
-            <p className="text-xl text-muted-foreground max-w-sm font-medium opacity-60">This deployment has not yet initialized any candidate ingestion sequences.</p>
+            <h3 className="text-4xl font-black mb-4 tracking-tighter">No applications yet</h3>
+            <p className="text-xl text-muted-foreground max-w-sm font-medium opacity-60">Applications for this position will appear here when candidates apply.</p>
           </div>
         ) : (
           <div className="space-y-12">
@@ -172,7 +172,6 @@ export default function ApplicantsPage() {
               {applications.map((app, index) => {
                 const possibleTransitions = getPossibleNextStatuses(app.status as ApplicationStatus)
                 const isExpanded = selectedApp?.id === app.id
-                const atsScore = Math.floor(80 + (app.applicant.name.length % 20))
 
                 return (
                   <motion.div
@@ -195,7 +194,7 @@ export default function ApplicantsPage() {
                                  <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-[10px] font-black uppercase tracking-widest text-muted-foreground/40">
                                     <span className="text-primary/80 font-black">{app.applicant.email}</span>
                                     <span className="w-1.5 h-1.5 bg-border rounded-full" />
-                                    <span className="flex items-center gap-2 font-black"><Zap className="w-4 h-4" /> Sequence Initiated {formatDate(app.appliedAt)}</span>
+                                    <span className="flex items-center gap-2 font-black">Applied {formatDate(app.appliedAt)}</span>
                                  </div>
                               </div>
                            </div>
@@ -204,30 +203,19 @@ export default function ApplicantsPage() {
                            </div>
                         </div>
 
-                        {/* AI Intelligence Grid */}
-                        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-                           <div className="md:col-span-1 p-8 rounded-[2rem] bg-foreground/[0.03] border border-border/50 flex flex-col justify-center items-center text-center group/score">
-                              <div className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/40 mb-3">Talent Index</div>
-                              <div className="text-5xl font-black tracking-tighter text-primary group-hover/score:scale-110 transition-transform duration-700">
-                                 {atsScore}
-                                 <span className="text-base opacity-40 ml-1">%</span>
-                              </div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                           <div className="p-6 rounded-2xl bg-background border border-border/50">
+                              <div className="text-xs font-semibold text-muted-foreground mb-2">Application status</div>
+                              <p className="text-sm font-medium leading-relaxed">
+                                 This application is currently in the <strong>{app.status.toLowerCase().replaceAll("_", " ")}</strong> stage.
+                                 Use the workflow controls below to record your next decision.
+                              </p>
                            </div>
-                           <div className="md:col-span-3 p-8 rounded-[2rem] glass-panel border-border/40 flex items-center gap-8 relative overflow-hidden">
-                              <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full blur-3xl -z-10" />
-                              <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center text-primary flex-shrink-0 shadow-xl">
-                                 <Zap className="w-8 h-8" />
-                              </div>
-                              <div className="space-y-2">
-                                 <div className="text-[10px] font-black uppercase tracking-widest text-primary/60">Intelligence Summary</div>
-                                 <p className="text-lg font-bold text-foreground/80 leading-relaxed text-balance">
-                                    {app.applicant.name.length % 3 === 0
-                                      ? "Exceptional architectural alignment detected. Candidate exhibits deep mastery of high-velocity systems."
-                                      : app.applicant.name.length % 2 === 0
-                                      ? "Strategic technical foundational profile. Recommended for elite-track screening sequences."
-                                      : "Sophisticated engineering trajectory identified. Exhibits strong potential for operational leadership roles."}
-                                 </p>
-                              </div>
+                           <div className="p-6 rounded-2xl bg-background border border-border/50">
+                              <div className="text-xs font-semibold text-muted-foreground mb-2">Resume review</div>
+                              <p className="text-sm text-muted-foreground leading-relaxed">
+                                 Review the attached resume against the role requirements. Automated resume parsing and match scoring are not available.
+                              </p>
                            </div>
                         </div>
 
@@ -236,7 +224,7 @@ export default function ApplicantsPage() {
                            <div className="space-y-6">
                               <div className="flex items-center gap-3 text-[10px] font-black uppercase tracking-widest text-muted-foreground/40 px-2">
                                  <FileText className="w-4 h-4" />
-                                 <span>Technical Payload</span>
+                                 <span>Resume</span>
                               </div>
                               <a
                                  href={app.resumeUrl}
@@ -256,8 +244,7 @@ export default function ApplicantsPage() {
 
                            <div className="space-y-6">
                               <div className="flex items-center gap-3 text-[10px] font-black uppercase tracking-widest text-muted-foreground/40 px-2">
-                                 <Zap className="w-4 h-4" />
-                                 <span>Workflow Sequence</span>
+                                 <span>Update application status</span>
                               </div>
                               <div className="flex flex-wrap gap-3">
                                  {possibleTransitions.map((status) => (
@@ -272,7 +259,7 @@ export default function ApplicantsPage() {
                                  ))}
                                  {possibleTransitions.length === 0 && (
                                     <div className="h-14 flex items-center px-8 rounded-2xl bg-foreground/[0.02] text-muted-foreground/40 font-black text-[10px] uppercase tracking-widest border border-border/40 border-dashed">
-                                       Sequence Finalized
+                                       Application closed
                                     </div>
                                  )}
                               </div>
@@ -284,14 +271,14 @@ export default function ApplicantsPage() {
                            <div className="flex items-center justify-between">
                               <div className="flex items-center gap-3 text-[10px] font-black uppercase tracking-widest text-muted-foreground/40 px-2">
                                  <MessageSquare className="w-4 h-4" />
-                                 <span>Internal Intelligence Logs</span>
+                                 <span>Recruiter notes</span>
                               </div>
                               <Button
                                  variant="ghost"
                                  className="h-10 px-6 rounded-xl font-black text-[10px] uppercase tracking-[0.2em] hover:bg-foreground hover:text-background transition-all"
                                  onClick={() => setSelectedApp(isExpanded ? null : app)}
                               >
-                                 {isExpanded ? "Close Logs" : "Expand Logs"}
+                                 {isExpanded ? "Close notes" : "Add or view notes"}
                               </Button>
                            </div>
 
@@ -319,7 +306,7 @@ export default function ApplicantsPage() {
                                 className="space-y-6 pt-4"
                              >
                                 <Textarea
-                                   placeholder="Ingest internal intelligence note..."
+                                   placeholder="Add a private note for your recruiting team…"
                                    value={newNote}
                                    onChange={(e) => setNewNote(e.target.value)}
                                    rows={4}
@@ -331,7 +318,7 @@ export default function ApplicantsPage() {
                                       disabled={!newNote.trim() || addingNote}
                                       className="h-16 px-12 rounded-2xl btn-quantum shadow-2xl active:scale-[0.98]"
                                    >
-                                      {addingNote ? <span className="flex items-center gap-3"><Loader2 className="w-4 h-4 animate-spin" /> Ingesting</span> : "Deploy Intelligence"}
+                                      {addingNote ? <span className="flex items-center gap-3"><Loader2 className="w-4 h-4 animate-spin" /> Saving…</span> : "Add note"}
                                    </Button>
                                 </div>
                              </motion.div>

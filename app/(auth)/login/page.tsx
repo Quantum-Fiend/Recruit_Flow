@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { toast } from "sonner"
-import { Loader2, ArrowRight, User, Lock, AlertCircle, UserX } from "lucide-react"
+import { Loader2, ArrowRight, Mail, Lock, AlertCircle, UserX } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 import { checkUserExistsAction } from "@/app/actions/auth"
 
@@ -76,7 +76,7 @@ function LoginForm() {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-[90vh] w-full px-6 pt-40 pb-20">
+    <div className="flex flex-col items-center justify-center min-h-[65vh] w-full px-6 py-8">
       <motion.div
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
@@ -84,7 +84,7 @@ function LoginForm() {
         className="w-full max-w-[480px]"
       >
         <div className="text-center mb-10">
-          <h1 className="h-lg text-gradient leading-tight mb-3">Access Hub.</h1>
+          <h1 className="h-lg text-gradient leading-tight mb-3">Welcome back</h1>
           <p className="text-base text-muted-foreground font-medium opacity-60">
             Enter your credentials to access your dashboard.
           </p>
@@ -124,7 +124,7 @@ function LoginForm() {
                 Email Address
               </Label>
               <div className="relative group">
-                <User className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground/40 group-focus-within:text-primary transition-colors" />
+                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground/40 group-focus-within:text-primary transition-colors" />
                 <Input
                   id="email"
                   name="email"
@@ -142,9 +142,6 @@ function LoginForm() {
                 <Label htmlFor="password" className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60">
                   Password
                 </Label>
-                <Link href="#" className="text-[10px] font-black uppercase tracking-widest text-primary/60 hover:text-primary transition-colors">
-                  Forgot Password?
-                </Link>
               </div>
               <div className="relative group">
                 <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground/40 group-focus-within:text-primary transition-colors" />
@@ -172,7 +169,7 @@ function LoginForm() {
                 </span>
               ) : (
                 <span className="flex items-center gap-2">
-                  Login <ArrowRight className="w-4 h-4" />
+                  Sign in <ArrowRight className="w-4 h-4" />
                 </span>
               )}
             </Button>

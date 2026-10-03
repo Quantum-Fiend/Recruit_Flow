@@ -13,6 +13,7 @@ import { Button } from '@/components/ui/button'
 import { toast } from 'sonner'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Badge } from '@/components/ui/badge'
+import { validateFile } from '@/lib/file-security'
 
 interface LocalUploadProps {
   onUploadComplete: (url: string, name: string) => void
@@ -22,10 +23,22 @@ export function LocalUpload({ onUploadComplete }: LocalUploadProps) {
   const [file, setFile] = useState<File | null>(null)
   const [uploading, setUploading] = useState(false)
   const [isDragOver, setIsDragOver] = useState(false)
+  const [fileError, setFileError] = useState<string | null>(null)
+
+  const selectFile = (selectedFile: File) => {
+    const validation = validateFile(selectedFile)
+    if (!validation.valid) {
+      setFile(null)
+      setFileError(validation.error ?? "Choose a valid PDF, DOC, or DOCX resume.")
+      return
+    }
+    setFileError(null)
+    setFile(selectedFile)
+  }
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      setFile(e.target.files[0])
+    if (e.target.files?.[0]) {
+      selectFile(e.target.files[0])
     }
   }
 
@@ -42,15 +55,17 @@ export function LocalUpload({ onUploadComplete }: LocalUploadProps) {
         body: formData,
       });
 
-      if (!res.ok) throw new Error("Upload failed");
+      if (!res.ok) {
+        const message = await res.text()
+        throw new Error(message || "Resume upload failed.")
+      }
 
       const data = await res.json();
       onUploadComplete(data.url, data.name);
-      toast.success("Document ingested successfully");
+      toast.success("Resume uploaded")
       setFile(null);
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
-      toast.error('Initialization failed. Check network status.')
+      toast.error(error instanceof Error ? error.message : "Resume upload failed. Please try again.")
     } finally {
       setUploading(false)
     }
@@ -73,7 +88,7 @@ export function LocalUpload({ onUploadComplete }: LocalUploadProps) {
             onDrop={(e) => {
               e.preventDefault();
               setIsDragOver(false);
-              if (e.dataTransfer.files[0]) setFile(e.dataTransfer.files[0]);
+              if (e.dataTransfer.files[0]) selectFile(e.dataTransfer.files[0]);
             }}
             className={`
               relative group flex flex-col items-center justify-center p-16 rounded-[2.5rem] 
@@ -95,11 +110,10 @@ export function LocalUpload({ onUploadComplete }: LocalUploadProps) {
 
             <div className="text-center space-y-4">
               <h3 className="text-2xl font-black tracking-tighter">
-                Deploy Resume Portfolio
+                Upload your resume
               </h3>
               <p className="text-sm text-muted-foreground font-medium max-w-xs mx-auto leading-relaxed">
-                Drag and drop your professional identity (PDF/DOCX) or click to
-                browse.
+                Drag and drop a PDF, DOC, or DOCX file, or click to browse.
               </p>
             </div>
 
@@ -107,6 +121,7 @@ export function LocalUpload({ onUploadComplete }: LocalUploadProps) {
               type="file"
               onChange={handleFileChange}
               accept=".pdf,.doc,.docx"
+              aria-label="Choose a resume file"
               className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
             />
           </motion.div>
@@ -135,7 +150,7 @@ export function LocalUpload({ onUploadComplete }: LocalUploadProps) {
                     {(file.size / 1024 / 1024).toFixed(2)} MB
                   </Badge>
                   <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
-                    Ready for Ingestion
+                    Ready to upload
                   </span>
                 </div>
               </div>
@@ -157,11 +172,11 @@ export function LocalUpload({ onUploadComplete }: LocalUploadProps) {
               {uploading ? (
                 <div className="flex items-center gap-3">
                   <Loader2 className="w-6 h-6 animate-spin" />
-                  <span>Ingesting Data...</span>
+                  <span>Uploading resume...</span>
                 </div>
               ) : (
                 <span className="flex items-center gap-3">
-                  Initialize Upload
+                  Upload resume
                   <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                 </span>
               )}
@@ -169,6 +184,11 @@ export function LocalUpload({ onUploadComplete }: LocalUploadProps) {
           </motion.div>
         )}
       </AnimatePresence>
+      {fileError && (
+        <p className="text-sm font-medium text-destructive" role="alert">
+          {fileError}
+        </p>
+      )}
     </div>
   );
 }
