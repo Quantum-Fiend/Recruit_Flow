@@ -8,7 +8,7 @@
 > **Project Status**: 🚧 **In Progress** 🚧
 > This project is currently undergoing active development and production hardening. Core features are being refined for stability and security.
 
-A modern, full-stack Applicant Tracking System (ATS) built with Next.js 14+, featuring role-based access control, workflow automation, and comprehensive audit trails.
+A modern, full-stack Applicant Tracking System (ATS) built with Next.js 16, featuring role-based access control, workflow automation, and comprehensive audit trails.
 
 ---
 
@@ -62,7 +62,7 @@ A modern, full-stack Applicant Tracking System (ATS) built with Next.js 14+, fea
 
 ## 📋 Prerequisites
 
-- Node.js 20.9+ and npm
+- Node.js 20.9+ with Corepack (Yarn 1.22.22)
 - PostgreSQL database
 - (Optional) Resend API key for email notifications
 - (Optional) UploadThing account for file uploads
@@ -74,7 +74,7 @@ A modern, full-stack Applicant Tracking System (ATS) built with Next.js 14+, fea
 ```bash
 git clone <your-repo-url>
 cd recruitflow
-npm install
+corepack yarn install --frozen-lockfile
 ```
 
 ### 2. Environment Setup
@@ -117,19 +117,19 @@ For a local non-Docker setup, create the PostgreSQL database first, then run mig
 
 ```bash
 # Generate Prisma Client
-npx prisma generate
+corepack yarn prisma generate
 
 # Create/apply development migrations
-npm run db:migrate:dev
+corepack yarn db:migrate:dev
 
 # Apply committed migrations in production before starting the app
-npm run db:migrate:deploy
+corepack yarn db:migrate:deploy
 ```
 
 ### 4. Run Development Server (without Docker)
 
 ```bash
-npm run dev
+corepack yarn dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) in your browser.
@@ -171,7 +171,7 @@ recruitflow/
 │   └── workflow.ts          # Status transition rules
 ├── prisma/
 │   └── schema.prisma        # Database schema
-└── middleware.ts            # Route protection
+└── proxy.ts                 # Route protection and API rate limiting
 ```
 
 ## 🔄 Application Workflow
@@ -243,13 +243,13 @@ Emails gracefully degrade if `RESEND_API_KEY` is not configured (logs warning in
 ### Running Tests
 ```bash
 # Run all unit tests
-npm run test
+corepack yarn test
 
 # Run full validation suite (lint + type-check + tests)
-npm run validate
+corepack yarn validate
 
 # Run tests in watch mode
-npm run test:watch
+corepack yarn test:watch
 ```
 
 ### Manual Testing Checklist
@@ -288,8 +288,8 @@ Check the [Production Checklist](./PRODUCTION_CHECKLIST.md) for detailed deploym
 ### Build for Production
 
 ```bash
-npm run build
-npm start
+corepack yarn build
+corepack yarn start
 ```
 
 ### Environment Variables (Production)
@@ -305,7 +305,7 @@ Ensure all environment variables are set in your production environment:
 
 ```bash
 # Run migrations in production
-npx prisma migrate deploy
+corepack yarn prisma migrate deploy
 ```
 
 ### Recommended Hosting

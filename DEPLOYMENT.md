@@ -5,7 +5,7 @@ This guide covers deploying RecruitFlow to production environments.
 ## Prerequisites
 
 - [ ] PostgreSQL database (Neon, Supabase, or managed PostgreSQL)
-- [ ] Node.js 18+ hosting (Vercel, Railway, Render, etc.)
+- [ ] Node.js 20.9+ hosting (Vercel, Railway, Render, etc.)
 - [ ] Resend account for email delivery
 - [ ] UploadThing account for file uploads
 - [ ] Domain name (optional but recommended)
@@ -89,23 +89,23 @@ Run database migrations to create schema:
 
 ```bash
 # Install dependencies
-npm install
+corepack yarn install --frozen-lockfile
 
 # Generate Prisma Client
-npx prisma generate
+corepack yarn prisma generate
 
 # Run migrations
-npx prisma migrate deploy
+corepack yarn prisma migrate deploy
 ```
 
 ## Step 5: Build Application
 
 ```bash
 # Build for production
-npm run build
+corepack yarn build
 
 # Test production build locally
-npm start
+corepack yarn start
 ```
 
 ## Deployment Options
@@ -129,7 +129,7 @@ npm start
    ```bash
    # After first deployment, run migrations
    vercel env pull .env.local
-   npx prisma migrate deploy
+   corepack yarn prisma migrate deploy
    ```
 
 ### Option 2: Railway
@@ -152,8 +152,8 @@ npm start
 
 1. **Create Web Service**
    - Connect GitHub repository
-   - Build Command: `npm install && npm run build`
-   - Start Command: `npm start`
+   - Build Command: `corepack yarn install --frozen-lockfile && corepack yarn build`
+   - Start Command: `corepack yarn start`
 
 2. **Add PostgreSQL**
    - Create PostgreSQL database in Render
@@ -257,19 +257,18 @@ Consider integrating:
 
 ```bash
 # Check Node version
-node --version  # Should be 18+
+node --version  # Should be 20.9+
 
-# Clear cache and rebuild
-rm -rf .next node_modules
-npm install
-npm run build
+# Reinstall and rebuild
+corepack yarn install --frozen-lockfile
+corepack yarn build
 ```
 
 ### Database Connection Issues
 
 ```bash
 # Test connection
-npx prisma db pull
+corepack yarn prisma db pull
 
 # Check SSL requirement
 # Add to DATABASE_URL: ?sslmode=require
